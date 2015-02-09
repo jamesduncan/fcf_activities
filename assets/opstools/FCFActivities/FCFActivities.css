@@ -1,0 +1,135 @@
+
+
+.fcf-list-rowH4 {
+    margin-top: 4px;
+}
+
+.fcf-list-image {
+    margin-right: 5px;
+}
+
+.fcf-tag {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+/*    display: block;  */
+/*    font-size: 13px; */
+    line-height: 1.42857;
+/*    margin: 0 0 10px; */
+    padding: 2.5px;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.fcf-tag-selected {
+    background-color: #d9edf7;
+}
+
+
+.fcf-team-list tr.selected,
+.fcf-activity-list tr.selected {
+    background-color: #d9edf7;
+}
+
+
+
+.fcf-activity-report-activities,
+.fcf-activity-report-activity-images,
+.fcf-activitiy-people-objects {
+    overflow:auto;
+}
+
+
+.fcf-activity-list-item,
+.fcf-activity-image-list-item {
+    height: 100px;
+}
+
+.fcf-activity-list-image {
+    margin-right: 20px;
+}
+
+
+
+/* The css for the list of ppl in the People Tagger */
+
+.fcf-activity-people-objects {
+    -moz-user-select: none;
+    background: none repeat scroll 0 0 #eee;
+    border-radius: 3px;
+    color: #333;
+    cursor: default;
+    float: left;
+    line-height: 2em;
+    margin: 2px;
+    padding-left: 5px;
+    position: relative;
+    white-space: nowrap;
+}
+
+
+
+.dropzone .fcf-activity-icon-picture {
+    background-color: transparent;
+    background-image: url("/images/icon_picture_activity.jpg");
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: auto 100px;
+    border: 1px solid transparent;
+    min-height: 100% !important;
+    opacity: 0.5;
+    position: relative;
+    width: 100% !important;
+
+}
+
+
+
+
+.typeahead, .tt-query, .tt-hint {
+    border: 2px solid #ccc;
+    border-radius: 8px;
+/*    font-size: 24px;     */
+/*    height: 30px;        */
+    line-height: 30px;
+    outline: medium none;
+/*    padding: 8px 12px;   */
+    width: 396px;
+}
+.typeahead {
+    background-color: #fff;
+}
+.typeahead:focus {
+    border: 2px solid #0097cf;
+}
+.tt-query {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.tt-hint {
+    color: #999;
+}
+.tt-dropdown-menu {
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 12px;
+    padding: 8px 0;
+    width: 422px;
+}
+.tt-suggestion {
+    font-size: 18px;
+    line-height: 24px;
+    padding: 3px 20px;
+}
+.tt-suggestion.tt-cursor {
+    background-color: #0097cf;
+    color: #fff;
+}
+.tt-suggestion p {
+    margin: 0;
+}
+.gist {
+    font-size: 14px;
+}
