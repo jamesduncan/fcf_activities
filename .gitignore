@@ -29,3 +29,17 @@ node_modules
 
 # Appdev config file
 .adn
+
+# Mockup Files:
+assets/js/bootstrap.min.js
+assets/js/jquery-1.11.1.min.js
+assets/js/jquery-ui.js
+assets/js/jquery.sidr.min.js
+assets/OpsPortal/opsportal.css
+assets/OpsPortal/portal-scratch.css
+assets/styles/bootstrap-theme.min.css
+assets/styles/bootsrap.min.css
+assets/styles/fontawesome.css
+assets/fonts/fontawesome-webfont.ttf
+assets/fonts/fontawesome-webfont.woff
+
