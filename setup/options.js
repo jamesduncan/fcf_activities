@@ -12,6 +12,10 @@
  *
  */
 module.exports = {
+    directories:[
+        '/assets/data/fcf/images/activities',
+        '/assets/data/fcf/images/temp'
+    ]
 /*
 
      // list any directories that need to be created in the base sails path

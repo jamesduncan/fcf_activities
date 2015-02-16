@@ -1,0 +1,513 @@
+<div class="opsportal-stage-container opsportal-padding-bottom-2x" >
+<!-- 
+#  Appdev Label Info:
+#label_context:opstool-FCFActivities
+#language_code:en
+-->
+
+<div id="fcf-activity-portal" class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="navbar-header">
+					 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Activities: </a>
+				</div>
+				
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<a href="#fcf-activities/AddActivity1" class="fcf-activity-new">New Activity</a>
+						</li>
+						
+					</ul>
+				</div>
+				
+			</nav>
+			<div class="jumbotron well">
+				<h1>
+					Activities
+				</h1>
+			</div>
+			<div class="row clearfix">
+				<div class="col-md-6 column">
+					<h3>
+						Latest Activity Reports
+					</h3>
+					<ol class="list-unstyled" style="border: 1px solid #ccc; padding: 2.5px;" >
+						<li class="clearfix">
+							<img alt="48x48" src="http://lorempixel.com/48/48/" class="img-rounded pull-left fcf-list-image" />
+							<H4 class="fcf-list-rowH4">Image Caption<br><small><span class="fcf-tag">person 1</span><span class="fcf-tag">person 2</span><span class="fcf-tag fcf-tag-selected">person 3</span></small></H4>
+						</li>
+						<li class="clearfix">
+							<img alt="48x48" src="http://lorempixel.com/48/48/" class="img-rounded pull-left fcf-list-image" />
+							<H4 class="fcf-list-rowH4">Image Caption<br><small><span class="fcf-tag">person 1</span><span class="fcf-tag fcf-tag-selected">person 3</span><span class="fcf-tag">person 2</span></small></H4>
+						</li>
+						<li class="clearfix">
+							<img alt="48x48" src="http://lorempixel.com/48/48/" class="img-rounded pull-left fcf-list-image" />
+							<H4 class="fcf-list-rowH4">Image Caption<br><small><span class="fcf-tag">person 1</span><span class="fcf-tag fcf-tag-selected">person 3</span><span class="fcf-tag fcf-tag">person 2</span></small></H4>
+						</li>
+						
+					</ol>
+				</div>
+				<div class="col-md-6 column">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<div id="fcf-activity-add-chooseTeam"  class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<span class="pull-right" app-label-key="fcf.assignment.Choose.Team.step1">Step 1 of 333</span>
+			<h3 class="text-left">
+				<span app-label-key="fcf.assignment.Choose.Team" >Choose Your Team</span>
+			</h3>
+			<div class="row clearfix">
+				<div class="col-md-10 column">
+					
+					<h4>
+						<span app-label-key="fcf.assignment.Choose.Team.Instructions">Instructions</span>
+					</h4>
+					<p>
+						<span app-label-key="fcf.assignment.Choose.Team.Desc" >What Ministry Team is this activity associated with?</span>
+					</p>
+
+					<div class="fcf-team-list-search form-group">
+						<input type="search" class="form-control fcf-team-filter typeahead" />
+					</div>
+
+					<table class="fcf-team-list table">
+						<thead>
+							<tr>
+								<th app-label-key="fcf.assignment.Team">
+									T3am
+								</th>
+								<th app-label-key="fcf.assignment.Project">
+									Owner
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="template"  addata="" >
+								<td>
+									[[= team.attr("MinistryDisplayName")]]
+								</td>
+								<td>
+									[[= team.attr("ProjectOwner")]]
+								</td>
+							</tr>
+							<tr class="active">
+								<td>
+									Team 2
+								</td>
+								<td>
+									Owner 2
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Team 3
+								</td>
+								<td>
+									Owner 3
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-2 column">
+				</div>
+			</div> 
+			<div class="row clearfix">
+				<div class="col-md-10 column">
+					<button id="fcf-activity-add-chooseteam-next" type="button" class="btn btn-primary btn-sm pull-right"><span app-label-key="fcf.assignment.Next" >Nexttt</span></button>
+				</div>
+				<div class="col-md-2 column">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<div id="fcf-activity-add-chooseActivity"  class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<span class="pull-right" appp-label-key="fcf.assignment.add.step2">Step 2 of 333</span>
+			<h3 class="text-left">
+				<span appp-label-key="fcf.assignment.Title.ChooseActivity" >Choose An Activity</span>
+			</h3>
+			<div class="row clearfix">
+				<div class="col-md-10 column">
+					
+					<h4>
+						<span appp-label-key="fcf.assignment.Choose.Instructions">Instructions</span>
+					</h4>
+					<p> 
+						<span appp-label-key="fcf.assignment.Choose.Activity.Team" >Team:</span> <span class="fcf-activity-add-chooseActivity-teamName" >[[= team.attr("MinistryDisplayName")]]</span>
+					</p>
+					<p>
+						<span appp-label-key="fcf.assignment.Choose.Activity.Desc1" >Choose one of the following 
+						activities associated with this team.</span>
+					</p>
+					<p>
+						<span appp-label-key="fcf.assignment.Choose.Activity.Desc2" >If you do not see an activity in the list then click the add activity button.</span>
+					</p>
+
+					<div class="fcf-activity-list-search form-group">
+						<input type="search" class="form-control fcf-activity-filter typeahead" />
+					</div>
+					<table class="fcf-activity-list table">
+						<thead>
+							<tr>
+								<th appp-label-key="fcf.assignment.Activity">
+									Activity
+								</th>
+								<th appp-label-key="fcf.assignment.SubmittedBy">
+									Submitted By
+								</th>
+								<th appp-label-key="fcf.assignment.ApprovedBy">
+									ApprovedBy
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="template"  addata="" >
+								<td>
+									[[= activity.attr("activityName")]]
+								</td>
+								<td>
+									[[= activity.attr("createdBy")]]
+								</td>
+								<td>
+									[[= activity.attr("approvedBy")]]
+								</td>
+							</tr>
+							<tr class="active">
+								<td>
+									Team 2
+								</td>
+								<td>
+									Owner 2
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Team 3
+								</td>
+								<td>
+									Owner 3
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-2 column">
+				</div>
+			</div> 
+			<div class="row clearfix">
+				<div class="col-md-10 column">
+					<button id="fcf-activity-add-chooseAssignment-addAssignment" type="button" class="btn btn-success btn-sm pull-left" href="#fcf-modal-new-Activity" role="button" data-toggle="modal" ><span appp-label-key="fcf.assignment.Add" >Add Assignment</span></button>
+				</div>
+				<div class="col-md-2 column">
+				</div>
+			</div>
+			<div class="row clearfix">
+				<div class="col-md-10 column">
+					<button id="fcf-activity-add-chooseAssignment-next" type="button" class="btn btn-primary btn-sm pull-right"><span appp-label-key="fcf.assignment.Next" >Nexttt</span></button>
+					<button id="fcf-activity-add-chooseAssignment-previous" type="button" class="btn btn-primary btn-sm pull-right"><span appp-label-key="fcf.assignment.Prev" >Previoussss</span></button>
+				</div>
+				<div class="col-md-2 column">
+				</div>
+			</div>
+			
+			<div class="modal fade" id="fcf-modal-new-Activity" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+							<h4 class="modal-title" id="myModalLabel">
+								<span appp-label-key="fcf.assignment.addAssignment.Title" >Add a New Activity</span>
+							</h4>
+						</div>
+						<div class="modal-body">
+							
+							<div role="form">
+								<input type="hidden" id="activity-team" name='team' />
+								<div>
+									<h4>
+										<span appp-label-key="fcf.assignment.Choose.ActivityName">Activity Name</span>
+									</h4>
+								</div>
+								<div class="form-group">
+									 <label for="activityName" appp-label-key="fcf.assignment.addAssignment.Choose.ActivityNameDesc" >Please use a name everyone associated with the activity will recognize.</label>
+									 <input type="text" class="form-control" placeholder="Activity Name" id="activityName" appp-label-key="fcf.assignment.Choose.ActivityName" name="name" required >
+								</div>
+							</div>
+							<div class="form-inline">
+								<div class="form-group">
+									 <label for="dateStart" appp-label-key="fcf.assignment.addAssignment.Choose.startDate">Start Date</label>
+									 <input type="date" class="form-control" id="dateStart" name="startDate" />
+								</div>
+								<div class="form-group">
+									 <label for="dateEnd" appp-label-key="fcf.assignment.addAssignment.Choose.endDate">End Date</label>
+									 <input type="date" class="form-control" id="dateEnd" name="endDate"/>
+								</div>
+							</div>
+							<div role="form" class="objectives-section">
+								<div>
+									<h4>
+										<span appp-label-key="fcf.assignment.Choose.TeamObjectives">Team Objectives</span>
+									</h4>
+									<span appp-label-key="fcf.assignment.Choose.TeamObjectivesDesc" > Every activity must meet at least one objective. Please choose all that apply:</span>
+								</div>
+								<div class="checkbox template-objectives">
+									 <label><input type="checkbox" value="[[= objective.id ]]" name="objective" /> [[= objective.description ]]</label>
+								</div> 
+								<div class="checkbox">
+									 <label><input type="checkbox" /> Objective 2 </label>
+								</div> 
+								<div class="checkbox">
+									 <label><input type="checkbox" /> Objective 3 </label>
+								</div> 
+							</div>
+							<div class="description-section">
+								<div>
+									<h4>
+										<span appp-label-key="fcf.assignment.Choose.Description">Description</span>
+									</h4>
+								</div>
+								<div class="form-group">
+									 <label for="activityName" appp-label-key="fcf.assignment.Choose.DescriptionDesc" >Please describe the activity using the team objectives as a guideline.</label>
+									 <textarea type="textarea" class="form-control" placeholder="Description" id="activityDescription" appp-label-key="fcf.assignment.Choose.Description" name="description">
+									 </textarea>
+								</div>
+							</div>
+
+
+						</div>
+						<div class="modal-footer">
+							 <button type="button" class="btn btn-default" data-dismiss="modal" ><span appp-label-key="fcf.assignment.Cancel">Cancel</span></button>
+							 <button id="add-assignment" type="button" class="btn btn-primary"><span appp-label-key="fcf.assignment.Add">Add</span></button>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<div id='fcf-activity-add-report' class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<span class="pull-right" appp-label-key="fcf.activity.add.report.step">Step 3 of 3</span>
+			<h3 class="text-left">
+				<span appp-label-key="fcf.activity.add.report.CurrentActivity" >Current Activity Report</span>
+			</h3>
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-4 column fcf-activity-report">
+			<h2>
+				<span appp-label-key="fcf.activity.report.AllActivities" >All Activities for </span><span class='fcf-activity-team-name'>[TEAM]</span>
+			</h2>
+			<div class="list-group fcf-activity-report-activities">
+
+				<a class="list-group-item fcf-activity-list-item  template"  activity-id="[[= activity.attr('id') ]]" >
+					<img alt="140x140" src="" class="img-rounded pull-left fcf-activity-list-image" />
+					<h4 class="list-group-item-heading">
+						[[= activity.attr("activity_name") ]]
+					</h4>
+					<p class="list-group-item-text fcf-activity-list-item-team">
+						Team Name
+					</p>
+					<p class="fcf-activity-list-item-people"> person 1, person 2, person 3 </p>
+				</a>
+				<a class="list-group-item fcf-activity-list-item">
+					<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-rounded pull-left fcf-activity-list-image" />
+					<h4 class="list-group-item-heading">
+						Activity Name
+					</h4>
+					<p class="list-group-item-text">
+						Team Name
+					</p>
+					<p> person 1, person 2, person 3 </p>
+				</a>
+				<a class="list-group-item fcf-activity-list-item">
+					<img alt="140x140" src="http://lorempixel.com/140/140/" class="img-rounded pull-left fcf-activity-list-image" />
+					<h4 class="list-group-item-heading">
+						Activity Name
+					</h4>
+					<p class="list-group-item-text">
+						Team Name
+					</p>
+					<p> person 1, person 2, person 3 </p>
+				</a>
+			
+			</div>
+		</div>
+		<div class="col-md-4 column">
+			<h2>
+				<span class='fcf-activity-activity-name'>[Activity Name]</span>
+			</h2>
+			<h4>
+				<span class='fcf-activity-activity-project-name'>[Project Name]</span>
+			</h4>
+			<h5>
+				<span class='fcf-activity-activity-team-name'>[Team Name]</span>
+			</h5>
+			<div class="list-group fcf-activity-report-activity-images">
+				<a class="list-group-item fcf-activity-image-list-item addImage"   >
+					<img alt="140x140" src="/data/fcf/images/activities/placeholder_activity.jpg" class="img-rounded pull-left fcf-activity-list-image" />
+					<h4 class="list-group-item-heading">
+						<span appp-label-key="fcf.activity.add.report.AddNewImage"> Add New Image </span>
+					</h4>
+				</a>
+				<a class="list-group-item fcf-activity-image-list-item  template"  image-id="[[= image.attr('id') ]]" >
+					<img alt="140x140" src="" class="img-rounded pull-left fcf-activity-list-image" />
+					<h5>
+						[[= image.attr('date').split('T')[0] ]]
+					</h5>
+					<h4 class="list-group-item-heading">
+						[[= image.attr("caption") ]]
+					</h4>
+					<p class="fcf-activity-list-item-people"> 
+					<!-- 
+console.log('image:', image);
+						var listPeopleIDs = image.attr('taggedPeople');
+console.log('listPeopleIDs:', listPeopleIDs);
+console.log('teammates:', teammates);
+
+						listPeopleIDs.forEach(function(personID){
+
+							var foundPerson = null;
+							teammates.each(function(mate){
+							
+								if (mate.IDPerson == personID) {
+									foundPerson = mate;
+								}
+							})
+
+							if (foundPerson) {   
+								
+console.log(foundPerson.display_name);
+								]]<a> [[= foundPerson.display_name ]] </a><!--
+
+							}
+	
+						})
+
+
+					--></p>
+				</a>
+			</div>
+		</div>
+
+
+		<div class="col-md-4 column  fcf-activity-image-form">
+
+
+				
+			<div id="fcf-activity-image-upload" class="dropzone dz-clickable" style="margin-bottom: 10px;" >
+				<div class="dz-message fcf-activity-icon-picture">
+					<span class="first" appp-label-key="fcf.activity.add.report.DragImageHere">Drag image here</span>
+					<span appp-label-key="fcf.activity.add.report.or">- or -</span>
+					<span class="opsportal-margin-top"><a class="btn opsportal-btn opsportal-btn-dk" title="Click to open the file browser" href="#" appp-label-key="fcf.activity.add.report.ClickToOpenFileBrowser">Click to open the file browser</a></span>
+				</div>
+				<div class="preview-template" style="display: none;"></div>
+				<img src="" id="fcf-activity-image-uploaded" />
+			</div>
+				
+			<form class="form-horizontal fcf-activity-image-form" role="form">
+				<input type="hidden" class="form-control" id="image-image" name="image" />
+				<input type="hidden" class="form-control" id="image-activity" name="activity" />
+				<div class="form-group">
+					<div class="col-sm-8">
+						<input type="text" class="form-control" id="image-caption"  placeholder='caption' name="caption" appp-label-key="fcf.activity.image.form.caption" />
+					</div>
+					<div class="col-sm-4">
+						<input type="date" class="form-control" id="image-date" name="date" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-12">
+						<div type="text" class="" id="image-tags" name="tags" placeholder='people in photo' appp-label-key="fcf.activity.image.form.tags"> </div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-12 panel panel-default">
+					
+						<div class="panel-body fcf-activitiy-people-objects">
+
+						  	<!-- people.each(function(person){   -->
+						    <div class="fcf-activity-people-objects" obj-embed="person"  data-person-id="[[= person.attr('IDPerson') ]]"><img src="[[= person.attr('avatar') ]]" class="img-rounded pull-left fcf-activity-list-image" style="width: 20%; height: 20%" />
+								<h4 class="list-group-item-heading">
+									[[= person.attr("display_name") ]]
+								</h4>
+							</div>
+							<!-- }) -->
+						    <div data-item-id="230" class="mockup fcf-activity-people-objects"><img alt="140x140" src="/images/activities_person_avatar.jpeg" class="img-rounded pull-left fcf-activity-list-image" style="width: 50%; height: 50%" />
+								<h4 class="list-group-item-heading">
+									[[= activity.attr("activity_name") ]]
+								</h4>
+							</div>
+							<div data-item-id="230" class="mockup fcf-activity-people-objects"><img alt="140x140" src="/images/activities_person_avatar.jpeg" class="img-rounded pull-left fcf-activity-list-image" style="width: 50%; height: 50%" />
+								<h4 class="list-group-item-heading">
+									[[= activity.attr("activity_name") ]]
+								</h4>
+							</div>
+							<div data-item-id="230" class="mockup fcf-activity-people-objects"><img alt="140x140" src="/images/activities_person_avatar.jpeg" class="img-rounded pull-left fcf-activity-list-image" style="width: 50%; height: 50%" />
+								<h4 class="list-group-item-heading">
+									[[= activity.attr("activity_name") ]]
+								</h4>
+							</div>
+
+						</div>
+
+					</div>
+				
+				</div>
+				<div class="row clearfix">
+					<div class="col-md-12">
+						<button id="fcf-activity-image-form-save" type="button" class="btn btn-primary btn-sm pull-right"><span appp-label-key="fcf.assignment.imageform.SaveImage" >Save Image</span></button>
+						<button id="fcf-activity-image-form-cancel" type="button" class="btn btn-default btn-sm pull-right"><span appp-label-key="fcf.assignment.imageform.Cancel" >Cancel</span></button>
+						<button id="fcf-activity-image-form-delete" type="button" class="btn btn-default btn-sm pull-right"><span appp-label-key="fcf.assignment.imageform.Delete" >Delete</span></button>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<button id="fcf-activity-add-report-confirm" type="button" class="btn btn-primary btn-sm pull-right"><span app-label-key="fcf.assignment.Next" >Next</span></button>
+			<button id="fcf-activity-add-report-previous" type="button" class="btn btn-default btn-sm pull-right"><span app-label-key="fcf.assignment.Previous" >Previous</span></button>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+</div>

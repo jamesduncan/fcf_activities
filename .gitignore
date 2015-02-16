@@ -31,15 +31,9 @@ node_modules
 .adn
 
 # Mockup Files:
-assets/js/bootstrap.min.js
-assets/js/jquery-1.11.1.min.js
-assets/js/jquery-ui.js
-assets/js/jquery.sidr.min.js
-assets/OpsPortal/opsportal.css
-assets/OpsPortal/portal-scratch.css
-assets/styles/bootstrap-theme.min.css
-assets/styles/bootsrap.min.css
-assets/styles/fontawesome.css
-assets/fonts/fontawesome-webfont.ttf
-assets/fonts/fontawesome-webfont.woff
+assets/mockups/*
+
+# Ignore any files in our /assets/data/fcf/images/activities/
+/assets/data/fcf/images/activities/*
+!/assets/data/fcf/images/activities/placeholder_activity.jpg
 
