@@ -11,7 +11,7 @@ module.exports={
         "dropzone.js"  : "dropzone/dropzone.min.js",
         "dropzone.css" : "dropzone/dropzone.css",
         "select3.js"   : "select3/select3-full.min.js",
-        "select3.css"  : "dselect3/select3.css"
+        "select3.css"  : "select3/select3.css"
     },
     shim : {
 
