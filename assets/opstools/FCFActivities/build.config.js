@@ -8,15 +8,15 @@ module.exports={
     paths: {
 
 
-        "dropzone.js"  : "dropzone/dropzone.min.js",
-        "dropzone.css" : "dropzone/dropzone.css",
+        // "dropzone.js"  : "dropzone/dropzone.min.js",
+        // "dropzone.css" : "dropzone/dropzone.css",
         "select3.js"   : "select3/select3-full.min.js",
         "select3.css"  : "select3/select3.css"
     },
     shim : {
 
-        'dropzone.js'  : { packaged:false },
-        'dropzone.css' : { packaged:false },
+        // 'dropzone.js'  : { packaged:false },
+        // 'dropzone.css' : { packaged:false },
 
         'select3.js'  : { packaged:false },
         'select3.css' : { packaged:false },
