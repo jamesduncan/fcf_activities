@@ -1,7 +1,6 @@
 steal(
         // List your Page's dependencies here:
-'can/control/route',
-		'styles/dropzone.css'
+'can/control/route'
 ).then(
         '//opstools/FCFActivities/controllers/FCFActivities.js',
         '//opstools/FCFActivities/FCFActivities.css',

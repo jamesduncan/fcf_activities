@@ -34,6 +34,6 @@ node_modules
 assets/mockups/*
 
 # Ignore any files in our /assets/data/fcf/images/activities/
-/assets/data/fcf/images/activities/*
-!/assets/data/fcf/images/activities/placeholder_activity.jpg
-
+assets/data/fcf/images/activities/*
+!assets/data/fcf/images/activities/placeholder_activity.jpg
+assets/data/fcf/images/temp/*

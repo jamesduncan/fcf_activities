@@ -3,7 +3,7 @@ steal(
         // List your Controller's dependencies here:
         'appdev',
         'opstools/FCFActivities/models/UserTeam.js',
-'opstools/FCFActivities/models/TeamActivity.js',
+        'opstools/FCFActivities/models/TeamActivity.js',
         'opstools/FCFActivities/controllers/FilteredElements.js',
 //        'opstools/FCFActivities/models/Projects.js',
 //        'appdev/widgets/ad_delete_ios/ad_delete_ios.js',

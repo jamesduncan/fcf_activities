@@ -6,8 +6,7 @@ steal(
         // 'opstools/FCFActivities/models/TeamObjective.js',
         'opstools/FCFActivities/controllers/FilteredElements.js',
         'opstools/FCFActivities/models/ActivityImage.js',
-        // 'dropzone/dropzone.min.js',
-        // 'dropzone/dropzone.min.css',
+
         'dropzone.js',
         'dropzone.css',
         'select3.js',
