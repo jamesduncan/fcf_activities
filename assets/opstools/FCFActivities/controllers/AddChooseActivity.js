@@ -4,7 +4,7 @@ steal(
         'appdev',
         'opstools/FCFActivities/models/TeamActivity.js',
         'opstools/FCFActivities/models/TeamObjective.js',
-        'opstools/FCFActivities/controllers/FilteredElements.js',
+        'opstools/FCFActivities/controllers/FilteredBootstrapTable.js',
 //        'opstools/FCFActivities/models/Projects.js',
 //        'appdev/widgets/ad_delete_ios/ad_delete_ios.js',
         // '//opstools/FCFActivities/views/AddChooseActivity/AddChooseActivity.ejs',
@@ -31,8 +31,9 @@ function(){
             this._super(element, options);
 
 
-            this.selectedTeam = null;   // which team are we displaying results for?
-
+            this.selectedTeam     = null; // which team are we displaying results for?
+            this.listActivities   = null; // track all the activities we've loaded.  
+            this.selectedActivity = null; // which activity was selected.
 
             this.element.hide();
 
@@ -79,48 +80,50 @@ function(){
             //// Create our table entry Template
             ////
 
-            // pull the row template from the current table
-            var rowTemplate = this.domToString( this.element.find('.template') ).replace("template", "");
+            // // pull the row template from the current table
+            // var rowTemplate = this.domToString( this.element.find('.template') ).replace("template", "");
 
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
+            // rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
+            // rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
 
-            // make sure the model instance gets returned for this <tr> element:
-            // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
-            rowTemplate = rowTemplate.replace('addata=""', '<%= (el) -> can.data(el, "activity", activity) %>  data-activity-id="<%= activity.attr(\'id\') %>"')
+            // // make sure the model instance gets returned for this <tr> element:
+            // // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
+            // rowTemplate = rowTemplate.replace('addata=""', '<%= (el) -> can.data(el, "activity", activity) %>  data-activity-id="<%= activity.attr(\'id\') %>"')
 
-            // remove the existing <tr> in the table
-            this.element.find('.fcf-activity-list tbody:last tr').remove();
+            // // remove the existing <tr> in the table
+            // this.element.find('.fcf-activity-list tbody:last tr').remove();
 
-            // now create the list template
-            var templateString = [
-                '<% activities.each(function(activity) { %>',
-                rowTemplate,
-                '<% }) %>'
-            ].join('\n');
+            // // now create the list template
+            // var templateString = [
+            //     '<% activities.each(function(activity) { %>',
+            //     rowTemplate,
+            //     '<% }) %>'
+            // ].join('\n');
 
-            // register template as :  'FCFActivities_AddChooseActivity'
-            //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
-            can.view.ejs('FCFActivities_AddChooseActivity', templateString);
+            // // register template as :  'FCFActivities_AddChooseActivity'
+            // //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
+            // can.view.ejs('FCFActivities_AddChooseActivity', templateString);
 
 
 
             ////
             //// Create our Objective entry Template
             ////
-            var objectiveRow = this.domToString(this.element.find('.template-objectives')).replace("template-objectives", "");
-            objectiveRow = AD.util.string.replaceAll(objectiveRow, '[[=', '<%= ');
-            objectiveRow = AD.util.string.replaceAll(objectiveRow, ']]', '%>');
+            // var objectiveRow = this.domToString(this.element.find('.template-objectives')).replace("template-objectives", "");
+            // objectiveRow = AD.util.string.replaceAll(objectiveRow, '[[=', '<%= ');
+            // objectiveRow = AD.util.string.replaceAll(objectiveRow, ']]', '%>');
 
-            // remove checkbox rows
-            this.element.find('#fcf-modal-new-Activity .checkbox').remove();
+            // // remove checkbox rows
+            // this.element.find('#fcf-modal-new-Activity .checkbox').remove();
 
-            var objectivesTemplate = [
-                '<% objectives.each(function(objective) { %>',
-                objectiveRow,
-                '<% }) %>'
-            ].join('\n');
+            // var objectivesTemplate = [
+            //     '<% objectives.each(function(objective) { %>',
+            //     objectiveRow,
+            //     '<% }) %>'
+            // ].join('\n');
 
+
+            var objectivesTemplate = this.domToTemplate(this.element.find('.objectives-section'));
             can.view.ejs('FCFActivities_AddObjectives', objectivesTemplate);
 
 
@@ -144,24 +147,47 @@ function(){
             this.buttons.next.addClass('disabled');
 
 
-            // attach the FilteredElements Controller
-            var Filter = AD.Control.get('opstools.FCFActivities.FilteredElements');
+            // attach the FilteredBootstrapTable Controller
+            var Filter = AD.Control.get('opstools.FCFActivities.FilteredBootstrapTable');
             this.Filter = new Filter(this.element, {
                 tagFilter: '.fcf-activity-filter',
-                tagEl: '.fcf-activity-list tbody:last tr',
-classSelected:'el-selected',
-                elSelected:function(el) {
-                    if (el) {
-                        self.selectRow(el);
+                tagBootstrapTable: '.fcf-activity-list',
+                scrollToSelect:true,
+
+                // filterTable:true,
+
+                rowClicked:function(data) {
+
+                    if (data) {
+                        self.selectedActivity = data;
+                        self.nextEnable();
+                    }
+
+                },
+                rowDblClicked: function(data) {
+                    // if they dbl-click a row,
+                    // just continue on as if they clicked [next]
+                    if (data) {
+                        self.selectedActivity = data;
+                        self.nextEnable();
                         self.buttons.next.click();
                     }
                 },
-                elToTerm: function(el) {  
-                    var activity = el.data('activity');
-                    if (activity) {
-                        return activity.activityName+', '+ activity.createdBy;
+                termSelected:function(data) {
+
+                    // if they select a term in the typeahead filter,
+                    // just continue on as if they clicked [next]
+                    if (data) {
+                        self.selectedActivity = data;
+                        self.nextEnable();
+                        self.buttons.next.click();
+                    }
+                },
+                dataToTerm: function(data) {  
+                    if (data) {
+                        return data.activityName+', '+ data.createdBy;
                     } else {
-                        console.error(' Ministry Activity Row not setup properly.');
+                        // console.error(' Ministry Team Row not setup properly.');
                         return '';
                     }
                 }
@@ -183,6 +209,20 @@ classSelected:'el-selected',
         },
 
 
+
+        /**
+         * @function formClear
+         * 
+         * clears the input fields on the Add Assigment Modal.
+         *
+         */
+        formClear:function() {
+            this.modalAdd.find(':input:not(:checkbox)').val('');
+            this.modalAdd.find(':checkbox').prop('checked', false);
+        },
+
+
+
         loadData:function( team ) {
             var self = this;
 
@@ -193,11 +233,6 @@ classSelected:'el-selected',
 
 
             var modelTeamActivity = AD.Model.get('opstools.FCFActivities.TeamActivity');
-
-            this.listActivities = null;
-            // this.searchTerms = [];  // 'searchable text'
-            // this.searchHash = {};   // term : $tr of matching row
-
             modelTeamActivity.findAll({team:team.getID()})
             .fail(function(err) {
                 console.log(err);
@@ -206,70 +241,81 @@ classSelected:'el-selected',
 
                 self.listActivities = list;
 
-                self.element.find('.fcf-activity-list > tbody:last tr').remove();
-
-                self.element.find('.fcf-activity-list > tbody:last').append(can.view('FCFActivities_AddChooseActivity', {activities:list}));
-
-                // tell our Filter to scan the DOM and initialize
-                self.Filter.refresh();
+                // tell our Filter to load these Activities
+                self.Filter.load(list);
 
             });
 
 
+            // update the objectives for this team:
             var modelTeamObjective = AD.Model.get('opstools.FCFActivities.TeamObjective');
             modelTeamObjective.findAll({team:team.getID()})
             .fail(function(err) { 
                 console.log(err);
             })
             .then(function(list){
-                self.modalAdd.find('.objectives-section .checkbox').remove();
 
-                self.modalAdd.find('.objectives-section').append(can.view('FCFActivities_AddObjectives', {objectives:list}));
+                // remove the current entries
+                self.modalAdd.find('ul.objectives-section li').remove();
+
+                // add the new ones
+                self.modalAdd.find('ul.objectives-section').append(can.view('FCFActivities_AddObjectives', {objectives:list}));
             })
 
 
         },
 
 
-        selectRow:function($row) {
+        nextDisable: function() {
+            
+            this.buttons.next.attr('disabled', 'disabled');
+            this.buttons.next.addClass('disabled');
 
-            this.tableTeamActivities.find('.selected').removeClass('selected');
-
-            if ($row) {
-                $row.addClass('selected');
-
-                // once a Row is selected, we can
-                // enable the [Next] button
-                this.buttons.next.removeAttr('disabled');
-                this.buttons.next.removeClass('disabled');
-            } else {
-
-                // if nothing is selected, then disable the next button
-                this.buttons.next.attr('disabled', 'disabled');
-                this.buttons.next.addClass('disabled');
-            }
         },
+
+
+        nextEnable: function() {
+            
+            this.buttons.next.removeAttr('disabled');
+            this.buttons.next.removeClass('disabled');
+
+        },
+
+
+        // selectRow:function($row) {
+
+        //     this.tableTeamActivities.find('.selected').removeClass('selected');
+
+        //     if ($row) {
+        //         $row.addClass('selected');
+
+        //         // once a Row is selected, we can
+        //         // enable the [Next] button
+        //         this.buttons.next.removeAttr('disabled');
+        //         this.buttons.next.removeClass('disabled');
+        //     } else {
+
+        //         // if nothing is selected, then disable the next button
+        //         this.buttons.next.attr('disabled', 'disabled');
+        //         this.buttons.next.addClass('disabled');
+        //     }
+        // },
 
 
         // return the value (IDMinistry) of the team selected by this page
         value: function() {
 
-            var selectedModel = this.tableTeamActivities.find('.selected').data('activity');
-            if (selectedModel) {
-                return selectedModel;
-            } else {
-                return null;
-            }
+            return this.selectedActivity;
         },
 
 
-        // when an entry is clicked on, mark it as selected.
-        '.fcf-activity-list tbody tr click': function($el, ev) {
+        // // when an entry is clicked on, mark it as selected.
+        // '.fcf-activity-list tbody tr click': function($el, ev) {
 
-            this.selectRow($el);
+        //     this.selectRow($el);
 
-            ev.preventDefault();
-        },
+        //     ev.preventDefault();
+        // },
 
 
         // when the [Next] button is clicked, then trigger our event:
@@ -362,11 +408,16 @@ classSelected:'el-selected',
                 var model = new Model(data);
 
                 self.listActivities.push(model);
-                self.modalAdd.find(':input:not(:checkbox)').val('');
-                self.modalAdd.find(':checkbox').prop('checked', false);
+                self.Filter.load(self.listActivities);
+                self.formClear();
                 self.modalAdd.modal('hide');
             })
 
+        },
+
+        '#cancel-add-assignment click': function($el, ev) {
+            this.formClear();
+            this.modalAdd.modal('hide');
         }
 
 

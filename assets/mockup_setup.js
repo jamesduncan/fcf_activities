@@ -49,28 +49,50 @@ $(function () {
 
 
 
-//  //Setup Typeahead Search Bars
-// $(document).ready(function () {
+ 
+/////
+///// Setup Typeahead Search Bars
+/////
+$(document).ready(function () {
     
-// 	$('.autocomplete-filter')
-// 	.typeahead({
-//         hint: true,
-//         highlight: true,
-//         minLength: 1
-//     },
-//     {
-//         name: 'filter',
-//         displayKey: 'value',
-//         source: function(q,cb) {
-//             cb([
-//             	{ value: 'example 1'},
-//             	{ value: 'examine'},
-//             	{ value: 'exajerate'}
-//             ]);
-//         }
-//     });
+    var inputs = [ '.fcf-team-filter', '.fcf-activity-filter'];
+    inputs.forEach(function(tag){
 
-// });
+		$(tag)
+		.typeahead({
+	        hint: true,
+	        highlight: true,
+	        minLength: 1
+	    },
+	    {
+	        name: 'filter',
+	        displayKey: 'value',
+	        source: function(q,cb) {
+	            cb([
+	            	{ value: 'example 1'},
+	            	{ value: 'examine'},
+	            	{ value: 'exajerate'}
+	            ]);
+	        }
+	    });
+
+	});
+
+});
+
+
+/////
+///// Setup bootstrap-table on these tables:
+/////
+$(document).ready(function () {
+
+	var tables = [ '.fcf-team-list', '.fcf-activity-list', ]
+    
+    tables.forEach(function(tag){
+    	$(tag).bootstrapTable({});
+    })
+
+});
 
 
 
@@ -78,7 +100,7 @@ $(function () {
  // copy the last row x20 
 $(document).ready(function () {
     
-    var allTables = $('table.table-hover');
+    var allTables = $('table');
     allTables.each(function(i, table){
     	var $table = $(table);
     	var lastRow = $table.find('tr:last');

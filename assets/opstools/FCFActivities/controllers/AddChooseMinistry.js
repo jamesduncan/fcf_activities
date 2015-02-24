@@ -4,7 +4,8 @@ steal(
         'appdev',
         'opstools/FCFActivities/models/UserTeam.js',
         'opstools/FCFActivities/models/TeamActivity.js',
-        'opstools/FCFActivities/controllers/FilteredElements.js',
+// 'opstools/FCFActivities/controllers/FilteredElements.js',
+        'opstools/FCFActivities/controllers/FilteredBootstrapTable.js',
 //        'opstools/FCFActivities/models/Projects.js',
 //        'appdev/widgets/ad_delete_ios/ad_delete_ios.js',
         // '//opstools/FCFActivities/views/AddChooseMinistry/AddChooseMinistry.ejs',
@@ -47,6 +48,9 @@ function(){
             this._super(element, options);
 
 
+            this.selectedMinistry = null;
+
+
             // this.dataSource = this.options.dataSource; // AD.models.Projects;
 
             this.element.hide();
@@ -69,30 +73,8 @@ function(){
             //// Create our table entry Template
             ////
 
-            // pull the row template from the current table
-            var rowTemplate = this.domToString( this.element.find('.template') ).replace("template", "");
-
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
-
-            // make sure the model instance gets Dreturned for this <tr> element:
-            // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
-            rowTemplate = rowTemplate.replace('addata=""', '<%= (el) -> can.data(el, "team", team) %>  data-team-id="<%= team.attr(\'IDMinistry\') %>"')
-
-            // remove the existing <tr> in the table
-            this.element.find('.fcf-team-list tbody:last tr').remove();
-
-            // now create the list template
-            var templateString = [
-                '<% teams.each(function(team) { %>',
-                rowTemplate,
-                '<% }) %>'
-            ].join('\n');
-
-            // register template as :  'FCFActivities_AddChosenMinistry'
-            //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
-            can.view.ejs('FCFActivities_AddChooseMinistry', templateString);
-
+            var template = this.domToTemplate(this.element.find('.fcf-team-list > tbody:last'));
+            can.view.ejs('FCFActivities_AddChooseMinistry', template);
 
 
             ////
@@ -102,6 +84,8 @@ function(){
 
             // attach to the <table>
             this.tableMinistryTeams = this.element.find('.fcf-team-list');
+            this.tableMinistryTeams.find('tbody:last').children().remove();
+
 
 
             // attach to the [Next] button && disable it
@@ -111,24 +95,47 @@ function(){
             this.buttons.next.addClass('disabled');
 
 
-            // attach the FilteredElements Controller
-            var Filter = AD.Control.get('opstools.FCFActivities.FilteredElements');
+            // attach the FilteredBootstrapTable Controller
+            var Filter = AD.Control.get('opstools.FCFActivities.FilteredBootstrapTable');
             this.Filter = new Filter(this.element, {
                 tagFilter: '.fcf-team-filter',
-                tagEl: '.fcf-team-list tr',
-classSelected:'el-selected',
-                elSelected:function(el) {
-                    if (el) {
-                        self.selectRow(el);
+                tagBootstrapTable: '.fcf-team-list',
+                scrollToSelect:true,
+
+                // filterTable:true,
+
+                rowClicked:function(data) {
+
+                    if (data) {
+                        self.selectedMinistry = data;
+                        self.nextEnable();
+                    }
+
+                },
+                rowDblClicked: function(data) {
+                    // if they dbl-click a row,
+                    // just continue on as if they clicked [next]
+                    if (data) {
+                        self.selectedMinistry = data;
+                        self.nextEnable();
                         self.buttons.next.click();
                     }
                 },
-                elToTerm: function(el) {  
-                    var team = el.data('team');
-                    if (team) {
-                        return team.MinistryDisplayName+', '+ team.ProjectOwner;
+                termSelected:function(data) {
+
+                    // if they select a term in the typeahead filter,
+                    // just continue on as if they clicked [next]
+                    if (data) {
+                        self.selectedMinistry = data;
+                        self.nextEnable();
+                        self.buttons.next.click();
+                    }
+                },
+                dataToTerm: function(data) {  
+                    if (data) {
+                        return data.MinistryDisplayName+', '+ data.ProjectOwner;
                     } else {
-                        console.error(' Ministry Team Row not setup properly.');
+                        // console.error(' Ministry Team Row not setup properly.');
                         return '';
                     }
                 }
@@ -141,6 +148,22 @@ classSelected:'el-selected',
         loadData:function() {
             var self = this;
 
+            AD.comm.service.get({ url:'/fcf_activities/userteam/find' })
+            .fail(function(err){
+                console.error('problem looking up user\'s team :');
+                console.error(err);
+            })
+            .then(function(res){
+
+                var list = res.data || res;
+                var data = new can.List(list);
+
+                self.Filter.load(data);
+
+            });
+
+
+/*
             var modelUserTeam = AD.Model.get('opstools.FCFActivities.UserTeam');
 
             this.listTeams = null;
@@ -179,49 +202,67 @@ classSelected:'el-selected',
 
 
             })
+*/
 
         },
 
 
-        selectRow:function($row) {
+        nextDisable: function() {
+            
+            this.buttons.next.attr('disabled', 'disabled');
+            this.buttons.next.addClass('disabled');
 
-            this.tableMinistryTeams.find('.selected').removeClass('selected');
-
-            if ($row) {
-                $row.addClass('selected');
-
-                // once a Row is selected, we can
-                // enable the [Next] button
-                this.buttons.next.removeAttr('disabled');
-                this.buttons.next.removeClass('disabled');
-            } else {
-
-                // if nothing is selected, then disable the next button
-                this.buttons.next.attr('disabled', 'disabled');
-                this.buttons.next.addClass('disabled');
-            }
         },
+
+
+        nextEnable: function() {
+            
+            this.buttons.next.removeAttr('disabled');
+            this.buttons.next.removeClass('disabled');
+
+        },
+
+
+        // selectRow:function($row) {
+
+        //     this.tableMinistryTeams.find('.selected').removeClass('selected');
+
+        //     if ($row) {
+        //         $row.addClass('selected');
+
+        //         // once a Row is selected, we can
+        //         // enable the [Next] button
+        //         this.buttons.next.removeAttr('disabled');
+        //         this.buttons.next.removeClass('disabled');
+        //     } else {
+
+        //         // if nothing is selected, then disable the next button
+        //         this.buttons.next.attr('disabled', 'disabled');
+        //         this.buttons.next.addClass('disabled');
+        //     }
+        // },
 
 
         // return the model instace of the UserTeam entry selected by this page
         value: function() {
 
-            var selectedModel = this.tableMinistryTeams.find('.selected').data('team');
-            if (selectedModel) {
-                return selectedModel;
-            } else {
-                return null;
+            // we were expecting a Model Obj so make this look like a model Obj:
+            this.selectedMinistry.getID = function() {
+                return this.IDMinistry;
             }
+
+            return this.selectedMinistry;
+
         },
 
 
-        // when an entry is clicked on, mark it as selected.
-        '.fcf-team-list tbody tr click': function($el, ev) {
+        // // when an entry is clicked on, mark it as selected.
+        // '.fcf-team-list tbody tr click': function($el, ev) {
 
-            this.selectRow($el);
+        //     this.selectRow($el);
 
-            ev.preventDefault();
-        },
+        //     ev.preventDefault();
+        // },
 
 
         // when the [Next] button is clicked, then trigger our event:

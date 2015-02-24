@@ -199,7 +199,8 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
             //  Announce this new Activity to any socket that had requested a list
             //  of activitiys for this same team
             function(next) {
-
+//// TODO: refactor the socket functionality using subscriptions to the model itself.
+/*
                 var currentSocketId = ADCore.socket.id(req);
 AD.log('currentSocketID:'+currentSocketId);
 
@@ -219,6 +220,7 @@ AD.log('hashTeamUpdates:',hashTeamUpdates);
                         }
                     })
                 }
+*/
                 next();
             }
 

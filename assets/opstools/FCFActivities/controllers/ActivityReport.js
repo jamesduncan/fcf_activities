@@ -48,7 +48,6 @@ function(){
             tags:{
                 '.fcf-activity-team-name':'title string',
                 '.fcf-activity-report-activities' : 'container for Activities',
-                '.fcf-activity-report-activities':'',
                 '.fcf-activity-activity-name': 'activity name container',
                 '.fcf-activity-activity-project-name': 'activity -> project name',
                 '.fcf-activity-activity-team-name': 'activity -> team name',
@@ -119,7 +118,7 @@ function(){
 
 
         clearImageList: function() {
-            this.element.find('.fcf-activity-report-activity-images a.list-group-item:not(.addImage)').remove();
+            this.element.find('.fcf-activity-report-activity-images').children().remove();
         },
 
 
@@ -236,32 +235,35 @@ console.log('... upload an image');
             //// Create our Activity List Template
             ////
 
-            // pull the row template from the current table
-            var rowTemplate = this.domToString( this.element.find('.fcf-activity-report-activities  .template') ).replace("template", "");
+//             // pull the row template from the current table
+//             var rowTemplate = this.domToString( this.element.find('.fcf-activity-report-activities  .template') ).replace("template", "");
 
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
+//             rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
+//             rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
 
-            // make sure the model instance gets returned for this <tr> element:
-            // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
-            rowTemplate = rowTemplate.replace('activity-id', '<%= (el) -> can.data(el, "activity", activity) %>  activity-id')
+//             // make sure the model instance gets returned for this <tr> element:
+//             // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
+//             rowTemplate = rowTemplate.replace('activity-id', '<%= (el) -> can.data(el, "activity", activity) %>  activity-id')
 
-            rowTemplate = rowTemplate.replace('src=""', 'src="<%= activity.attr(\'imageURL\') %>"');
+//             rowTemplate = rowTemplate.replace('src=""', 'src="<%= activity.attr(\'imageURL\') %>"');
 
-            // remove the existing <div> in the list
-            this.element.find('.fcf-activity-report-activities a.list-group-item').remove();
+//             // remove the existing <div> in the list
+//             this.element.find('.fcf-activity-report-activities a.list-group-item').remove();
 
-            // now create the list template
-            var templateString = [
-                '<% activities.each(function(activity) { %>',
-                rowTemplate,
-                '<% }) %>'
-            ].join('\n');
-console.warn(templateString);
+//             // now create the list template
+//             var templateString = [
+//                 '<% activities.each(function(activity) { %>',
+//                 rowTemplate,
+//                 '<% }) %>'
+//             ].join('\n');
+// console.warn(templateString);
 
             // register template as :  'FCFActivities_ActivityReport_ActivityList'
             //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
-            can.view.ejs('FCFActivities_ActivityReport_ActivityList', templateString);
+            var activityListTemplate =  this.domToTemplate(this.element.find('.fcf-activity-report-activities'));
+            activityListTemplate = AD.util.string.replaceAll(activityListTemplate, 'src="images/fcf_activities/img1.jpg"', 'src="<%= activity.attr("imageURL") %>"');
+            activityListTemplate = AD.util.string.replaceAll(activityListTemplate, 'images/fcf_activities/tag.jpg', '/images/fcf_activities/tag.jpg');
+            can.view.ejs('FCFActivities_ActivityReport_ActivityList', activityListTemplate);
 
 
 
@@ -271,34 +273,36 @@ console.warn(templateString);
             ////
 
             // pull the row template from the current table
-            rowTemplate = this.domToString( this.element.find('.fcf-activity-report-activity-images  .template') ).replace("template", "");
+//             rowTemplate = this.domToString( this.element.find('.fcf-activity-report-activity-images  .template') ).replace("template", "");
 
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, '<!--', '<%');
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, '-->', '%>');
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
-            rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
+//             rowTemplate = AD.util.string.replaceAll(rowTemplate, '<!--', '<%');
+//             rowTemplate = AD.util.string.replaceAll(rowTemplate, '-->', '%>');
+//             rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
+//             rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
 
-            // make sure the model instance gets returned for this <tr> element:
-            // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
-            rowTemplate = rowTemplate.replace('image-id', '<%= (el) -> can.data(el, "image", image) %>  image-id')
+//             // make sure the model instance gets returned for this <tr> element:
+//             // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
+//             rowTemplate = rowTemplate.replace('image-id', '<%= (el) -> can.data(el, "image", image) %>  image-id')
 
-            rowTemplate = rowTemplate.replace('src=""', 'src="<%= image.attr(\'image\') %>"');
+//             rowTemplate = rowTemplate.replace('src=""', 'src="<%= image.attr(\'image\') %>"');
 
-            // remove the existing <a> in the list (but NOT the addImage row)
-            this.clearImageList();
-            // this.element.find('.fcf-activity-report-activity-images a.list-group-item:not(.addImage)').remove();
+//             // remove the existing <a> in the list (but NOT the addImage row)
+//             this.clearImageList();
+//             // this.element.find('.fcf-activity-report-activity-images a.list-group-item:not(.addImage)').remove();
 
-            // now create the list template
-            var templateString = [
-                '<% images.each(function(image) { %>',
-                rowTemplate,
-                '<% }) %>'
-            ].join('\n');
-// console.warn(templateString);
+//             // now create the list template
+//             var templateString = [
+//                 '<% images.each(function(image) { %>',
+//                 rowTemplate,
+//                 '<% }) %>'
+//             ].join('\n');
+// // console.warn(templateString);
 
             // register template as :  'FCFActivities_ActivityReport_ImageList'
             //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
-            can.view.ejs('FCFActivities_ActivityReport_ImageList', templateString);
+            var imageListTemplate =  this.domToTemplate(this.element.find('.fcf-activity-report-activity-images'));
+            imageListTemplate = AD.util.string.replaceAll(imageListTemplate, 'src="images/fcf_activities/img2.jpg"', 'src="<%= image.attr(\'image\') %>"');
+            can.view.ejs('FCFActivities_ActivityReport_ImageList', imageListTemplate);
 
 //             ////
 //             //// Create our Objective entry Template
@@ -319,7 +323,9 @@ console.warn(templateString);
 //             can.view.ejs('FCFActivities_AddObjectives', objectivesTemplate);
 
 
-            var template = this.domToTemplate(this.element.find('.fcf-activitiy-people-objects'));
+            var template = this.domToTemplate(this.element.find('.fcf-activitiy-people-list'));
+            template = AD.util.string.replaceAll(template, 'src=""', 'src="<%= person.attr(\'avatar\') %>"');
+            template = AD.util.string.replaceAll(template, '[INSERT_TR]', ['%>', '</tr>', '<tr>', '<% \n' ].join('\n'))
             can.view.ejs('FCFActivities_ActivityReport_PersonList', template);
 
 
@@ -331,6 +337,7 @@ console.warn(templateString);
             // Activity List Column:
             this.dom.titleTeam = this.element.find('.fcf-activity-team-name');
             this.dom.listActivities = this.element.find('.fcf-activity-report-activities');
+            this.dom.listActivities.children().remove();
             this.dom.listActivities.css("height",  "600px");
 
 
@@ -339,6 +346,7 @@ console.warn(templateString);
             this.dom.titleActivityProject = this.element.find('.fcf-activity-activity-project-name');
             this.dom.titleActivityTeam    = this.element.find('.fcf-activity-activity-team-name');
             this.dom.listImages           = this.element.find('.fcf-activity-report-activity-images');
+            this.dom.listImages.children().remove();
             this.dom.listImages.css('height', "400px");
 
             // Image Form
@@ -491,6 +499,7 @@ console.warn(templateString);
                     placeholder: 'people in photo'
                 });
 
+                self.dom.peopleObjects.children().remove();
                 self.dom.peopleObjects.append( can.view('FCFActivities_ActivityReport_PersonList', { people:self.listTeammates } ));
             })
         },
@@ -579,7 +588,7 @@ console.warn(templateString);
                     self.dom.titleTeam.text(self.selectedTeam.attr('MinistryDisplayName'));
 
                     // remove existing activity <div>
-                    self.dom.listActivities.find('a.fcf-activity-list-item').remove();
+                    self.dom.listActivities.find('div.fcf-activity-list-item').remove();
                     self.dom.listActivities.append(can.view('FCFActivities_ActivityReport_ActivityList', {activities: self.listActivities }));
 
 
@@ -737,7 +746,7 @@ console.warn(templateString);
 
 
         // When a new activity is selected in the Activity List
-        '.fcf-activity-report-activities a  click': function($el, ev) {
+        'div.fcf-activity-list-item  click': function($el, ev) {
 
             this.selectActivityRow($el);
             this.selectedActivity = $el.data('activity');
@@ -749,7 +758,7 @@ console.warn(templateString);
 
 
         // when they click on the [Add New Image] entry:
-        'a.fcf-activity-image-list-item.addImage click' : function($el, ev) {
+        'div.fcf-activity-image-list-item.addImage click' : function($el, ev) {
 
             this.selectImageRow($el);
             this.clearForm();
@@ -758,7 +767,7 @@ console.warn(templateString);
 
 
         // when they click on any other Image in the list:
-        'a.fcf-activity-image-list-item:not(.addImage) click': function($el, ev) {
+        'div.fcf-activity-image-list-item:not(.addImage) click': function($el, ev) {
 
             this.selectImageRow($el);
             this.loadForm($el.data('image'));
