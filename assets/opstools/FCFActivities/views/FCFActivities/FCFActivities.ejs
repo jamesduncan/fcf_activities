@@ -189,7 +189,7 @@
                                   <table class="fcf-activity-list table"  data-cache="false" data-height="299">
                                     <thead>
                                       <tr>
-                                        <th data-field="activityName" appp-label-key="fcf.assignment.Activity" > Activity Name</th>
+                                        <th data-field="activity_name" appp-label-key="fcf.assignment.Activity" > Activity Name</th>
                                         <th data-field="createdBy" appp-label-key="fcf.assignment.SubmittedBy">Submitted by</th>
                                         <th data-field="approvedBy" appp-label-key="fcf.assignment.ApprovedBy">Approved by</th>
                                       </tr>
@@ -198,7 +198,7 @@
                                     	<!--  activities.forEach(function(activity){   -->
                                         <tr class="template"  addata="" >
 											<td>
-												[[= activity.attr("activityName")]]
+												[[= activity.attr("activity_name")]]
 											</td>
 											<td>
 												[[= activity.attr("createdBy")]]
@@ -439,7 +439,7 @@
                                         <div class="col-md-6">
                                           <div class="row marginbot15">
                                             <div class="col-md-12">
-                                              <label>Currently Activity Report</label>
+                                              <label>Current Activity Report</label>
                                               <p><span class="orange fcf-activity-activity-name">[Activity Name]</span>   <span class="blue">10/1/14 - Ongoing</span></p>
                                               <p class="blue">[Project Name]</br>[Team Name]</p>
                                             </div>
@@ -576,39 +576,73 @@ console.log(foundPerson.display_name);
                                           </div>
                                           <!--/END Big Image-->
                                           <!--Form-->
-                                          <div class="col-md-12 nopadding">
-                                          	<input type="hidden" class="form-control" id="image-image" name="image" />
-											<input type="hidden" class="form-control" id="image-activity" name="activity" />
-                                            <div id="dc" class="row">
-                                              <div class="form-group col-md-6 nopadding">
-                                                <input type="text" class="form-control" id="image-caption"  placeholder='caption' name="caption" appp-label-key="fcf.activity.image.form.caption" />
-                                              </div>
-                                              <div class="form-group col-md-6 nopadding">
-                                                <input type="date" class="form-control" id="image-date" name="date" />
-                                              </div>
-                                            </div>
+
+                                          <div class="col-md-12 nopadding ">
+                                          	<form class="fcf-activity-image-form">
+	                                          	<input type="hidden" class="form-control" id="image-image" name="image" />
+												<input type="hidden" class="form-control" id="image-activity" name="activity" />
+	                                            <div id="dc" class="row">
+	                                              <div class="form-group col-md-6 nopadding">
+	                                                <input type="text" class="form-control" id="image-caption"  placeholder='caption' name="caption" appp-label-key="fcf.activity.image.form.caption" />
+	                                              </div>
+	                                              <div class="form-group col-md-6 nopadding">
+	                                                <input type="date" class="form-control" id="image-date" name="date" />
+	                                              </div>
+	                                            </div>
+                                        	</form>
                                           </div>
                                           <div class="col-md-12 nopadding">
                                             <div class="form-group">
                                               <div type="text" class="" id="image-tags" name="tags" placeholder='people in photo' appp-label-key="fcf.activity.image.form.tags"> </div>
                                             </div>
                                           </div>
+<div id="actionsbtn" class="form-inline marginbot15">
+<div class="btnactions">
+  <button id="fcf-activity-image-form-delete" type="button" class="btn custombtn marginrght10"><span appp-label-key="fcf.assignment.imageform.Delete" >Delete</span></button>
+  <button id="fcf-activity-image-form-cancel" type="submit" class="btn custombtn marginrght10"><span appp-label-key="fcf.assignment.imageform.Cancel" >Cancel</span></button>
+  <button id="fcf-activity-image-form-save" type="submit" class="btn custombtn marginrght10" ><span appp-label-key="fcf.assignment.imageform.SaveImage" >Save Image</span></button>
+</div>
+</div>
                                           <!--Profile List-->
                                           <div id="profile-list" class="col-md-12 nopadding">
-                                              <div id="profilelist-scroll">
-                                                <table class="table" data-toggle="table" data-cache="false" data-height="299">
-                                                  <tbody class="fcf-activitiy-people-list">
+
+                                          	  <div class="profilelist-scroll fcf-activitiy-people-list">
+                          											  <!-- people.each(function(person){   -->
+                          											  <div class="fcf-activity-people-objects floatleft" obj-embed="person"  data-person-id="[[= person.attr('IDPerson') ]]"><img src="" class="floatleft" width="66" height=""><strong>[[= person.attr("display_name") ]]</strong><br>Project Director<br>Connie's Home
+                          												</div>
+                          												<!-- }) -->
+                          											    <div data-item-id="230" class="mockup fcf-activity-people-objects"><img alt="140x140" src="/images/activities_person_avatar.jpeg" class="img-rounded pull-left fcf-activity-list-image" style="width: 50%; height: 50%" />
+                          													<h4 class="list-group-item-heading">
+                          														[[= activity.attr("activity_name") ]]
+                          													</h4>
+                          												</div>
+                          												<div data-item-id="230" class="mockup fcf-activity-people-objects"><img alt="140x140" src="/images/activities_person_avatar.jpeg" class="img-rounded pull-left fcf-activity-list-image" style="width: 50%; height: 50%" />
+                          													<h4 class="list-group-item-heading">
+                          														[[= activity.attr("activity_name") ]]
+                          													</h4>
+                          												</div>
+                          												<div data-item-id="230" class="mockup fcf-activity-people-objects"><img alt="140x140" src="/images/activities_person_avatar.jpeg" class="img-rounded pull-left fcf-activity-list-image" style="width: 50%; height: 50%" />
+                          													<h4 class="list-group-item-heading">
+                          														[[= activity.attr("activity_name") ]]
+                          													</h4>
+                          												</div>
+
+                          											</div>
+                                              <div id="profilelist-scroll fcf-activitiy-people-objects" style="display:none;">
+                                                <table class="table fcf-activitiy-people-list" >
+                                                  <tbody class="">
                                                     <tr >
                                                     	<!-- 
 														var count = 0;
                                                     	people.each(function(person){ 
 															count++;
+console.log(count+':'+person.display_name);
                                                     	--> 
-                                                      	<td class="fcf-activity-people-objects" data-person-id="[[= person.attr('IDPerson') ]]"><img src="" class="floatleft" width="66" height="54"><strong>[[= person.attr("display_name") ]]</strong><br>Project Director<br>Connie's Home</td>
+                                                      	<td class="fcf-activity-people-objects" data-person-id="[[= person.attr('IDPerson') ]]" obj-embed="person" ><img src="" class="floatleft" width="66" height="54"><strong>[[= person.attr("display_name") ]]</strong><br>Project Director<br>Connie's Home</td>
                                                       	<!-- 
 															if (count == 2) {
 																count = 0;
-
+console.log(' - tr -');
 																[INSERT_TR]
 
 															}
@@ -636,8 +670,9 @@ console.log(foundPerson.display_name);
                                           <!--/Profile List-->
                                           <div id="actionsbtn" class="form-inline marginbot15">
                                             <div class="btnactions">
-                                              <button type="submit" class="btn custombtn marginrght10">Previous</button>
-                                              <button type="submit" class="btn custombtn marginrght10" data-toggle="modal" data-target="#confirmstep" >Next</button>
+                                              <button id="fcf-activity-image-form-delete" type="button" class="btn custombtn marginrght10"><span appp-label-key="fcf.assignment.imageform.Delete" >Delete</span></button>
+                                              <button id="fcf-activity-image-form-cancel" type="submit" class="btn custombtn marginrght10"><span appp-label-key="fcf.assignment.imageform.Cancel" >Cancel</span></button>
+                                              <button id="fcf-activity-image-form-save" type="submit" class="btn custombtn marginrght10" ><span appp-label-key="fcf.assignment.imageform.SaveImage" >Save Image</span></button>
                                             </div>
                                           </div>
                                           <!--/END Form-->         
@@ -652,7 +687,7 @@ console.log(foundPerson.display_name);
                             <!--/Content-->
                             <div id="actionsbtn" class="form-inline marginbot15">
 	                            <div class="btnactions">
-	                              <button type="submit" class="btn custombtn marginrght10">Previous</button>
+	                              <button id="fcf-activity-image-form-nav-previous" type="submit" class="btn custombtn marginrght10">Previous</button>
 	                              <button type="submit" class="btn custombtn marginrght10" data-toggle="modal" data-target="#confirmstep" >Next</button>
 	                            </div>
 	                        </div>           

@@ -25,12 +25,13 @@ module.exports = {
 
             // get the user's Person Entry
             function(next) {
-
+// AD.log('... personForSession()');
                 FCFCore.personForSession(req)
                 .fail(function(err){
                     next(err);
                 })
                 .then(function(data){
+// AD.log('    fcfPerson:', data);
                     fcfPerson = data;
                     next();
                 })
@@ -40,14 +41,25 @@ module.exports = {
             // Now get the list of Ministry Teams for this Person
             function(next) {
 // AD.log('... fcfPerson.ministryTeams()');
-                fcfPerson.ministryTeams()
-                .fail(function(err){
+                if (fcfPerson) {
+
+                    fcfPerson.ministryTeams()
+                    .fail(function(err){
+                        next(err);
+                    })
+                    .then(function(lTeams){
+                        listTeams = lTeams;
+                        next();
+                    })
+
+                } else {
+
+                    // apparently the current user isn't setup in our system
+                    // respond with an error:
+                    var err = new Error('Current user not in our system.');
                     next(err);
-                })
-                .then(function(lTeams){
-                    listTeams = lTeams;
-                    next();
-                })
+
+                }
 
             },
 
@@ -60,7 +72,6 @@ module.exports = {
                     next(err);
                 })
                 .then(function(){
-// AD.log('...... listTeams:', listTeams);
                     next();
                 })
 

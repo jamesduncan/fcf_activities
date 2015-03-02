@@ -86,7 +86,7 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
                     var obj = {};
                     obj.id = activity.id;
                     obj.team = activity.team;
-                    obj.activityName = activity.activity_name;
+                    obj.activity_name = activity.activity_name;
                     obj.createdBy = activity.createdBy ? activity.createdBy.displayName(langCode) : '';
                     obj.approvedBy = activity.approvedBy ? activity.approvedBy.displayName(langCode): '';
 
@@ -187,9 +187,10 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
 
                     // now create a new entry to return:
                     ReturnData.id = activity.id;
-                    ReturnData.activityName = activity.activity_name;
+                    ReturnData.activity_name = activity.activity_name;
                     ReturnData.createdBy = activity.createdBy ? activity.createdBy.displayName(langCode) : '';
                     ReturnData.approvedBy = activity.approvedBy ? activity.approvedBy.displayName(langCode): '';
+                    ReturnData.team  = activity.team;
                     next();
                 })
 

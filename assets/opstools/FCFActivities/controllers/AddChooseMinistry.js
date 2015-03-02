@@ -148,8 +148,12 @@ function(){
         loadData:function() {
             var self = this;
 
+            this.Filter.load([]);
+            this.Filter.busy();
+
             AD.comm.service.get({ url:'/fcf_activities/userteam/find' })
             .fail(function(err){
+                self.Filter.ready();
                 console.error('problem looking up user\'s team :');
                 console.error(err);
             })
@@ -159,6 +163,7 @@ function(){
                 var data = new can.List(list);
 
                 self.Filter.load(data);
+                self.Filter.ready();
 
             });
 

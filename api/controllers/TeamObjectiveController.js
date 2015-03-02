@@ -15,6 +15,7 @@ module.exports = {
     // Return the list of Activities for a given Ministry
     , find:function(req, res) {
 
+        AD.log('TeamObjectives.find():');
 
         var FinalData = [];
         var listObjectives = null;
@@ -42,15 +43,21 @@ module.exports = {
             // get the user's Person Entry
             function(next) {
 
+                AD.log('... finding Objectives where IDMinistry:'+minId);
                 FCFObjective.find({IDMinistry:minId})
                 .fail(function(err){
                     next(err);
                 })
                 .then(function(data){
 
+                    AD.log('... found:', data);
                     listObjectives = data;
                     next();
                 })
+                .catch(function(err) {
+                    AD.log.error('catch: error find(): ', err);
+                    next(err);
+                });
             },
 
 
@@ -65,6 +72,7 @@ module.exports = {
                     FinalData.push(obj);
                 })
 
+                AD.log('... flattened to: ', FinalData);
                 next();
 
             }
@@ -75,7 +83,7 @@ module.exports = {
 
                 ADCore.comm.error(res, err, 500);
             } else {
-
+                AD.log('... .success()');
                 ADCore.comm.success(res, FinalData);
             }
 

@@ -123,7 +123,7 @@ function(){
             })
 
 
-
+            //// Choose Activity Controller
             // The Choose Activity Controller will publish a NEXT
             // event when finished.
             this.portals.Add2.element.on(this.portals.Add2.CONST.NEXT, function() {
@@ -139,9 +139,12 @@ function(){
             })
 
 
-            // The Activity Report Controller
+            //// The Activity Report Controller
 
-
+            // if they press [Previous] then go back
+            this.portals.Report.element.on(this.portals.Report.CONST.PREV, function() {
+                self.showPortal('Add2');
+            })
 
 
         },

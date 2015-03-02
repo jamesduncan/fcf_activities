@@ -344,7 +344,9 @@ function(){
 
 
             // now figure out each of our hashes:
-            list.each(function(data, i){
+            var i = 0;
+            list.forEach(function(data) { 
+            // list.each(function(data, i){
 
                 // what is the search tearm for this data item?
                 var term = self.options.dataToTerm(data);
@@ -354,8 +356,20 @@ function(){
                 self.dataHash[term] = data;
                 self.posHash[term] = i;
 
+                i++;
+
             })
 
+        },
+
+
+
+        busy:function() {
+            this.table.bootstrapTable('showLoading');
+        },
+
+        ready:function() {
+            this.table.bootstrapTable('hideLoading');
         }
 
 

@@ -138,6 +138,7 @@ function(){
 
             // attach to the <table>
             this.tableTeamActivities = this.element.find('.fcf-activity-list');
+            this.tableTeamActivities.find('tbody > tr').remove();
 
 
             // attach to the [Next] button && disable it
@@ -185,7 +186,7 @@ function(){
                 },
                 dataToTerm: function(data) {  
                     if (data) {
-                        return data.activityName+', '+ data.createdBy;
+                        return data.activity_name+', '+ data.createdBy;
                     } else {
                         // console.error(' Ministry Team Row not setup properly.');
                         return '';
@@ -231,10 +232,12 @@ function(){
             // update our Team Title:
             this.titleMinistry.text(team.attr('MinistryDisplayName'));
 
+            this.Filter.busy();
 
             var modelTeamActivity = AD.Model.get('opstools.FCFActivities.TeamActivity');
             modelTeamActivity.findAll({team:team.getID()})
             .fail(function(err) {
+                self.Filter.ready();
                 console.log(err);
             })
             .then(function(list){
@@ -243,6 +246,7 @@ function(){
 
                 // tell our Filter to load these Activities
                 self.Filter.load(list);
+                self.Filter.ready();
 
             });
 

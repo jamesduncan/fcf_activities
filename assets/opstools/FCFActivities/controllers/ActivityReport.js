@@ -82,6 +82,8 @@ function(){
 
             this.listTeammates = [];
 
+            this.currentlyEditingImage = null; // the image model of the image we are currently editing.
+
             this.dom = {};                  // collects our references to the DOM objects
             this.obj = {};                  // collections of objects that are not DOM references (Dropzone)
 
@@ -125,6 +127,8 @@ function(){
 
         clearForm:function(){
 
+            this.currentlyEditingImage = null;
+
             this.dom.dropzone.find('.dz-message').show();
             this.dom.dropzone.find('img').prop('src', '').hide();
 
@@ -137,9 +141,13 @@ function(){
         },
 
 
+
         loadForm:function(image) {
             var self = this;
 console.log('... loading Form with image:',image.getID())
+
+            this.currentlyEditingImage = image;
+
             // this.clearForm();
 
             this.dom.dropzone.find('.dz-message').hide();
@@ -147,7 +155,8 @@ console.log('... loading Form with image:',image.getID())
 
             this.dom.inputImage.val(image.image);
             this.dom.inputCaption.val(image.caption);
-            this.dom.inputDate.val(image.date);
+            // this.dom.inputDate.val(image.date);
+            this.dom.inputDate.datepicker('update', new Date(image.date));
 
             this.dom.inputTags.select3('value', []);
             this.dom.peopleObjects.find('div.fcf-activity-people-objects').show();
@@ -157,51 +166,80 @@ console.log('... loading Form with image:',image.getID())
             });
 
 
-            this.dom.inputActivity.val( this.selectedActivity.getID() );
+            var id = this.selectedActivity.getID ? this.selectedActivity.getID() : this.selectedActivity.id;
+            this.dom.inputActivity.val( id );
 
         },
 
 
+
         formSubmit: function() {
+            var self = this;
 
             var values = this.dom.imageForm.serializeArray();
+console.log('... values:', values);
             var valuesObj = {};
             values.forEach(function(val){
                 valuesObj[val.name] = val.value;
             });
 
-            valuesObj.taggedPeople = [];
+            var taggedPeople = [];
             var listTags = this.dom.inputTags.select3('data');
 
 console.log('listTags:', listTags);
             listTags.forEach(function(tag) {
-                valuesObj.taggedPeople.push( tag.id );
+                taggedPeople.push( tag.id );
             })
 
             // if formValidate() is ok
             if (this.formValidate(valuesObj)) {
 
-                var ActivityImage = AD.Model.get('opstools.FCFActivities.ActivityImage');
 
-                ActivityImage.create(valuesObj)
-                .fail(function(err){
-                    console.error(err);
-                })
-                .then(function(obj){
+                // if we are not currently editing an image then CREATE one
+                if (!this.currentlyEditingImage) {
 
-                    self.clearForm();
+                    valuesObj.taggedPeople = taggedPeople;
 
-                })
-console.log('values:', valuesObj);
+                    var ActivityImage = AD.Model.get('opstools.FCFActivities.ActivityImage');
 
+                    ActivityImage.create(valuesObj)
+                    .fail(function(err){
+                        console.error(err);
+                    })
+                    .then(function(obj){
 
+                        obj = obj.data || obj;
 
+                        self.listImages.unshift(obj);
+                        self.clearForm();
 
+                    })
+
+                } else {
+
+                    // else UPDATE this one
+                    this.currentlyEditingImage.attr(valuesObj);
+                    this.currentlyEditingImage.attr('taggedPeople', taggedPeople); // update our taggedPeople array
+                    this.currentlyEditingImage.save()
+                    .fail(function(err){
+//// TODO: how do we handle Errors?
+
+console.error(err);
+                    })
+                    .then(function(data){
+
+console.log(' ... returnedData:', data);
+                        self.clearForm();                        
+                    })
+
+                }
 
             } else {
 console.log('... can\'t save the image yet.');
             }
         },
+
+
 
         formValidate: function( values ) {
 
@@ -325,9 +363,8 @@ console.log('... upload an image');
 
             var template = this.domToTemplate(this.element.find('.fcf-activitiy-people-list'));
             template = AD.util.string.replaceAll(template, 'src=""', 'src="<%= person.attr(\'avatar\') %>"');
-            template = AD.util.string.replaceAll(template, '[INSERT_TR]', ['%>', '</tr>', '<tr>', '<% \n' ].join('\n'))
+            // template = AD.util.string.replaceAll(template, '[INSERT_TR]', ['%> ', ' </tr>', ' <tr> ', '<% \n' ].join('\n'))
             can.view.ejs('FCFActivities_ActivityReport_PersonList', template);
-
 
 
             ////
@@ -363,8 +400,10 @@ console.log('... upload an image');
                 console.log('response:', response);
 
                 self.obj.dropzone.removeFile(file);
+                self.dom.dropzone.addClass('nopadding').css('padding-top', '0px').css('padding-bottom', '0px');
                 self.dom.dropzone.find('.dz-message').hide();
-                self.dom.dropzone.find('img').prop('src', response.data.path ).show();
+                var width = self.dom.dropzone.css('width');
+                self.dom.dropzone.find('img').css('width', width).prop('src', response.data.path ).show();
                 self.dom.inputImage.val(response.data.name);
 
             })
@@ -378,9 +417,9 @@ console.log('... upload an image');
             this.dom.inputActivity = this.dom.imageForm.find('#image-activity');
             this.dom.inputCaption = this.dom.imageForm.find('#image-caption');
             this.dom.inputDate  = this.dom.imageForm.find('#image-date');
-            this.dom.inputTags  = this.dom.imageForm.find('#image-tags');
-            this.dom.peopleObjects = this.dom.imageForm.find('.fcf-activitiy-people-objects');
-            this.dom.peopleObjects.css('height', '200px');
+            this.dom.inputTags  = this.element.find('#image-tags');
+            this.dom.peopleObjects = this.element.find('.fcf-activitiy-people-list');
+            // this.dom.peopleObjects.css('height', '200px');
 
             var calendarOptions = {
                 format: "mm/dd/yyyy",
@@ -648,22 +687,15 @@ console.log('... upload an image');
 
 
 
-
-
         selectActivity: function( activity) {
 
-            this.selectActivityRow(this.dom.listActivities.find('[activity-id="'+activity.getID()+'"]'));
-        },
-
-
-        selectActivityRow:function($row) {
+            var id = activity.getID ? activity.getID() : activity.id;
 
             this.dom.listActivities.find('.active').removeClass('active');
-
-            if ($row) {
-                $row.addClass('active');
-            } 
+            this.dom.listActivities.find('[activity-id="'+id+'"]').addClass('active');
+            this.dom.inputActivity.val( id );
         },
+
 
 
         selectImageRow: function($row) {
@@ -724,6 +756,7 @@ console.log('... upload an image');
 
 
                 self.clearImageList();
+                self.listImages = list;
                 self.dom.listImages.append( can.view('FCFActivities_ActivityReport_ImageList', {images:list, teammates:self.listTeammates}));
 
                 self.selectImageRow( self.dom.listImages.find('.addImage'));
@@ -748,8 +781,9 @@ console.log('... upload an image');
         // When a new activity is selected in the Activity List
         'div.fcf-activity-list-item  click': function($el, ev) {
 
-            this.selectActivityRow($el);
+            // this.selectActivityRow($el);
             this.selectedActivity = $el.data('activity');
+            this.selectActivity(this.selectedActivity);
             this.updateImageList();
             ev.preventDefault();
         },
@@ -779,17 +813,34 @@ console.log('... upload an image');
 
             $el.hide();
 
+            // create a new tag for this person
             var person = $el.data('person');
+            var personID= person.attr('IDPerson');
 
+
+            // if the current list of tags doesn't already have this tag 
+            // then add it.
             var currList = this.dom.inputTags.select3('data');
-            var currListHash = {};
-            currList.forEach(function(curr){
-                currListHash[curr.id] = curr.text;
+            var currListIDs = [];
+            currList.forEach(function(entry){
+                currListIDs.push(entry.id);
             })
-
-            if (!currListHash[person.attr('IDPerson')]) {
-                currList.push({id:person.attr('IDPerson'), text:person.attr('display_name')})
+            if (currListIDs.indexOf(personID) == -1) {
+                var personEntry = {id:person.attr('IDPerson'), text:person.attr('display_name')};
+                currList.push(personEntry);
             }
+
+
+
+            // var currList = this.dom.inputTags.select3('data');
+            // var currListHash = {};
+            // currList.forEach(function(curr){
+            //     currListHash[curr.id] = curr.text;
+            // })
+
+            // if (!currListHash[person.attr('IDPerson')]) {
+            //     currList.push({id:person.attr('IDPerson'), text:person.attr('display_name')})
+            // }
             
             this.dom.inputTags.select3('data', currList);
 
@@ -803,7 +854,32 @@ console.log('... upload an image');
             this.formSubmit();
 
             ev.preventDefault();
-        }
+        },
+
+
+        // when they click on the [cancel] button
+        '#fcf-activity-image-form-cancel click': function($el, ev) {
+
+//// TODO:  if there are pending changes, confirm cancel
+
+            this.clearForm();
+
+            ev.preventDefault();
+        },
+
+
+
+
+
+        //// Navigation Buttons
+
+        // when the [Previous] button is clicked, then trigger our event:
+        '#fcf-activity-image-form-nav-previous click': function($el, ev) {
+            this.element.trigger(this.CONST.PREV);
+        },
+
+
+
 
 
 
