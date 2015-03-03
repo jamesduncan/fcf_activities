@@ -7,6 +7,7 @@ steal(
         'opstools/FCFActivities/controllers/AddChooseMinistry.js',
         'opstools/FCFActivities/controllers/AddChooseActivity.js',
         'opstools/FCFActivities/controllers/ActivityReport.js',
+        'opstools/FCFActivities/controllers/ConfirmStep.js',
         '//opstools/FCFActivities/views/FCFActivities/FCFActivities.ejs',
 function(){
 
@@ -147,6 +148,12 @@ function(){
             })
 
 
+
+            //// The Confirm Step 
+            this.portals.Confirm.element.on('confirmed', function() {
+                self.showPortal('Portal');
+            })
+
         },
 
 
@@ -165,6 +172,7 @@ function(){
             var Add1 = AD.Control.get('opstools.FCFActivities.AddChooseMinistry');
             this.portals.Add1 = new Add1(this.element.find('#fcf-activity-add-chooseTeam'));
 
+
             // attach The Add Choose Activity Controller
             var Add2 = AD.Control.get('opstools.FCFActivities.AddChooseActivity');
             this.portals.Add2 = new Add2(this.element.find('#fcf-activity-add-chooseActivity'));
@@ -172,6 +180,10 @@ function(){
 
             var Report = AD.Control.get('opstools.FCFActivities.ActivityReport');
             this.portals.Report = new Report(this.element.find('#fcf-activity-add-report'));
+
+
+            var Confirm = AD.Control.get('opstools.FCFActivities.ConfirmStep');
+            this.portals.Confirm = new Confirm(this.element.find('#confirmstep'));
         },
 
 

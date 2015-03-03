@@ -137,7 +137,31 @@ function(){
             this.dom.inputCaption.val('');
             this.dom.inputDate.val('');
             this.dom.inputTags.select3('value', []);
-            this.dom.peopleObjects.find('div.fcf-activity-people-objects').show();
+            this.dom.peopleObjects.find('li.fcf-activity-people-objects').show();
+        },
+
+
+
+        formDelete:function() {
+            var self = this;
+
+            // else UPDATE this one
+            if (this.currentlyEditingImage) {
+
+            
+                this.currentlyEditingImage.destroy()
+                .fail(function(err){
+//// TODO: how do we handle Errors?
+
+                })
+                .then(function(data){
+
+                    self.clearForm();    
+console.log('... listImages:', self.listImages);                    
+                })
+            }
+
+
         },
 
 
@@ -159,7 +183,7 @@ console.log('... loading Form with image:',image.getID())
             this.dom.inputDate.datepicker('update', new Date(image.date));
 
             this.dom.inputTags.select3('value', []);
-            this.dom.peopleObjects.find('div.fcf-activity-people-objects').show();
+            this.dom.peopleObjects.find('li.fcf-activity-people-objects').show();
 
             image.taggedPeople.forEach(function(personID){
                 self.dom.peopleObjects.find('[data-person-id="'+personID+'"]').click();
@@ -863,6 +887,15 @@ console.log('... upload an image');
 //// TODO:  if there are pending changes, confirm cancel
 
             this.clearForm();
+
+            ev.preventDefault();
+        },
+
+
+        // when they click on the [delete] button
+        '#fcf-activity-image-form-delete click': function($el, ev) {
+
+            this.formDelete();
 
             ev.preventDefault();
         },

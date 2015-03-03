@@ -40,7 +40,7 @@ module.exports = {
 
             // Now get the list of Ministry Teams for this Person
             function(next) {
-// AD.log('... fcfPerson.ministryTeams()');
+AD.log('... fcfPerson.ministryTeams()');
                 if (fcfPerson) {
 
                     fcfPerson.ministryTeams()
@@ -66,7 +66,7 @@ module.exports = {
 
             // merge in the names of the People Responsible
             function(next){
-// AD.log('... Project.Populate():');
+AD.log('... Project.Populate():');
                 FCFProject.Populate(listTeams, 'ProjectOwner')
                 .fail(function(err){
                     next(err);
@@ -102,7 +102,7 @@ module.exports = {
         ], function(err, results) {
 
             if (err) {
-
+AD.log(err);
                 ADCore.comm.error(res, err, 500);
             } else {
 

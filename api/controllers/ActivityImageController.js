@@ -518,10 +518,128 @@ AD.log('... tags:', id);
 
 	},
 
+
+
 	destroy:function(req, res) {
 
-		ADCore.comm.success(res,{ status:'destroyed' });
+		var currImage = null;
+
+AD.log('<green>ActivityImageController.destroy()</green>');
+
+		var id = req.param('id');
+		if (!id) {
+
+			AD.comm.error(res, new Error('no id provided'));
+			return;
+		}
+
+		async.series([
+
+			// 1) get the current Image instance
+			function(next) {
+
+AD.log('... finding current Image by id['+id+']');
+				FCFActivityImages.findOne({ id:id })
+				.populate('taggedPeople')
+				.then(function( image ) {
+
+					currImage = image;
+					next();
+
+// currImage.translate(langCode)
+// .fail(function(err){
+// 	AD.log.error('... failed translating into lang['+langCode+']');
+// 	next(err);
+// })
+// .then(function(){
+// 	next();
+// })
+
+				})
+				.catch(function(err){
+					next(err);
+				})
+
+			},
+
+
+
+			// 2) remove current image
+			function(next) {
+
+
+AD.log('... removing ['+ FCFCore.paths.images.activities(currImage.image) + ']' );
+				fs.unlink(FCFCore.paths.images.activities(currImage.image), function(err){
+
+					// ok so what if there was an error?
+					next();
+				})
+
+			
+			},
+
+			
+
+			// // 4) remove any tags
+			// function(next) {
+
+			// 	// foreach tag in currImage that isn't in provide list -> remove
+			// 	currImage.taggedPeople.forEach(function(person){
+
+			// 		AD.log('... removing tag for person['+ person.IDPerson+']');
+			// 		currImage.taggedPeople.remove(person.IDPerson);
+			// 	});
+
+			// 	// ok, tags removed!
+			// 	next();
+			// },
+
+			// 3) now destroy the image translations
+			function(next) {
+
+AD.log('... removing image translations');
+
+				FCFActivityImagesTrans.destroy({ fcfactivityimages: currImage.id })
+				.then(function( trans ){
+
+AD.log('... removing the image entry');
+
+					// and now the actual image entry!
+					currImage.destroy()
+					.then(function(removedImg){
+
+						next();
+
+					})
+					.catch(function(err){
+						AD.log('   --- error attempting to destroy() Activity Image:', err);
+						next(err);
+					})
+	
+				})
+				.catch(function(err){
+					AD.log.error('   --- error removing image translations');
+					next(err);
+				})
+
+			}
+
+		], function(err, results){ 
+
+			if (err) {	
+				err._model = 'FCFActivityImages';
+				ADCore.comm.error(res, err);
+			} else {
+
+				ADCore.comm.success(res,{ status:'destroyed' });
+
+			}
+
+		})
 	},
+
+
+
 
 	upload:function(req, res) {
 

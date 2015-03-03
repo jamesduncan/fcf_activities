@@ -9,7 +9,7 @@ steal(
         findOne: 'GET /fcf_activities/activityimage/{id}',
         create:  'POST /fcf_activities/activityimage/create',
         update:  'PUT /fcf_activities/activityimage/update/{id}',
-        destroy: 'DELETE /fcf_activities/activityimage/destroy/{id}.json',
+        destroy: 'DELETE /fcf_activities/activityimage/destroy/{id}',
         describe: function() {
             return {
                       "image": "string",
