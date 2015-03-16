@@ -90,6 +90,10 @@ function(){
 
             this.currentlyEditingImage = null; // the image model of the image we are currently editing.
 
+            this.isFormLoaded = false;      // {bool} true if the image form has been loaded with a value
+            this.values = {};               // {obj} a hash of { field: values} representing the original values of 
+            this.values.taggedPeople = [];  // the image form.
+
             this.dom = {};                  // collects our references to the DOM objects
             this.obj = {};                  // collections of objects that are not DOM references (Dropzone)
 
@@ -123,6 +127,35 @@ function(){
 
         },
 
+        alertUnsavedChanges: function(opts) {
+
+            var title = opts.title || "Unsaved Changes";
+            var message = opts.message || "You have made changed that are not saved.  What should I do?";
+            var labelSecondary = opts.labelSecondary || "I don't need them";
+            var labelMain = opts.labelMain || "Keep editing";
+
+            var fnSecondary = opts.cbSecond || function() { };
+            var fnMain = opts.cbMain || function () {};
+
+
+            bootbox.dialog({
+                message: message,
+                title: title,
+                buttons: {
+                    secondary: {
+                        label: labelSecondary,
+                        className: "btn-success",
+                        callback: fnSecondary
+                    },
+                    main: {
+                        label: labelMain,
+                        className: "btn-primary",
+                        callback: fnMain
+                    }
+                }
+            });
+        },
+
 
 
         clearImageList: function() {
@@ -144,6 +177,14 @@ function(){
             this.dom.inputDate.val('');
             this.dom.inputTags.select3('value', []);
             this.dom.peopleObjects.find('li.fcf-activity-people-objects').show();
+
+
+            // refrence values are empty:
+            this.values.image = "";
+            this.values.caption = "";
+            this.values.date = "";
+            this.values.taggedPeople = [];
+
         },
 
 
@@ -182,11 +223,15 @@ console.log('... loading Form with image:',image.getID())
 
             this.dom.dropzone.find('.dz-message').hide();
             this.dom.dropzone.find('img').prop('src', image.image).show();
+            this.values.image = image.image;
 
             this.dom.inputImage.val(image.image);
             this.dom.inputCaption.val(image.caption);
+            this.values.caption = image.caption;
+
             // this.dom.inputDate.val(image.date);
             this.dom.inputDate.datepicker('update', new Date(image.date));
+            this.values.date = image.date;
 
             this.dom.inputTags.select3('value', []);
             this.dom.peopleObjects.find('li.fcf-activity-people-objects').show();
@@ -194,6 +239,7 @@ console.log('... loading Form with image:',image.getID())
             image.taggedPeople.forEach(function(personID){
                 self.dom.peopleObjects.find('[data-person-id="'+personID+'"]').click();
             });
+            this.values.taggedPeople = image.taggedPeople;
 
 
             var id = this.selectedActivity.getID ? this.selectedActivity.getID() : this.selectedActivity.id;
@@ -290,6 +336,79 @@ console.log('... upload an image');
 
 
 
+        /**
+         * formValues
+         *
+         * returns an object hash of the current form values:
+         */
+        formValues: function() {
+
+            var values = this.dom.imageForm.serializeArray();
+console.log('... values:', values);
+            var valuesObj = {};
+            values.forEach(function(val){
+                valuesObj[val.name] = val.value;
+            });
+
+
+            var taggedPeople = [];
+            var listTags = this.dom.inputTags.select3('data');
+
+// console.log('listTags:', listTags);
+            listTags.forEach(function(tag) {
+                taggedPeople.push( tag.id );
+            })
+
+            valuesObj.taggedPeople = taggedPeople;
+
+            return valuesObj;
+        },
+
+
+
+        hasUnsavedChanges : function() {
+            var self = this;
+
+            var isChanged = false;
+
+            var formVals = this.formValues();
+
+
+            // the date from the form is given as mm/dd/yyyy
+            // convert to yyyy-mm-dd:
+            var parts = formVals.date.split('/');
+            if (parts.length == 3) {
+                formVals.date = parts[2]+'-'+parts[0]+'-'+parts[1];
+            } else {
+                formVals.date = "";
+            }
+
+
+            isChanged = isChanged || (this.values.image != formVals.image);
+            isChanged = isChanged || (this.values.caption != formVals.caption);
+            isChanged = isChanged || (this.values.date != formVals.date);
+
+
+            // if one of our values.taggedPeople were removed:
+            this.values.taggedPeople.forEach(function(id){
+                if (formVals.taggedPeople.indexOf(id) == -1) {
+                    isChanged = true;
+                }
+            })
+
+            // if a taggedPerson was added:
+            formVals.taggedPeople.forEach(function(id){
+                if (self.values.taggedPeople.indexOf(id) == -1) {
+                    isChanged = true;
+                }
+            })
+
+
+            return isChanged;
+        },
+
+
+
 
         /**
          *  @function initDom
@@ -322,29 +441,6 @@ console.log('... upload an image');
             //// Create our Activity List Template
             ////
 
-//             // pull the row template from the current table
-//             var rowTemplate = this.domToString( this.element.find('.fcf-activity-report-activities  .template') ).replace("template", "");
-
-//             rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
-//             rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
-
-//             // make sure the model instance gets returned for this <tr> element:
-//             // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
-//             rowTemplate = rowTemplate.replace('activity-id', '<%= (el) -> can.data(el, "activity", activity) %>  activity-id')
-
-//             rowTemplate = rowTemplate.replace('src=""', 'src="<%= activity.attr(\'imageURL\') %>"');
-
-//             // remove the existing <div> in the list
-//             this.element.find('.fcf-activity-report-activities a.list-group-item').remove();
-
-//             // now create the list template
-//             var templateString = [
-//                 '<% activities.each(function(activity) { %>',
-//                 rowTemplate,
-//                 '<% }) %>'
-//             ].join('\n');
-// console.warn(templateString);
-
             // register template as :  'FCFActivities_ActivityReport_ActivityList'
             //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
             var activityListTemplate =  this.domToTemplate(this.element.find('.fcf-activity-report-activities'));
@@ -353,37 +449,9 @@ console.log('... upload an image');
             can.view.ejs('FCFActivities_ActivityReport_ActivityList', activityListTemplate);
 
 
-
-
             ////
             //// Create our Image List Template
             ////
-
-            // pull the row template from the current table
-//             rowTemplate = this.domToString( this.element.find('.fcf-activity-report-activity-images  .template') ).replace("template", "");
-
-//             rowTemplate = AD.util.string.replaceAll(rowTemplate, '<!--', '<%');
-//             rowTemplate = AD.util.string.replaceAll(rowTemplate, '-->', '%>');
-//             rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
-//             rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
-
-//             // make sure the model instance gets returned for this <tr> element:
-//             // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
-//             rowTemplate = rowTemplate.replace('image-id', '<%= (el) -> can.data(el, "image", image) %>  image-id')
-
-//             rowTemplate = rowTemplate.replace('src=""', 'src="<%= image.attr(\'image\') %>"');
-
-//             // remove the existing <a> in the list (but NOT the addImage row)
-//             this.clearImageList();
-//             // this.element.find('.fcf-activity-report-activity-images a.list-group-item:not(.addImage)').remove();
-
-//             // now create the list template
-//             var templateString = [
-//                 '<% images.each(function(image) { %>',
-//                 rowTemplate,
-//                 '<% }) %>'
-//             ].join('\n');
-// // console.warn(templateString);
 
             // register template as :  'FCFActivities_ActivityReport_ImageList'
             //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
@@ -393,25 +461,10 @@ console.log('... upload an image');
 console.warn('***** imageListTemplate:', imageListTemplate);
             can.view.ejs('FCFActivities_ActivityReport_ImageList', imageListTemplate);
 
-//             ////
-//             //// Create our Objective entry Template
-//             ////
-//             var objectiveRow = this.domToString(this.element.find('.template-objectives')).replace("template-objectives", "");
-//             objectiveRow = AD.util.string.replaceAll(objectiveRow, '[[=', '<%= ');
-//             objectiveRow = AD.util.string.replaceAll(objectiveRow, ']]', '%>');
 
-//             // remove checkbox rows
-//             this.element.find('#fcf-modal-new-Activity .checkbox').remove();
-
-//             var objectivesTemplate = [
-//                 '<% objectives.each(function(objective) { %>',
-//                 objectiveRow,
-//                 '<% }) %>'
-//             ].join('\n');
-
-//             can.view.ejs('FCFActivities_AddObjectives', objectivesTemplate);
-
-
+            ////
+            //// Create our Objective entry Template
+            ////
             var template = this.domToTemplate(this.element.find('.fcf-activitiy-people-list'));
             template = AD.util.string.replaceAll(template, 'src=""', 'src="<%= person.attr(\'avatar\') %>"');
             // template = AD.util.string.replaceAll(template, '[INSERT_TR]', ['%> ', ' </tr>', ' <tr> ', '<% \n' ].join('\n'))
@@ -460,8 +513,6 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             })
             this.dom.dropzone.find('img').prop('src', '' ).hide();
 
-
-            
             this.dom.imageForm = this.element.find('.fcf-activity-image-form');
 
             this.dom.inputImage = this.dom.imageForm.find('#image-image');
@@ -500,60 +551,18 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             this.dom.peopleObjects.children().remove();
 
 
-            // this.obj.dropzone.on("complete", function(file) {
-            //     console.log(file);
-                
-            // });
-
-//             // attach to the <table>
-//             this.tableTeamActivities = this.element.find('.fcf-activity-list');
-
-
-//             // attach to the [Next] button && disable it
-//             this.buttons = {};
-//             this.buttons.next = this.element.find('#fcf-activity-add-chooseAssignment-next');
-//             this.buttons.next.attr('disabled', 'disabled');
-//             this.buttons.next.addClass('disabled');
-
-
-//             // attach the FilteredElements Controller
-//             var Filter = AD.Control.get('opstools.FCFActivities.FilteredElements');
-//             this.Filter = new Filter(this.element, {
-//                 tagFilter: '.fcf-activity-filter',
-//                 tagEl: '.fcf-activity-list tbody:last tr',
-// classSelected:'el-selected',
-//                 elSelected:function(el) {
-//                     if (el) {
-//                         self.selectRow(el);
-//                         self.buttons.next.click();
-//                     }
-//                 },
-//                 elToTerm: function(el) {  
-//                     var activity = el.data('activity');
-//                     if (activity) {
-//                         return activity.activityName+', '+ activity.createdBy;
-//                     } else {
-//                         console.error(' Ministry Activity Row not setup properly.');
-//                         return '';
-//                     }
-//                 }
-//             });
-
-
-
-//             //// Add Activity Modal:
-//             this.modalAdd = this.element.find("#fcf-modal-new-Activity");
-
-//             var calendarOptions = {
-//                 format: "mm/dd/yyyy",
-//                 startDate: "01/01/1970"
-//             };
-//             this.modalAdd.find('#dateStart').datepicker(calendarOptions);
-//             this.modalAdd.find('#dateEnd').datepicker(calendarOptions);
-
-
         },
 
+
+        /**
+         * setTeam()
+         *
+         * called by the main controller when a team was selected (step 1 in our process)
+         *
+         * This routine gathers all the team members for the selected team
+         *
+         * @param {Team} a model object representing the selected Team
+         */
         setTeam: function(team) {
             var self = this;
 
@@ -567,6 +576,10 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             .then(function(res){
                 var data = [];
                 var list = res.data || res;
+
+                //// Update the Tag Selector
+
+                // convert returned list into [ {id:IDPerson, text:'PersonName'}]
                 list.forEach(function(person){
 
                     data.push({ 
@@ -575,24 +588,23 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                     });
                 })
 
-                // // remove the previous entries
-                // self.listTeammates.forEach(function(entry){
-                //     self.dom.inputTags.select3('remove', entry);
-                // })
-
-                // update our list of teammates to this set
-                self.listTeammates = new can.List(list);
-
+                // initialize the select3 tag selector with converted list
                 self.dom.inputTags.select3({
                     items: data,
                     multiple: true,
                     placeholder: 'people in photo'
                 });
 
+
+
+                // update our list of teammates to this set of people
+                self.listTeammates = new can.List(list);
+
                 self.dom.peopleObjects.children().remove();
                 self.dom.peopleObjects.append( can.view('FCFActivities_ActivityReport_PersonList', { people:self.listTeammates } ));
             })
         },
+
 
 
         loadData:function( activity ) {
@@ -683,7 +695,7 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                     self.dom.listActivities.append(can.view('FCFActivities_ActivityReport_ActivityList', {activities: self.listActivities, whoami:self.whoami }));
 
 
-                    // refresh all the activities tagged people
+                    // refresh all the activities' tagged people
                     self.refreshPeopleTaggedInActivities()
 
                     // find the current Activity in the List and mark it selected:
@@ -919,11 +931,25 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
         // When a new activity is selected in the Activity List
         'div.fcf-activity-list-item  click': function($el, ev) {
+            var self = this;
 
-            // this.selectActivityRow($el);
-            this.selectedActivity = $el.data('activity');
-            this.selectActivity(this.selectedActivity);
-            this.updateImageList();
+            if (this.hasUnsavedChanges()) {
+
+                this.alertUnsavedChanges({
+                    cbSecond:function() {
+                        self.selectedActivity = $el.data('activity');
+                        self.selectActivity(self.selectedActivity);
+                        self.updateImageList();
+                    }
+                })
+
+            } else {
+
+                this.selectedActivity = $el.data('activity');
+                this.selectActivity(this.selectedActivity);
+                this.updateImageList();
+            }
+            
             ev.preventDefault();
         },
 
@@ -932,18 +958,46 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
         // when they click on the [Add New Image] entry:
         'div.fcf-activity-image-list-item.addImage click' : function($el, ev) {
+            var self = this;
 
-            this.selectImageRow($el);
-            this.clearForm();
+            if (this.hasUnsavedChanges()) {
+
+                this.alertUnsavedChanges({
+                    cbSecond:function() {
+                        self.selectImageRow($el);
+                        self.clearForm();
+                    }
+                })
+
+
+            } else {
+                this.selectImageRow($el);
+                this.clearForm();
+            }
+            
 
         },
 
 
         // when they click on any other Image in the list:
         'div.fcf-activity-image-list-item:not(.addImage) click': function($el, ev) {
+            var self = this;
 
-            this.selectImageRow($el);
-            this.loadForm($el.data('image'));
+            if (this.hasUnsavedChanges()) {
+
+                this.alertUnsavedChanges({
+                    cbSecond:function() {
+                        self.selectImageRow($el);
+                        self.loadForm($el.data('image'));
+                    }
+                })
+
+
+            } else {
+                this.selectImageRow($el);
+                this.loadForm($el.data('image'));
+            }
+            
         },
 
 
@@ -998,10 +1052,21 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
         // when they click on the [cancel] button
         '#fcf-activity-image-form-cancel click': function($el, ev) {
+            var self = this;
 
-//// TODO:  if there are pending changes, confirm cancel
+            
+            if (this.hasUnsavedChanges()) {
 
-            this.clearForm();
+                this.alertUnsavedChanges({
+                    cbSecond:function() {
+                        self.clearForm()
+                    }
+                })
+
+
+            } else {
+                this.clearForm();
+            }
 
             ev.preventDefault();
         },
@@ -1023,12 +1088,40 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
         // when the [Finish] button is clicked, then trigger our event:
         '#fcf-activity-image-form-nav-finish click': function($el, ev) {
-            this.element.trigger(this.CONST.FINISH);
+            var self = this;
+
+            if (this.hasUnsavedChanges()) {
+
+                this.alertUnsavedChanges({
+                    cbSecond:function() {
+                        self.element.trigger(self.CONST.FINISH);
+                    }
+                })
+
+
+            } else {
+                this.element.trigger(this.CONST.FINISH);
+            }
+
+            
         },
 
         // when the [Previous] button is clicked, then trigger our event:
         '#fcf-activity-image-form-nav-previous click': function($el, ev) {
-            this.element.trigger(this.CONST.PREV);
+            var self = this;
+
+            if (this.hasUnsavedChanges()) {
+
+                this.alertUnsavedChanges({
+                    cbSecond:function() {
+                        self.element.trigger(self.CONST.PREV);
+                    }
+                })
+
+
+            } else {
+                this.element.trigger(this.CONST.PREV);
+            }
         },
 
 
