@@ -359,7 +359,7 @@ function(){
 
 
 
-        // when the [Add Assignment] button is clicked, then trigger our event:
+        // when the [Add Assignment] button is clicked, 
         '#add-assignment click': function($el, ev) {
             var self = this;
             var values = this.modalAdd.find(':input').serializeArray();

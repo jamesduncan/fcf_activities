@@ -41,10 +41,15 @@ module.exports = {
 
         async.series([
 
-            // get the user's Person Entry
+            // Find all the activities for the given Team
+            // -- only ongoing activities  (date_end == null)
+            // -- or have ended no more than 120 days ago
             function(next) {
 
-                FCFActivity.find({team:minId})
+                var fourMonthsAgo = new Date();
+                fourMonthsAgo.setDate(fourMonthsAgo.getDate() - 120 )
+
+                FCFActivity.find({team:minId,  'or': [ { date_end: { '>=': fourMonthsAgo }}, { date_end:null}]})
                 .populate('translations')
                 .populate('team')
                 .fail(function(err){
@@ -59,16 +64,6 @@ module.exports = {
                     listActivities = data;
                     next();
                 })
-            },
-
-
-            // Now get the list of people tagged in photos
-            // for this activity:
-            //   - in past 90 days
-            function(next) {
-//// TODO: when we have activity images and people tags...
-next();
-
             },
 
 
@@ -236,6 +231,279 @@ next();
 
             
         }
+    },
+
+
+
+    whoami:function(req, res) {
+
+        AD.log('<green>whoami:</green>');
+
+        FCFCore.personForSession(req)
+        .fail(function(err){
+            AD.log.error('... error finding personForSession():', err);
+            ADCore.comm.error(res, err);
+        })
+        .then(function(data){
+
+            if (!data) {
+                AD.log.error('... did not match a person');
+            } else {
+                AD.log('... found');
+            }
+
+            var simplePerson = {
+                IDPerson:data.IDPerson,
+                display_name: data.displayName()
+            }
+
+            ADCore.comm.success(res, simplePerson );
+        })
+
+    },
+
+
+
+    // http://localhost:1337/fcf_activities/activityreport/relevantTags?activities=24&activities=25&activities=26&activities=27&activities=28&activities=29
+    relevantTags: function(req, res) {
+
+        AD.log('<green>relevantTags():</green>');
+
+        var activities = req.param('activities');
+        AD.log('... activities:'+activities);
+        if (!activities) {
+            var err = new Error('param[activities] required');
+            AD.log.error('... no activity ids provided!');
+            ADCore.comm.error(res,err);
+            return;
+        } 
+
+
+        // FinalData is a hash of activity_id : [ peopleID, peopleID...]
+        var finalData = {};
+
+        // listOldActivities: [] of activity.id for past activities
+        var listOldActivities = [];
+
+        // listCurrentActivities: [] of activitiy.id
+        var listCurrentActivities = [];
+
+
+        var dateToday = new Date();
+        AD.log('... today\'s date:', dateToday)
+
+
+        async.series([
+
+            // Step 1) get all activities with end date in the past
+            function(next) {
+                
+                FCFActivity.find({ id:activities, date_end: { '<=': dateToday }})
+                .then(function(activities){
+                    AD.log('... activities in the past:');
+                    activities.forEach(function(a){
+                        AD.log('    id:'+a.id+' date_end:'+ a.date_end);
+                        listOldActivities.push(a.id)
+                    })                   
+                    next();
+                })
+            },
+
+
+            // step 2) get all activities with end date in future (or null)
+            function(next) {
+                FCFActivity.find({ id:activities,  'or': [ { date_end: { '>': dateToday }}, { date_end:null}] })
+                .then(function(activities){
+                    AD.log('... activities current:');
+                    activities.forEach(function(a){
+                        AD.log('    id:'+a.id+' date_end:'+ a.date_end);
+                        listCurrentActivities.push(a.id)
+                    })                   
+                    next();
+                })
+            },
+
+            // step 3) now gather all the people in parallel
+            function(next) {
+
+
+                var activityHash = {};  // this is our final Hash of { activityID : [IDPerson,...]}
+                var currDate =  new Date(); // today:
+
+                async.parallel([
+
+                    // task 1: handle the old activities
+                    function(done) {
+
+                        // if there are none to lookup, then skip
+                        if (listOldActivities.length == 0) {
+
+                            done();
+
+                        } else {
+
+                            var fourMonthsAgo = new Date();
+                            fourMonthsAgo.setDate(fourMonthsAgo.getDate() - 120 )
+                            AD.log('... fourMonthsAgo:', fourMonthsAgo);
+
+                            peopleTaggedInPhotos(activityHash, listOldActivities, fourMonthsAgo)
+                            .fail(function(err){
+                                AD.log.error('error finding peopleTaggedInPhotos fourMonthsAgo');
+                                done(err);
+                            })
+                            .then(function( hash ) {
+
+                                // convert the peopleID hash to an array of ids
+                                for (var id in hash) {
+                                    var personHash = hash[id];
+                                    var personArry = _.keys(personHash);
+
+                                    finalData[id] = personArry;
+
+                                }
+
+                                done();
+                            })
+                        }
+
+                    },
+
+                    // task 2: handle the current activities
+
+                    function(done) {
+
+                        // if there are none to lookup, then skip
+                        if (listCurrentActivities.length == 0) {
+
+                            done();
+
+                        } else {
+                            var twoMonthsAgo = new Date();
+                            twoMonthsAgo.setDate(twoMonthsAgo.getDate() - 60 )
+                            AD.log('... twoMonthsAgo:', twoMonthsAgo);
+
+                            peopleTaggedInPhotos(activityHash, listCurrentActivities, twoMonthsAgo)
+                            .fail(function(err){
+                                AD.log.error('error finding peopleTaggedInPhotos twoMonthsAgo');
+                                done(err);
+                            })
+                            .then(function( hash ) {
+
+                                // convert the peopleID hash to an array of ids
+                                for (var id in hash) {
+                                    var personHash = hash[id];
+                                    var personArry = _.keys(personHash);
+
+                                    finalData[id] = personArry;
+                                }
+
+                                done();
+                            })
+                        }
+
+
+                    },
+
+                ], function(error, results) {
+
+                    next();
+
+                })
+
+            }
+
+
+        ], function(err, results) {
+
+            if (err) {
+                AD.log.error(err)
+                ADCore.comm.error(res,err);
+            } else {
+                AD.log('<green>relevantTags done:</green> finalData:', finalData);
+                ADCore.comm.success(res, finalData);
+            }
+
+        })
+        // get activities with end date past
+            // get images from 120 days  ago
+            // compile all people taged with these images
+
+        // get activities with no end date
+            // get images from 60 days ago
+            // compile all people tagged with these images
+
+        // for
+
+
+        var peopleTaggedInPhotos = function( activityHash, activityIDs, afterDate ) {
+            var dfd = AD.sal.Deferred();
+
+            // a recursive fn to process a single activityID
+            var processCurrent = function(cb) {
+
+                // if there are no more items in our array
+                if (activityIDs.length < 1) {
+                    // we'er done
+                    if (cb) cb();
+                } else {
+
+                    // shift off the next activity id
+                    var actID = activityIDs.shift();
+
+                    // create a hash to hold all the people ids
+                    activityHash[actID] = {};
+
+                    // find all images related to this activity after our date
+                    FCFActivityImages.find({ activity:actID, date: {'>=': afterDate }})
+                    .populate('taggedPeople')
+                    .then(function(images){
+
+                        // for each image returned
+                        images.forEach(function(image){
+
+                            // for each person in the image
+                            image.taggedPeople.forEach(function(person){
+
+                                // mark that person as tagged
+                                activityHash[actID][person.IDPerson] = true;
+                            })
+
+                        })
+
+                        // now recurse through this fn() again
+                        processCurrent(cb);
+
+                    })
+
+                }
+            }
+
+
+            
+            var numDone = 0;
+
+            // start no more than 5 of these in parallel
+            // if there are < 5 activityIDs, then only do that many
+            var numStarted = 5;
+            if (numStarted > activityIDs.length) numStarted = activityIDs.length;
+
+            for(var i=0; i< numStarted; i++) {
+                processCurrent(function(){
+
+                    numDone++;
+                    // if all of our parallel processes have finished:
+                    if (numDone >= numStarted) {
+
+                        // resolve() our data
+                        dfd.resolve(activityHash);
+                    }
+                })
+            }
+
+
+            return dfd
+        }
+
     }
 
     // , create:function(req, res) {

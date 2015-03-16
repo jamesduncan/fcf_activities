@@ -355,7 +355,30 @@
                                                   <div class="col-md-5 col-sm-3 col-xs-4 nopadding"><img src="images/fcf_activities/img1.jpg"></div>
                                                   <div class="col-md-6 col-sm-8 col-xs-7">
                                                     <p><span class="orange">[[= activity.attr("activity_name") ]]</span><br/><span class="blue">Family Connection(team)</span></p>
-                                                    <p><span class="orange">Tum</span>, Nate, Mike, Imran, Boom, Jume</p>
+                                                    <p class="fcf-activity-tag-list" activityID="[[= activity.attr('id') ]]">
+
+<!-- 
+taggedPeople.forEach(function(personID){
+
+    var foundPerson = null;
+    teammates.each(function(mate){
+    
+      if (mate.IDPerson == personID) {
+        foundPerson = mate;
+      }
+    })
+
+    if (foundPerson) {   
+
+      ]] [[= foundPerson.display_name ]],  <!--
+
+    }
+
+})
+
+-->
+
+                                                      <span class="orange">Tum</span></p>
                                                   </div>
                                                   <div class="col-md-1 col-sm-1 col-xs-1 nopadding"><img src="images/fcf_activities/tag.jpg"></div>
                                                 </div>  

@@ -91,6 +91,26 @@ function(){
                 self.newActivity();
             })
 
+
+            // gather which person the user is & pass off to Controllers
+            AD.comm.service.get({ url:'/fcf_activities/activityreport/whoami'})
+            .fail(function(err){
+                console.error('!!!! FCFActivities: error getting /whoami', err);
+            })
+            .then(function(data){
+
+                if (data) {
+
+                    self.portals.Report.setWhoami(data);
+
+                } else {
+
+                    console.warn('... FCFActivities: /whoami did not find an entry!');
+                }
+                
+
+            })
+
         },
 
 
@@ -142,6 +162,11 @@ function(){
 
             //// The Activity Report Controller
 
+            // if they press [Finish] then go back
+            this.portals.Report.element.on(this.portals.Report.CONST.FINISH, function() {
+                self.showPortal('Portal');
+            })
+
             // if they press [Previous] then go back
             this.portals.Report.element.on(this.portals.Report.CONST.PREV, function() {
                 self.showPortal('Add2');
@@ -150,9 +175,9 @@ function(){
 
 
             //// The Confirm Step 
-            this.portals.Confirm.element.on('confirmed', function() {
-                self.showPortal('Portal');
-            })
+            // this.portals.Confirm.element.on('confirmed', function() {
+            //     self.showPortal('Portal');
+            // })
 
         },
 

@@ -328,9 +328,41 @@
                                                   <div class="col-md-5 col-sm-3 col-xs-4 nopadding"><img src="images/fcf_activities/img1.jpg"></div>
                                                   <div class="col-md-6 col-sm-8 col-xs-7">
                                                     <p><span class="orange">[[= activity.attr("activity_name") ]]</span><br/><span class="blue">Family Connection(team)</span></p>
-                                                    <p><span class="orange">Tum</span>, Nate, Mike, Imran, Boom, Jume</p>
+                                                    <p class="fcf-activity-tag-list" activityID="[[= activity.attr('id') ]]">
+
+<!-- 
+
+var displayedTags = []; 
+taggedPeople.forEach(function(personID){
+
+    var foundPerson = null;
+    teammates.each(function(mate){
+    
+      if (mate.IDPerson == personID) {
+        foundPerson = mate;
+      }
+    })
+
+    if (foundPerson) {   
+
+        if (foundPerson.IDPerson != whoami.IDPerson) {
+
+            displayedTags.push(foundPerson.display_name); 
+
+        } else {
+            displayedTags.push(' <span class="orange">'+foundPerson.display_name+'</span>');
+        }
+
+    }
+
+})
+
+]] [[== displayedTags.join(', ') ]]  <!--
+
+
+--><span class="orange mockup">Tum</span></p>
                                                   </div>
-                                                  <div class="col-md-1 col-sm-1 col-xs-1 nopadding"><img src="images/fcf_activities/tag.jpg"></div>
+                                                  <div class="col-md-1 col-sm-1 col-xs-1 nopadding"><img class="fcf-activity-list-item-tag" activityID="[[= activity.attr('id') ]]" src="images/fcf_activities/tag.jpg"></div>
                                                 </div>  
                                        
                                           </div>
@@ -447,35 +479,42 @@
                                                         <div class="col-md-4 col-sm-3 col-xs-4 nopadding"><img src="images/fcf_activities/img2.jpg"></div>
                                                         <div class="col-md-8 col-sm-9 col-xs-8">
                                                           <label class="blue">"[[= image.attr("caption") ]]"</label>
-                                                          <p><span class="blue bgfont">People in this photo:</span><br>
-                                                          <span class="orange">Tum</span>
+                                                          <p><span class="blue bgfont" appp-label-key="fcf.activity.add.report.PeopleInPhoto" >People in this photo:</span><br>
 <!-- 
-console.log('image:', image);
+//console.log('image:', image);
             var listPeopleIDs = image.attr('taggedPeople');
-console.log('listPeopleIDs:', listPeopleIDs);
-console.log('teammates:', teammates);
+//console.log('listPeopleIDs:', listPeopleIDs);
+//console.log('teammates:', teammates);
+
+            var taggedPeople = [];
 
             listPeopleIDs.forEach(function(personID){
 
-              var foundPerson = null;
-              teammates.each(function(mate){
-              
-                if (mate.IDPerson == personID) {
-                  foundPerson = mate;
-                }
-              })
-
-              if (foundPerson) {   
+                var foundPerson = null;
+                teammates.each(function(mate){
                 
-console.log(foundPerson.display_name);
-                ]] [[= foundPerson.display_name ]]  <!--
+                    if (mate.IDPerson == personID) {
+                        foundPerson = mate;
+                    }
+                })
 
-              }
+                if (foundPerson) {   
+
+                    if (foundPerson.IDPerson != whoami.IDPerson) {
+
+                        ]] [[== foundPerson.display_name ]], <!--
+                        // taggedPeople.push(foundPerson.display_name);     
+                    } else {
+                        ]] <span class="orange"> [[== foundPerson.display_name ]] </span>,  <!--
+                        //taggedPeople.push(' <span class="orange">'+foundPerson.display_name+'</span>');
+                    }
+
+                }
   
             })
 
 
-          -->
+          --> 
 
                                                           </p>
                                                         </div>                            
@@ -627,59 +666,14 @@ console.log(foundPerson.display_name);
                             <div id="actionsbtn" class="form-inline marginbot15">
                               <div class="btnactions">
                                 <button id="fcf-activity-image-form-nav-previous" type="submit" class="btn custombtn marginrght10">Previous</button>
-                                <button type="submit" class="btn custombtn marginrght10" data-toggle="modal" data-target="#confirmstep" >Next</button>
+                                <button id="fcf-activity-image-form-nav-finish" type="submit" class="btn custombtn marginrght10" >Finish</button>
                               </div>
                           </div>           
                       </div>
                     </div>
                 </div>
                 <!--/END PAGE 3-->
-                <!-- Modal for Confirm Step -->
-                <div class="modal fade" id="confirmstep" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content modal-add-activity">
-                       <p class="modalhead">Confirm your Report</p>
-                      <div class="modal-body inner-add-activity">
-                        <p class="blue"><span class="orange font25"><strong>Name: </strong>Connection Meeting</span><br>
-                           <span><strong>Project: </strong>Family Connection</span><br>
-                           <span><strong>Team: </strong>Admin Team</span><br>
-                           <span><strong>Date: </strong>10/11/14</span>
-                        </p>
-                        <div class="col-md-12">
-                          <div id="confirm-step-scroll" class="marginbot10">
-                            <!--Photos Added 1-->
-                            <div class="row">
-                              <div class="col-md-12">
-                                <p>Photos you added</p>
-                                <img src="images/fcf_activities/confirmed-img.jpg">
-                                <p>Caption: Connection Meeting 1</p>
-                                <p>Tags: <span class="orange">Tom</span>, Nate, Mike, Imran, Boom </p>
-                              </div>
-                            </div>
-                            <!--/Photos Added 1-->
-                            <!--Photos Added 2-->
-                            <div class="row">
-                              <div class="col-md-12">
-                                <p>Photos you added</p>
-                                <img src="images/fcf_activities/confirmed-img.jpg">
-                                <p>Caption: Connection Meeting 1</p>
-                                <p>Tags: <span class="orange">Tom</span>, Nate, Mike, Imran, Boom </p>
-                              </div>
-                            </div>
-                            <!--/Photos Added 2-->
-                          </div>
-                        </div>
-                
-                        <div class="modal-footer margintop10">
-                          <button type="button" class="btn custombtn" data-dismiss="modal">Back</button>
-                          <button type="button" class="btn custombtn fcf-activity-confirm">Confirm</button>
-                        </div>       
-                      </div>
-                
-                    </div>
-                  </div>
-                </div>
-                <!--/ Modal for Confirm Step -->
+               
 
 
 

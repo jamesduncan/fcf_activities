@@ -44,6 +44,7 @@ function(){
 
         CONST: {
             NEXT: 'activity_report.confirm',
+            FINISH: 'activity_report.finish',
             PREV: 'activity_report.previous',
             tags:{
                 '.fcf-activity-team-name':'title string',
@@ -63,6 +64,8 @@ function(){
             }
         },
 
+
+
         init: function (element, options) {
             var self = this;
             options = AD.defaults({
@@ -78,9 +81,12 @@ function(){
             this.selectedActivity = null;   // which Activity are we displaying details for?
 
             this.listActivities = null;     // the list of all Activities From the selectedTeam
+            this.listActivityTags = null;   // the list of activity.id : [tag.id]  for each activity
             this.listImages = null;         // the list of all images related to the selectedActivity
 
             this.listTeammates = [];
+
+            this.whoami = null;             // the person obj of the user
 
             this.currentlyEditingImage = null; // the image model of the image we are currently editing.
 
@@ -210,7 +216,7 @@ console.log('... values:', values);
             var taggedPeople = [];
             var listTags = this.dom.inputTags.select3('data');
 
-console.log('listTags:', listTags);
+// console.log('listTags:', listTags);
             listTags.forEach(function(tag) {
                 taggedPeople.push( tag.id );
             })
@@ -237,6 +243,8 @@ console.log('listTags:', listTags);
                         self.listImages.unshift(obj);
                         self.clearForm();
 
+                        self.refreshPeopleTaggedInActivities( valuesObj.activity );
+
                     })
 
                 } else {
@@ -253,7 +261,10 @@ console.error(err);
                     .then(function(data){
 
 console.log(' ... returnedData:', data);
-                        self.clearForm();                        
+                        self.clearForm();  
+
+                        self.refreshPeopleTaggedInActivities( valuesObj.activity );
+
                     })
 
                 }
@@ -292,6 +303,20 @@ console.log('... upload an image');
          */
         initDOM: function () {
             var self = this;
+
+
+            //// 
+            //// Create a template for our Activity's Tagged People:
+            //// (NOTE: do this before creating the Activity List Template)
+
+            // register template as :  'FCFActivities_ActivityReport_ActivityTaggedPeople'
+            //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
+            var activityListTaggedPeopleTemplate =  this.domToTemplate(this.element.find('.fcf-activity-tag-list'));
+            can.view.ejs('FCFActivities_ActivityReport_ActivityTaggedPeople', activityListTaggedPeopleTemplate);
+
+            // remove the template from the DOM
+            this.element.find('.fcf-activity-tag-list').html(' ');
+
 
             ////
             //// Create our Activity List Template
@@ -364,6 +389,8 @@ console.log('... upload an image');
             //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
             var imageListTemplate =  this.domToTemplate(this.element.find('.fcf-activity-report-activity-images'));
             imageListTemplate = AD.util.string.replaceAll(imageListTemplate, 'src="images/fcf_activities/img2.jpg"', 'src="<%= image.attr(\'image\') %>"');
+
+console.warn('***** imageListTemplate:', imageListTemplate);
             can.view.ejs('FCFActivities_ActivityReport_ImageList', imageListTemplate);
 
 //             ////
@@ -645,6 +672,7 @@ console.log('... upload an image');
 
                 },
 
+
                 // attach Activities to template:
                 function(next) {
 
@@ -652,8 +680,11 @@ console.log('... upload an image');
 
                     // remove existing activity <div>
                     self.dom.listActivities.find('div.fcf-activity-list-item').remove();
-                    self.dom.listActivities.append(can.view('FCFActivities_ActivityReport_ActivityList', {activities: self.listActivities }));
+                    self.dom.listActivities.append(can.view('FCFActivities_ActivityReport_ActivityList', {activities: self.listActivities, whoami:self.whoami }));
 
+
+                    // refresh all the activities tagged people
+                    self.refreshPeopleTaggedInActivities()
 
                     // find the current Activity in the List and mark it selected:
                     self.selectActivity( activity );
@@ -706,6 +737,83 @@ console.log('... upload an image');
             //     self.modalAdd.find('.objectives-section').append(can.view('FCFActivities_AddObjectives', {objectives:list}));
             // })
 
+
+        },
+
+
+
+        refreshPeopleTaggedInActivities: function( activityID ) {
+
+            var self = this;
+
+            var activityIDs = [];
+
+            // if no activityID was provided, then refresh all of our Activities
+            if (typeof activityID == 'undefined') {
+
+                self.listActivities.each(function(act){
+                    activityIDs.push(act.id);
+                });
+
+            } else {
+                activityIDs = [ activityID ];
+            }
+
+
+            var listActivityTags = {};  // { activityID : [IDPerson1, ... ]}
+
+            AD.util.async.series([
+
+                // lookup all the relevant tags for these activities:
+                function(next) {
+                    
+                    AD.comm.service.get({
+                        url:'/fcf_activities/activityreport/relevantTags',
+                        params:{ activities: activityIDs}
+                    })
+                    .fail(function(err){
+                        next(err);
+                    })
+                    .then(function(tags){
+                        listActivityTags = tags;
+                        next();
+                    })
+
+                },
+
+                // update the visual templates:
+                function(next) {
+
+                    // foreach listActivityTags
+                    for(var actID in listActivityTags) {
+                        var people = listActivityTags[actID]
+
+                        // update Tagged People for this Activity
+                        var pTags = self.element.find('.fcf-activity-tag-list[activityID='+actID+']')
+                        pTags.html(' ');  // clear the list
+                        pTags.append(can.view('FCFActivities_ActivityReport_ActivityTaggedPeople', {taggedPeople:people, teammates:self.listTeammates,  whoami:self.whoami }))
+                    
+
+                        // decide if we should show the TAG for this activity
+                        var shouldShow = false;
+                        people.forEach(function(personID){
+                            if (personID == self.whoami.IDPerson) {
+                                shouldShow = true;
+                            }
+                        })
+
+                        var imgTag = self.element.find('.fcf-activity-list-item-tag[activityID='+actID+']')
+                        if (shouldShow) {
+                            imgTag.show();
+                        } else {
+                            imgTag.hide();
+                        }
+                    }
+
+                }
+            ], function(err, results) {
+
+            })
 
         },
 
@@ -781,7 +889,7 @@ console.log('... upload an image');
 
                 self.clearImageList();
                 self.listImages = list;
-                self.dom.listImages.append( can.view('FCFActivities_ActivityReport_ImageList', {images:list, teammates:self.listTeammates}));
+                self.dom.listImages.append( can.view('FCFActivities_ActivityReport_ImageList', {images:list, teammates:self.listTeammates, whoami:self.whoami}));
 
                 self.selectImageRow( self.dom.listImages.find('.addImage'));
                 self.clearForm();
@@ -796,6 +904,13 @@ console.log('... upload an image');
                 // @resource  FCFImages, ActivityImages
                 // @findAll, @find, @create, @update, @destroy
 
+        },
+
+
+
+        setWhoami:function(person) {
+
+            this.whoami = person;
         },
 
 
@@ -905,6 +1020,11 @@ console.log('... upload an image');
 
 
         //// Navigation Buttons
+
+        // when the [Finish] button is clicked, then trigger our event:
+        '#fcf-activity-image-form-nav-finish click': function($el, ev) {
+            this.element.trigger(this.CONST.FINISH);
+        },
 
         // when the [Previous] button is clicked, then trigger our event:
         '#fcf-activity-image-form-nav-previous click': function($el, ev) {
