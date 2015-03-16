@@ -109,19 +109,6 @@ function(){
             ////
             //// Create our Objective entry Template
             ////
-            // var objectiveRow = this.domToString(this.element.find('.template-objectives')).replace("template-objectives", "");
-            // objectiveRow = AD.util.string.replaceAll(objectiveRow, '[[=', '<%= ');
-            // objectiveRow = AD.util.string.replaceAll(objectiveRow, ']]', '%>');
-
-            // // remove checkbox rows
-            // this.element.find('#fcf-modal-new-Activity .checkbox').remove();
-
-            // var objectivesTemplate = [
-            //     '<% objectives.each(function(objective) { %>',
-            //     objectiveRow,
-            //     '<% }) %>'
-            // ].join('\n');
-
 
             var objectivesTemplate = this.domToTemplate(this.element.find('.objectives-section'));
             can.view.ejs('FCFActivities_AddObjectives', objectivesTemplate);
@@ -207,6 +194,8 @@ function(){
             this.modalAdd.find('#dateEnd').datepicker(calendarOptions);
 
 
+            this.form = this.modalAdd.find('#fcf-new-activity-form');
+
         },
 
 
@@ -220,6 +209,91 @@ function(){
         formClear:function() {
             this.modalAdd.find(':input:not(:checkbox)').val('');
             this.modalAdd.find(':checkbox').prop('checked', false);
+        },
+
+
+        formErrors: function(values) {
+
+            var errors = [];
+            
+            if (typeof values == 'undefined') {
+                values = this.formValues();
+            }
+
+
+
+            if (values.name == '') {
+                errors.push('A name is Required.');
+            }
+
+            if (values.startDate == '') {
+                errors.push('A start date is Required.');
+            } else {
+
+
+                if (values.endDate != '') {
+                    if (new Date(values.startDate) > new Date(values.endDate)) {
+
+                        errors.push('The end date must come after the start date.')
+                    }
+                }
+            }
+
+            if (values.objective.length == 0) {
+                errors.push('At least one objective should be tied to this Activity.');
+            }
+
+            if (values.description == '') {
+                errors.push('A description is Required.');
+            }
+
+            return errors;
+        },
+
+
+        formValid:function(values) {
+
+            var isValid = true;  // so optimistic
+
+            // image needs to be set:
+            isValid = isValid && (values.name != '');
+            isValid = isValid && (values.startDate != '');
+            // isValid = isValid && (values.endDate != '');
+            isValid = isValid && (values.objective.length > 0 );
+            isValid = isValid && (values.description != '');
+
+            // endDate can't come before startDate
+            if ((values.startDate != '')
+                && (values.endDate != '')) {
+                
+                if ( new Date(values.startDate) > new Date(values.endDate)) {
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        },
+
+
+        formValues: function() {
+
+            var values = this.modalAdd.find(':input').serializeArray();
+            var obj = {};
+            obj.objective = [];
+
+            values.forEach(function(val){
+                if (val.name != 'objective'){
+                    obj[val.name] = val.value;
+                } else {
+                    obj.objective.push(val.value);
+                }
+                
+            })
+
+            obj.team = this.selectedTeam.getID();
+
+
+            return obj;
         },
 
 
@@ -362,60 +436,53 @@ function(){
         // when the [Add Assignment] button is clicked, 
         '#add-assignment click': function($el, ev) {
             var self = this;
-            var values = this.modalAdd.find(':input').serializeArray();
-            var obj = {};
-            obj.objective = [];
-
-            values.forEach(function(val){
-                if (val.name != 'objective'){
-                    obj[val.name] = val.value;
-                } else {
-                    obj.objective.push(val.value);
-                }
-                
-            })
-
-            obj.team = this.selectedTeam.getID();
+            
 
 // console.log('form values : ', obj);
+            var obj = this.formValues();
 
-            // these fields are required:
-            var validation = {
-                name:['required'],
-                description:['required'],
-                objective:['required'],
-                startDate:['required'],
-                endDate:[{'>=':'startDate'}]
+            if (this.formValid(obj) ) {
+
+                var Model = AD.Model.get('opstools.FCFActivities.TeamActivity');
+                
+                Model.create(obj)
+                .fail(function(err){
+                    console.error(err);
+                })
+                .then(function(data){
+                    data = data.data || data;
+
+                    console.log('returned Activity:', data);
+
+                    var model = new Model(data);
+
+                    self.listActivities.push(model);
+                    self.Filter.load(self.listActivities);
+                    self.formClear();
+                    self.modalAdd.modal('hide');
+                })
+
+            } else {
+
+                var errors = this.formErrors(obj);
+
+                if (errors.length>0) {
+
+                    bootbox.dialog({
+                        message: 'Please fix these errors before trying again:<br>'+errors.join('<br>'),
+                        title: 'Invalid Form Data',
+                        buttons: {
+                            main: {
+                                label: 'OK',
+                                className: "btn-primary",
+                                callback: function() {}
+                            }
+                        }
+                    });
+
+                }
+
             }
-
-            var isValid = true;
-
-            // verify name:
-            if ( (!obj.name)
-                 || (obj.name == '')) {
-                isValid = false;
-            }
-
-            
-
-            var Model = AD.Model.get('opstools.FCFActivities.TeamActivity');
-            
-            Model.create(obj)
-            .fail(function(err){
-                console.error(err);
-            })
-            .then(function(data){
-                data = data.data || data;
-
-                console.log('returned Activity:', data);
-
-                var model = new Model(data);
-
-                self.listActivities.push(model);
-                self.Filter.load(self.listActivities);
-                self.formClear();
-                self.modalAdd.modal('hide');
-            })
 
         },
 

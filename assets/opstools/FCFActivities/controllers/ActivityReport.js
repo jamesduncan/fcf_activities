@@ -269,6 +269,31 @@ console.log('... listImages:', self.listImages);
         },
 
 
+        formErrors: function() {
+
+            var errors = [];
+            var values = this.formValues();
+
+            if (values.image == '') {
+                errors.push('An Image is Required.');
+            }
+
+            if (values.caption == '') {
+                errors.push('A caption is Required.');
+            }
+
+            if (values.date == '') {
+                errors.push('A date is Required.');
+            }
+
+            if (values.taggedPeople.length == 0) {
+                errors.push('At least one person should be tagged in this photo.');
+            }
+
+            return errors;
+        },
+
+
 
         loadForm:function(image) {
             var self = this;
@@ -321,20 +346,9 @@ console.log('... loading Form with image:',image.getID())
         formSubmit: function() {
             var self = this;
 
-            var values = this.dom.imageForm.serializeArray();
-console.log('... values:', values);
-            var valuesObj = {};
-            values.forEach(function(val){
-                valuesObj[val.name] = val.value;
-            });
 
-            var taggedPeople = [];
-            var listTags = this.dom.inputTags.select3('data');
+            var valuesObj = this.formValues();
 
-// console.log('listTags:', listTags);
-            listTags.forEach(function(tag) {
-                taggedPeople.push( tag.id );
-            })
 
             // if formValidate() is ok
             if (this.formValidate(valuesObj)) {
@@ -343,7 +357,7 @@ console.log('... values:', values);
                 // if we are not currently editing an image then CREATE one
                 if (!this.currentlyEditingImage) {
 
-                    valuesObj.taggedPeople = taggedPeople;
+                    // valuesObj.taggedPeople = taggedPeople;
 
                     var ActivityImage = AD.Model.get('opstools.FCFActivities.ActivityImage');
 
@@ -366,7 +380,7 @@ console.log('... values:', values);
 
                     // else UPDATE this one
                     this.currentlyEditingImage.attr(valuesObj);
-                    this.currentlyEditingImage.attr('taggedPeople', taggedPeople); // update our taggedPeople array
+                    // this.currentlyEditingImage.attr('taggedPeople', taggedPeople); // update our taggedPeople array
                     this.currentlyEditingImage.save()
                     .fail(function(err){
 //// TODO: how do we handle Errors?
@@ -385,7 +399,38 @@ console.log(' ... returnedData:', data);
                 }
 
             } else {
-console.log('... can\'t save the image yet.');
+
+                var errors = this.formErrors();
+
+                if (errors.length>0) {
+
+                    bootbox.dialog({
+                        message: 'Please fix these problems before trying again:<br>'+errors.join('<br>'),
+                        title: 'Invalid Form Data',
+                        buttons: {
+                            main: {
+                                label: 'OK',
+                                className: "btn-primary",
+                                callback: function() {}
+                            }
+                        }
+                    });
+
+                } else {
+
+                    bootbox.dialog({
+                        message: 'something isn\'t right about this form, but I can\'t tell you what. Just make sure everything is properly filled out and try again.',
+                        title: 'Invalid Form Data',
+                        buttons: {
+                            main: {
+                                label: 'OK',
+                                className: "btn-primary",
+                                callback: function() {}
+                            }
+                        }
+                    });
+
+                }
             }
         },
 
@@ -393,14 +438,15 @@ console.log('... can\'t save the image yet.');
 
         formValidate: function( values ) {
 
-return true;
+            var isValid = true;  // so optimistic
 
             // image needs to be set:
-            if (values.image == '') { 
-console.log('... upload an image');
-                return false;
-            }
+            isValid = isValid && (values.image != '');
+            isValid = isValid && (values.caption != '');
+            isValid = isValid && (values.date != '');
+            isValid = isValid && (values.taggedPeople.length > 0 );
 
+            return isValid;
         },
 
 
@@ -413,13 +459,24 @@ console.log('... upload an image');
         formValues: function() {
 
             var values = this.dom.imageForm.serializeArray();
-console.log('... values:', values);
+// console.log('... values:', values);
             var valuesObj = {};
             values.forEach(function(val){
                 valuesObj[val.name] = val.value;
             });
 
 
+            // the date from the form is given as mm/dd/yyyy
+            // convert to yyyy-mm-dd:
+            var parts = valuesObj.date.split('/');
+            if (parts.length == 3) {
+                valuesObj.date = parts[2]+'-'+parts[0]+'-'+parts[1];
+            } else {
+                valuesObj.date = "";
+            }
+
+
+            // compile the taggedPeople:
             var taggedPeople = [];
             var listTags = this.dom.inputTags.select3('data');
 
@@ -441,16 +498,6 @@ console.log('... values:', values);
             var isChanged = false;
 
             var formVals = this.formValues();
-
-
-            // the date from the form is given as mm/dd/yyyy
-            // convert to yyyy-mm-dd:
-            var parts = formVals.date.split('/');
-            if (parts.length == 3) {
-                formVals.date = parts[2]+'-'+parts[0]+'-'+parts[1];
-            } else {
-                formVals.date = "";
-            }
 
 
             isChanged = isChanged || (this.values.image != formVals.image);
