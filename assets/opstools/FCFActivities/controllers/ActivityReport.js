@@ -127,6 +127,35 @@ function(){
 
         },
 
+
+        alertDeleteConfirm: function(opts) {
+
+            this.alertUnsavedChanges({
+                title:'Delete Confirm',
+                message:'Are you sure you want to delete this image?',
+                labelSecondary:'Yes',
+                labelMain:'No',
+                cbSecond:opts.cbSecond
+            })
+
+        },
+
+
+        alertDeleteInvalid: function() {
+            bootbox.dialog({
+                message: 'This image has other people tagged in it.  In order to delete it, you need to notify your ministry leader.',
+                title: 'Delete Not Allowed',
+                buttons: {
+                    main: {
+                        label: 'OK',
+                        className: "btn-primary",
+                        callback: function() {}
+                    }
+                }
+            });
+        },
+
+
         alertUnsavedChanges: function(opts) {
 
             var title = opts.title || "Unsaved Changes";
@@ -158,6 +187,30 @@ function(){
 
 
 
+        buttonDisable:function(key) {
+
+            if (this.dom.buttons[key]) {
+                this.dom.buttons[key].attr('disabled', 'disabled');
+                this.dom.buttons[key].addClass('disabled');
+            } else {
+                console.error('button ['+key+'] not recognized!');
+            }
+        },
+
+
+
+        buttonEnable:function(key) {
+
+            if (this.dom.buttons[key]) {
+                this.dom.buttons[key].removeAttr('disabled');
+                this.dom.buttons[key].removeClass('disabled');
+            } else {
+                console.error('button ['+key+'] not recognized!');
+            }
+
+        },
+
+
         clearImageList: function() {
             this.element.find('.fcf-activity-report-activity-images').children().remove();
         },
@@ -185,6 +238,10 @@ function(){
             this.values.date = "";
             this.values.taggedPeople = [];
 
+            this.buttonDisable('save');
+            this.buttonDisable('cancel');
+            this.dom.buttons.delete.hide();
+            // this.buttonEnable('delete');
         },
 
 
@@ -244,6 +301,18 @@ console.log('... loading Form with image:',image.getID())
 
             var id = this.selectedActivity.getID ? this.selectedActivity.getID() : this.selectedActivity.id;
             this.dom.inputActivity.val( id );
+
+            this.buttonEnable('save');
+            this.buttonEnable('cancel');
+
+            var personUploaded = image.uploadedBy;
+            if (personUploaded.IDPerson == this.whoami.IDPerson) {
+                this.dom.buttons.delete.show();
+                this.buttonEnable('delete');
+            } else {
+                this.dom.buttons.delete.hide();
+            }
+            
 
         },
 
@@ -510,6 +579,10 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                 self.dom.dropzone.find('img').css('width', width).prop('src', response.data.path ).show();
                 self.dom.inputImage.val(response.data.name);
 
+                // make sure our [save] & [cancel] buttons are enabled now:
+                self.buttonEnable('save');
+                self.buttonEnable('cancel');
+
             })
             this.dom.dropzone.find('img').prop('src', '' ).hide();
 
@@ -527,7 +600,11 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                 format: "mm/dd/yyyy",
                 startDate: "01/01/1970"
             };
-            this.dom.inputDate.datepicker(calendarOptions);
+            this.dom.inputDate.datepicker(calendarOptions)
+            .on('changeDate', function(){
+                self.buttonEnable('save');
+                self.buttonEnable('cancel');
+            })
 
 
             var labelKey = this.dom.inputTags.prop('app-label-key') || 'fcf.activity.image.form.tags';
@@ -549,6 +626,14 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             // var emptyList = new can.List([]);
             // this.dom.peopleObjects.html( can.view('FCFActivities_ActivityReport_PersonList', { people:emptyList } ));
             this.dom.peopleObjects.children().remove();
+
+
+            // attach the buttons:
+            this.dom.buttons = {};
+            this.dom.buttons.save = this.element.find('#fcf-activity-image-form-save');
+            this.dom.buttons.cancel = this.element.find('#fcf-activity-image-form-cancel');
+            this.dom.buttons.delete = this.element.find('#fcf-activity-image-form-delete');
+
 
 
         },
@@ -877,6 +962,11 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                 this.dom.peopleObjects.find('[data-person-id="'+ opt.removed.id + '"]').show();
             }
 
+
+            // this change should also enable the [Save] & [Cancel] buttons 
+            this.buttonEnable('save');
+            this.buttonEnable('cancel');
+
         },
 
 
@@ -1074,8 +1164,29 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
         // when they click on the [delete] button
         '#fcf-activity-image-form-delete click': function($el, ev) {
+            var self = this;
+            var formValues = this.formValues();
 
-            this.formDelete();
+            // can only delete an image if
+            // the user is the only one tagged in it
+            if ((formValues.taggedPeople.length == 1)
+                && (formValues.taggedPeople[0] == this.whoami.IDPerson)) {
+
+                // make sure they meant to delete this image
+                this.alertDeleteConfirm({
+                    cbSecond:function() {
+
+                        // go ahead and delete
+                        self.formDelete();
+                    }
+                })
+
+            } else {
+
+                this.alertDeleteInvalid();
+
+            }
+            
 
             ev.preventDefault();
         },
