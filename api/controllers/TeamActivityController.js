@@ -122,7 +122,16 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
 
 
         var objectives = req.param('objective');
+        if (typeof objectives == 'undefined') {
+            var err = new Error('No Objectives provided.');
+            ADCore.comm.error(res, err, 400);
+            return;
+        }
 
+        // if date_end is '', save NULL instead
+        if (data.date_end == '') {
+            data.date_end = null;
+        }
 
         var langCode = ADCore.user.current(req).getLanguageCode();
 
