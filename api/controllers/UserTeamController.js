@@ -16,6 +16,8 @@ module.exports = {
     // Use this for initial design and testing
     , find:function(req, res) {
 
+        AD.log('<green>userteam.find()</green>');
+
         var FinalData = [];
         var listTeams = [];
 
@@ -25,13 +27,13 @@ module.exports = {
 
             // get the user's Person Entry
             function(next) {
-// AD.log('... personForSession()');
+                AD.log('... personForSession()');
                 FCFCore.personForSession(req)
                 .fail(function(err){
                     next(err);
                 })
                 .then(function(data){
-// AD.log('    fcfPerson:', data);
+                    AD.log('    fcfPerson:', data);
                     fcfPerson = data;
                     next();
                 })
@@ -40,7 +42,7 @@ module.exports = {
 
             // Now get the list of Ministry Teams for this Person
             function(next) {
-AD.log('... fcfPerson.ministryTeams()');
+                AD.log('... fcfPerson.ministryTeams()');
                 if (fcfPerson) {
 
                     fcfPerson.ministryTeams()
@@ -64,36 +66,41 @@ AD.log('... fcfPerson.ministryTeams()');
             },
 
 
-            // merge in the names of the People Responsible
-            function(next){
-AD.log('... Project.Populate():');
-                FCFProject.Populate(listTeams, 'ProjectOwner')
-                .fail(function(err){
-                    next(err);
-                })
-                .then(function(){
-                    next();
-                })
+//             // merge in the names of the People Responsible
+//             function(next){
+// AD.log('... Project.Populate():');
+//                 FCFProject.Populate(listTeams, 'ProjectOwner')
+//                 .fail(function(err){
+//                     next(err);
+//                 })
+//                 .then(function(){
+//                     next();
+//                 })
 
-            },
+//             },
 
 
             // now take info and compile into FinalData 
             // we only want:  IDMinistry, MinistryDisplayName, PersonName
             function(next) {
 
+                AD.log('... simple teams:')
                 listTeams.forEach(function(team){
                     var obj = {};
                     obj.IDMinistry = team.IDMinistry;
                     obj.MinistryDisplayName = team.MinistryDisplayName;
                     obj.ProjectOwner = '';
-                    if (team.ProjectOwner) {
-                        obj.ProjectOwner = team.ProjectOwner.displayName();
+                    // if (team.ProjectOwner) {
+                    //     obj.ProjectOwner = team.ProjectOwner.displayName();
+                    // }
+AD.log(team);
+                    if (team.IDProject) {
+                        obj.ProjectOwner = team.IDProject.IDProject || team.IDProject;
                     }
-
                     FinalData.push(obj);
                 })
 
+                AD.log(FinalData);
                 next();
             }
 
@@ -105,7 +112,7 @@ AD.log('... Project.Populate():');
 AD.log(err);
                 ADCore.comm.error(res, err, 500);
             } else {
-
+                AD.log('<green> end: userteam.find() </green>')
                 ADCore.comm.success(res, FinalData);
             }
 

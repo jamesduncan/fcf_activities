@@ -102,6 +102,9 @@ function(){
                 tagBootstrapTable: '.fcf-team-list',
                 scrollToSelect:true,
 
+                modelID : 'IDMinistry',     // our data values use IDMinistry for their unique ID
+                cssSelected:'orange',
+
                 // filterTable:true,
 
                 rowClicked:function(data) {

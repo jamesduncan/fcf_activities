@@ -54,8 +54,8 @@
                         <div id="content" class="col-md-12">
 
                           <div class="col-md-12 nopadding">
-                              <h4><span appp-label-key="fcf.assignment.Choose.Team.Instructions">Instructions</span></h4>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a nunc in est faucibus faucibus. Vestibulum sapien mi, placerat nec arcu vitae, dapibus ultrices sem. Sed in augue eget odio pretium hendrerit. Sed fringilla, sem sed dictum tempor, leo libero egestas felis, vitae rutrum quam magna aliquet est.</p>
+                              <h4><span appp-label-key="fcf.assignment.Choose.Team.InstructionsLabel">Instructions</span></h4>
+                              <p appp-label-key="fcf.assignment.Choose.Team.Instructions">Please select which Team to which you would like add an Activity. Either double-click on the name of the team or type in the name in the Search box.</p>
                               <p>&nbsp;</p>
                               <h4><span appp-label-key="fcf.assignment.Choose.Team.Desc" >What Ministry Team is this activity associated with?</span></h4>
                           </div>
@@ -107,8 +107,7 @@
                           </div>
                         </div>
                       </div>
-                      <!--/Content-->
-                      <div class="col-md-12 align-right bck"><a href="#">Back to Dashboard</a></div>            
+                                 
                   </div>
                 </div>                
 
@@ -302,7 +301,7 @@
                     <div class="container">
                       <div id="wrap" class="col-md-12">
                             <!--Top-->
-                            <div id="pagination" class="col-md-12">
+                            <div id="fcf-activity-pagination" class="col-md-12">
                               <div class="row">
                                 <div class="col-md-10"></div>
                                 <div class="col-md-2 align-right marginbot5"><span class="pull-right" appp-label-key="fcf.activity.add.report.step">Step 3 of 3</span></div>
@@ -310,22 +309,22 @@
                             </div>
                             <!--End Top-->
                             <!--Content-->      
-                              <div class="col-md-12">
+                              <div id="fcf-activity-content-section" class="col-md-12">
                                 <div class="col-md-12">
                                   <div class="row">
                                     <!--All Activity list-->
                                     <div class="col-md-4 nopadleft">
-                                      <div class="col-md-12 innner-content padrigt1">
-                                        <label class="margintop15 marginbot15"><span appp-label-key="fcf.activity.report.AllActivities" >All Activities for </span><span class='fcf-activity-team-name'>[TEAM]</span></label>
+                                      <div class="col-md-12 innner-content padrigt1 fcf-activity-contentsection-activityList">
+                                        <label class="margintop15 marginbot15 fcf-activity-activityList-label"><span appp-label-key="fcf.activity.report.AllActivities" >All Activities for </span><span class='fcf-activity-team-name'>[TEAM]</span></label>
                                         <div id="lc-activity" class="fcf-activity-report-activities col-md-12 nopadding">
                                           <!-- activities.forEach(function(activity) {  -->
                                           
                                           <div class="imgleft fcf-activity-list-item" obj-embed="activity" >
                                             
                                                 <div class="col-md-12 col-sm-12 nopadleft">
-                                                  <div class="col-md-5 col-sm-3 col-xs-4 nopadding"><img src="images/fcf_activities/img1.jpg"></div>
+                                                  <div class="col-md-5 col-sm-3 col-xs-4 nopadding"><img src="images/fcf_activities/img1.jpg" style="width:120px;"></div>
                                                   <div class="col-md-6 col-sm-8 col-xs-7">
-                                                    <p><span class="orange">[[= activity.attr("activity_name") ]]</span><br/><span class="blue">Family Connection(team)</span></p>
+                                                    <p><span class="orange">[[= activity.attr("activity_name") ]]</span><br/><span class="blue fcf-activity-activity-project-name">[[= ProjectName ]]</span></p>
                                                     <p class="fcf-activity-tag-list" activityID="[[= activity.attr('id') ]]">
 
 <!-- 
@@ -348,7 +347,7 @@ taggedPeople.forEach(function(personID){
             displayedTags.push(foundPerson.display_name); 
 
         } else {
-            displayedTags.push(' <span class="orange">'+foundPerson.display_name+'</span>');
+            displayedTags.unshift(' <span class="orange">'+foundPerson.display_name+'</span>');
         }
 
     }
@@ -442,13 +441,14 @@ taggedPeople.forEach(function(personID){
                                     <!--Activity Report--> 
                                     <div class="col-md-8 innner-content">
                                       <div class="row margintop15">
+
                                         <!--Uploaded Photos-->
                                         <div class="col-md-6">
                                           <div class="row marginbot15">
                                             <div class="col-md-12">
                                               <label>Current Activity Report</label>
-                                              <p><span class="orange fcf-activity-activity-name">[Activity Name]</span>   <span class="blue">10/1/14 - Ongoing</span></p>
-                                              <p class="blue">[Project Name]</br>[Team Name]</p>
+                                              <p><span class="orange fcf-activity-activity-name">[Activity Name]</span>   <span class="blue"><span class="fcf-activity-activity-startdate">10/1/14</span> - <span class="fcf-activity-activity-enddate">Ongoing</span></span></p>
+                                              <p class="blue"><span class="fcf-activity-activity-project-name">[Project Name]</span></br><span class="fcf-activity-activity-team-name">[Team Name]</span></p>
                                             </div>
                                           </div>
                                           <div id="uploaded-img" class="col-md-12 padrigt1">
@@ -477,42 +477,38 @@ taggedPeople.forEach(function(personID){
                                                         <div class="col-md-4 col-sm-3 col-xs-4 nopadding"><img src="images/fcf_activities/img2.jpg"></div>
                                                         <div class="col-md-8 col-sm-9 col-xs-8">
                                                           <label class="blue">"[[= image.attr("caption") ]]"</label>
-                                                          <p><span class="blue bgfont" appp-label-key="fcf.activity.add.report.PeopleInPhoto" >People in this photo:</span><br>
+                                                          <p class="fcf-activity-image-tag-list" imageID="[[= image.attr('id') ]]"><span class="blue bgfont" appp-label-key="fcf.activity.add.report.PeopleInPhoto" >People in this photo:</span><br>
 <!-- 
-//console.log('image:', image);
-            var listPeopleIDs = image.attr('taggedPeople');
-//console.log('listPeopleIDs:', listPeopleIDs);
-//console.log('teammates:', teammates);
 
-            var taggedPeople = [];
+var displayedTags = []; 
+taggedPeople.forEach(function(personID){
 
-            listPeopleIDs.forEach(function(personID){
+    var foundPerson = null;
+    teammates.each(function(mate){
+    
+      if (mate.IDPerson == personID) {
+        foundPerson = mate;
+      }
+    })
 
-                var foundPerson = null;
-                teammates.each(function(mate){
-                
-                    if (mate.IDPerson == personID) {
-                        foundPerson = mate;
-                    }
-                })
+    if (foundPerson) {   
 
-                if (foundPerson) {   
+        if (foundPerson.IDPerson != whoami.IDPerson) {
 
-                    if (foundPerson.IDPerson != whoami.IDPerson) {
+            displayedTags.push(foundPerson.display_name); 
 
-                        ]] [[== foundPerson.display_name ]], <!--
-                        // taggedPeople.push(foundPerson.display_name);     
-                    } else {
-                        ]] <span class="orange"> [[== foundPerson.display_name ]] </span>,  <!--
-                        //taggedPeople.push(' <span class="orange">'+foundPerson.display_name+'</span>');
-                    }
+        } else {
+            displayedTags.unshift(' <span class="orange">'+foundPerson.display_name+'</span>');
+        }
 
-                }
-  
-            })
+    }
+
+})
+
+]] [[== displayedTags.join(', ') ]]  <!--
 
 
-          --> 
+--> 
 
                                                           </p>
                                                         </div>                            
@@ -661,7 +657,7 @@ taggedPeople.forEach(function(personID){
                                 </div>
                               </div>
                             <!--/Content-->
-                            <div id="actionsbtn" class="form-inline marginbot15">
+                            <div id="fcf-activity-actionsbtn" class="form-inline marginbot15">
                               <div class="btnactions">
                                 <button id="fcf-activity-image-form-nav-previous" type="submit" class="btn custombtn marginrght10">Previous</button>
                                 <button id="fcf-activity-image-form-nav-finish" type="submit" class="btn custombtn marginrght10" >Finish</button>

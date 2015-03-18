@@ -142,6 +142,8 @@ function(){
                 tagBootstrapTable: '.fcf-activity-list',
                 scrollToSelect:true,
 
+                cssSelected:'orange',
+
                 // filterTable:true,
 
                 rowClicked:function(data) {
@@ -167,6 +169,7 @@ function(){
                     // just continue on as if they clicked [next]
                     if (data) {
                         self.selectedActivity = data;
+
                         self.nextEnable();
                         self.buttons.next.click();
                     }
@@ -188,7 +191,9 @@ function(){
 
             var calendarOptions = {
                 format: "mm/dd/yyyy",
-                startDate: "01/01/1970"
+                startDate: "01/01/1970",
+                // toggleActive: false,
+                // multidate: false,
             };
             this.modalAdd.find('#dateStart').datepicker(calendarOptions);
             this.modalAdd.find('#dateEnd').datepicker(calendarOptions);
@@ -265,7 +270,7 @@ function(){
             // endDate can't come before startDate
             if ((values.startDate != '')
                 && (values.endDate != '')) {
-                
+
                 if ( new Date(values.startDate) > new Date(values.endDate)) {
                     isValid = false;
                 }
@@ -357,6 +362,16 @@ function(){
             this.buttons.next.removeAttr('disabled');
             this.buttons.next.removeClass('disabled');
 
+        },
+
+
+        show:function() {
+
+            // Call parent show()
+            this._super();
+
+            // make sure we resetView() on bootstraptable
+            this.Filter.resetView();
         },
 
 
@@ -457,9 +472,14 @@ function(){
                     var model = new Model(data);
 
                     self.listActivities.push(model);
-                    self.Filter.load(self.listActivities);
+
+                    self.Filter.select(model);              // set which data row should be selected
+                    self.Filter.load(self.listActivities);  // load the new set of data
+
                     self.formClear();
                     self.modalAdd.modal('hide');
+                    self.selectedActivity = model;
+                    self.nextEnable();
                 })
 
             } else {

@@ -49,9 +49,13 @@ function(){
 
         init: function (element, options) {
             var self = this;
+
+            // this is what gets published when this tool should resize:
+            var NOTIFICATION_RESIZE = 'FCFActivities.resize';
+
             options = AD.defaults({
                     templateDOM: '//opstools/FCFActivities/views/FCFActivities/FCFActivities.ejs',
-                    resize_notification: 'FCFActivities.resize',
+                    resize_notification: NOTIFICATION_RESIZE,
                     tool:null   // the parent opsPortal Tool() object
             }, options);
             this.options = options;
@@ -59,6 +63,9 @@ function(){
             // Call parent init
 // AD.classes.opsportal.OpsTool.prototype.init.apply(this, arguments);
             this._super(element, options);
+
+
+            this.keyVisiblePortal = 'Portal';    // keep track of which portal is visible
 
 
             this.dataSource = this.options.dataSource; 
@@ -87,8 +94,29 @@ function(){
 
 // end testing
 
+
+            // on a tool.show event for this tool ... consider this a reset 
+            // to the Portal screen.
+            AD.comm.hub.subscribe('opsportal.tool.show', function(key,data){
+
+                if (data.tool == 'FCFActivities') {
+                    self.showPortal('Portal');
+                }
+            })
+            
+
             AD.comm.hub.subscribe('fcf.activity.new', function() {
                 self.newActivity();
+            })
+
+            AD.comm.hub.subscribe(NOTIFICATION_RESIZE, function(key, data) {
+
+                var height = data.height;   // the available height in our displayable area.
+
+                self.resizeActivePortal(height);
+                
+
+//// TODO: mark the other portals as needing a resize!
             })
 
 
@@ -220,6 +248,20 @@ function(){
         },
 
 
+        resizeActivePortal:function(height) {
+
+            // height is the total available to our OpsTool
+
+            // however, our outer <div> has a padding set: so remove 
+
+            var hAvailable = height - 20; // todo: get this from the <div>
+
+            // tell the currently visible portal to resize to this available height:
+            var portal = this.portals[this.keyVisiblePortal];
+            if (portal.resize) portal.resize(hAvailable);
+        },
+
+
         showPortal:function(key) {
 
             for (var k in this.portals) {
@@ -230,6 +272,8 @@ function(){
                     this.portals[k].hide();
                 }
             }
+
+            this.keyVisiblePortal = key;
 
         },
 

@@ -160,6 +160,12 @@ AD.log('query:', req.query);
 					// relocate the image to actual filesystem location
 					// Naming Convention:  [Activity.id]_[Image.id]_[uuid].ext
 					// var newName = [values.activity, '_', newImage.id, '_', values.image].join('');
+					// 
+					// NOTE: .toSavedFileName() will internally update the .image to the new name
+					//       but the instance isn't saved yet.
+					//		 This FCFCore....tempToActivity() has a chance to fail and if it does we
+					//		 don't .save() that name change.
+					//       else we will .save() the image in the next step.
 					var newName = newImage.toSavedFileName(values.image);
 					FCFCore.files.images.tempToActivity(values.image, newName)
 					.fail(function(err){
@@ -208,6 +214,39 @@ AD.log('query:', req.query);
 					next(err);
 				});
 
+			},
+
+
+			// 5) if this is the 1st image for an Activity, then use this image name
+			//    for the Activity.defaultImage
+			function(next) {
+
+				FCFActivity.findOne({ id: newImage.activity})
+				.then(function(activity){
+
+					if (!activity.default_image) {
+
+						activity.default_image = newImage.image;
+						activity.save()
+						.then(function(data) {
+							AD.log('... activity.default_image = '+data.default_image);
+							finalData.default_image = finalData.image; // --> should already be converted to proper path
+							next();
+						})
+						.catch(function(err){
+							AD.log.error('error: updating activity.default_image: activity.save() failed: ', err);
+							next(err);
+						})
+					} else {
+						finalData.default_image = false;  // <-- no update happened.
+						next();
+					}
+				})
+				.catch(function(err){
+					AD.log.error('error: can\'t FCFActivity.findOne() id:'+newImage.activity+' ', err);
+					next(err);
+				})
+
 			}
 			
 
@@ -231,11 +270,13 @@ AD.log('query:', req.query);
 
 		var tags = req.param('taggedPeople');
 
+		var origImage = null;       // {string} name of original image
 		var currImage = null;
 		var updatedImage = null;
 
 		var isImageSwap = false;	// are they swapping out an image?
 
+		var finalData = null;		// this is what we will send back
 
 		var id = req.param('id');
 		if (!id) {
@@ -289,17 +330,20 @@ AD.log('query:', req.query);
 				} else {
 
 					// there is image data sent
-AD.log('currImage.image['+currImage.image+']  newImage['+newImage+']')
+
+					origImage = currImage.image;  // track our original image name
+
 					// if they are the same
 					if (currImage.image == newImage) {
 
-AD.log('... image reference unchanged.');
+						// AD.log('... image reference unchanged.');
 						// nope, they are the same.
 						// move along
 						next();
 						
 					} else {
-AD.log('... looks like an imageSwap!');
+
+						AD.log('... looks like an imageSwap!');
 						// we must be replacing the image
 						// mark that we are doing an imageSwap:
 						isImageSwap = true;
@@ -319,7 +363,7 @@ AD.log('... looks like an imageSwap!');
 					next();
 
 				} else {
-AD.log('... removing ['+ FCFCore.paths.images.activities(currImage.image) + ']' );
+					AD.log('... removing original image ['+ FCFCore.paths.images.activities(currImage.image) + ']' );
 					fs.unlink(FCFCore.paths.images.activities(currImage.image), function(err){
 
 						// ok so what if there was an error?
@@ -425,13 +469,13 @@ AD.log('... removing ['+ FCFCore.paths.images.activities(currImage.image) + ']' 
 					// tags represents the official list of who should be tagged
 
 					var currListTags = []; // collect any tags that didn't get removed.
-AD.log('... given tags:', tags);
+// AD.log('... given tags:', tags);
 
-AD.log('... currently tagged people:');
-AD.log(currImage.taggedPeople);
+// AD.log('... currently tagged people:');
+// AD.log(currImage.taggedPeople);
 					// foreach tag in currImage that isn't in provide list -> remove
 					currImage.taggedPeople.forEach(function(person){
-AD.log('... person:', person.IDPerson);
+// AD.log('... person:', person.IDPerson);
 						// note: the values in tags are strings,
 						// so convert person.IDPerson to string here:
 						var personID = person.IDPerson + '';  
@@ -442,11 +486,11 @@ AD.log('... person:', person.IDPerson);
 							currListTags.push( personID );
 						}
 					});
-AD.log('... currListTags:', currListTags);
+// AD.log('... currListTags:', currListTags);
 
 					// for each provided tag that isn't in our currListTags -> add
 					tags.forEach(function(id){
-AD.log('... tags:', id);
+// AD.log('... tags:', id);
 						if (currListTags.indexOf(id) == -1) {
 							AD.log('... adding tag for person ['+id+']');
 							currImage.taggedPeople.add(id);
@@ -471,6 +515,9 @@ AD.log('... tags:', id);
 
 				currImage.save()
 				.then(function(savedImg){
+
+					// this is what we'll send back to the client
+					finalData = savedImg.toClient(langCode);
 
 					// now save any caption change:
 					var newCaption = req.param('caption');
@@ -501,6 +548,48 @@ AD.log('... tags:', id);
 					next(err);
 				})
 
+			},
+
+
+			// 6) if we changed images, and our image was the Activity's default image
+			//    update the activity.default_image
+			function(next) {
+
+				if (!isImageSwap) {
+					next();
+				} else {
+
+
+					// get Activity
+					FCFActivity.findOne({ id: currImage.activity})
+					.then(function(activity){
+
+						if (activity.default_image == origImage ) {
+
+							AD.log('... image\'s activity.default_image was linked to our old image.');
+							activity.default_image = currImage.image;
+							activity.save()
+							.then(function(data) {
+								AD.log('... activity.default_image = '+data.default_image);
+								finalData.default_image = finalData.image; // --> should already be converted to proper path
+								next();
+							})
+							.catch(function(err){
+								AD.log.error('error: updating activity.default_image: activity.save() failed: ', err);
+								next(err);
+							})
+						} else {
+							finalData.default_image = false;  // <-- no update happened.
+							next();
+						}
+					})
+					.catch(function(err){
+						AD.log.error('error: can\'t FCFActivity.findOne() id:'+currImage.activity+' ', err);
+						next(err);
+					})
+
+				}
+
 			}
 
 		], function(err, results){ 
@@ -509,8 +598,10 @@ AD.log('... tags:', id);
 				err._model = 'FCFActivityImages';
 				ADCore.comm.error(res, err);
 			} else {
-
-				ADCore.comm.success(res,{ status:'updated' });
+				AD.log('... finalData:', finalData);
+				AD.log("<green>activityimage.update() finished</green>");
+				res.send(finalData);
+				// ADCore.comm.success(res,finalData);
 
 			}
 
@@ -523,6 +614,10 @@ AD.log('... tags:', id);
 	destroy:function(req, res) {
 
 		var currImage = null;
+
+		var imageName = null;
+
+		var finalData = {};  
 
 AD.log('<green>ActivityImageController.destroy()</green>');
 
@@ -538,12 +633,14 @@ AD.log('<green>ActivityImageController.destroy()</green>');
 			// 1) get the current Image instance
 			function(next) {
 
-AD.log('... finding current Image by id['+id+']');
+				AD.log('... finding current Image by id['+id+']');
 				FCFActivityImages.findOne({ id:id })
 				.populate('taggedPeople')
+				.populate('activity')
 				.then(function( image ) {
 
 					currImage = image;
+					imageName = currImage.image;
 					next();
 
 // currImage.translate(langCode)
@@ -568,7 +665,7 @@ AD.log('... finding current Image by id['+id+']');
 			function(next) {
 
 
-AD.log('... removing ['+ FCFCore.paths.images.activities(currImage.image) + ']' );
+				AD.log('... removing existing image ['+ FCFCore.paths.images.activities(currImage.image) + ']' );
 				fs.unlink(FCFCore.paths.images.activities(currImage.image), function(err){
 
 					// ok so what if there was an error?
@@ -578,31 +675,85 @@ AD.log('... removing ['+ FCFCore.paths.images.activities(currImage.image) + ']' 
 			
 			},
 
-			
 
-			// // 4) remove any tags
-			// function(next) {
-
-			// 	// foreach tag in currImage that isn't in provide list -> remove
-			// 	currImage.taggedPeople.forEach(function(person){
-
-			// 		AD.log('... removing tag for person['+ person.IDPerson+']');
-			// 		currImage.taggedPeople.remove(person.IDPerson);
-			// 	});
-
-			// 	// ok, tags removed!
-			// 	next();
-			// },
-
-			// 3) now destroy the image translations
+			// 3) now, if the image's activity is using this image for it's default image
+			//    choose another!
 			function(next) {
 
-AD.log('... removing image translations');
+				// get Activity
+				var activity = currImage.activity;
+				if (!activity) {
+
+					AD.log.error('our image did not return an activity!  Why?  image:', currImage);
+					next();  // just keep on going for now.
+				} else {
+
+					// if they are not the same, then move along
+					if (activity.default_image != currImage.image) {
+
+						next();
+
+					} else {
+
+
+						// ok, we need to find another image and choose that one!
+//// TODO:  in future we might want to simply emit an event that Activity lost an image
+//// TODO:  in future there will be an interface to manage Activity Data and setting an image will be that responsibility
+////        we should not have to do this here.
+
+						AD.log('... this image was the Activity.default_image');
+						FCFActivityImages.find({ id:{ '!':currImage.id }, activity: activity.id })
+						.then(function(list){
+
+							// if there are other images then choose first image
+							if ((list) && (list.length > 0)) {
+
+								activity.default_image = list[0].image; 
+							} else {
+
+								// else return to null
+								activity.default_image = null;
+								AD.log('... no other images found')
+							}
+
+							AD.log("... updating default_image:"+activity.default_image);
+							activity.save()
+							.then(function(a) {
+
+								finalData.default_image = a.imageURL();
+
+								// all done
+								next();
+							})
+							.catch(function(err) {
+								AD.log.error('error: cant save activity change. ', err);
+
+								// next(err);
+								next();  // <-- just move along for now since this is a secondary issue!
+							})
+						})
+						.catch(function(err){
+
+							AD.log.error('error: cant find additional images for activity:', err, activity);
+							// next(err);
+							next();
+						})
+					}
+				}
+			},
+
+			
+
+
+			// 4) now destroy the image translations
+			function(next) {
+
+				AD.log('... removing image translations');
 
 				FCFActivityImagesTrans.destroy({ fcfactivityimages: currImage.id })
 				.then(function( trans ){
 
-AD.log('... removing the image entry');
+					AD.log('... removing the image entry');
 
 					// and now the actual image entry!
 					currImage.destroy()
@@ -624,6 +775,9 @@ AD.log('... removing the image entry');
 
 			}
 
+
+
+
 		], function(err, results){ 
 
 			if (err) {	
@@ -631,7 +785,13 @@ AD.log('... removing the image entry');
 				ADCore.comm.error(res, err);
 			} else {
 
-				ADCore.comm.success(res,{ status:'destroyed' });
+				AD.log('<green> activityimage.delete() complete. </green>');
+				
+
+//// TODO: once we update AD.Models.get() to use our AD.comm.send() routines do this:
+				// ADCore.comm.success(res, finalData );
+
+				res.send(finalData);
 
 			}
 

@@ -21,6 +21,7 @@ module.exports = {
     // Return the list of Activities for a given Ministry
     , find:function(req, res) {
 
+        AD.log('<green>teamactivities.find()</green>');
 
         var FinalData = [];
         var listActivities = null;
@@ -35,7 +36,7 @@ module.exports = {
 
         // if no minId provided, return an error.
         if (!minId) {
-
+            AD.log.error('error: no team id provided.');
             var err = new Error('No Team provided.');
             ADCore.comm.error(res, err, 500);
             return;
@@ -57,7 +58,7 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
 
         async.series([
 
-            // get the user's Person Entry
+            // 1) finding all activities with given team id
             function(next) {
 
                 FCFActivity.find({team:minId})
@@ -81,14 +82,17 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
 
             // Flatten this out to our essential data:
             function(next) {
+
+                AD.log('... flattening list for client:');
                 listActivities.forEach(function(activity){
 
-                    var obj = {};
-                    obj.id = activity.id;
-                    obj.team = activity.team;
-                    obj.activity_name = activity.activity_name;
-                    obj.createdBy = activity.createdBy ? activity.createdBy.displayName(langCode) : '';
-                    obj.approvedBy = activity.approvedBy ? activity.approvedBy.displayName(langCode): '';
+                    var obj = activity.toClient(langCode);
+                    // {};
+                    // obj.id = activity.id;
+                    // obj.team = activity.team;
+                    // obj.activity_name = activity.activity_name;
+                    // obj.createdBy = activity.createdBy ? activity.createdBy.displayName(langCode) : '';
+                    // obj.approvedBy = activity.approvedBy ? activity.approvedBy.displayName(langCode): '';
 
                     FinalData.push(obj);
                 })
@@ -104,6 +108,8 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
                 ADCore.comm.error(res, err, 500);
             } else {
 
+                AD.log('... final data:', FinalData);
+                AD.log('<green> end: teamactivities.find()</green>');
                 ADCore.comm.success(res, FinalData);
             }
 

@@ -16,10 +16,10 @@ module.exports = {
     // /activityreport/activities/:teamid
     activities:function(req, res) {
 
+        AD.log('<green>::: activityreport.activities() :::</green>');
 
         // what is the current language_code of the User
         var langCode = ADCore.user.current(req).getLanguageCode();
-
 
 
         var minId = req.param('team');
@@ -46,6 +46,7 @@ module.exports = {
             // -- or have ended no more than 120 days ago
             function(next) {
 
+                AD.log('... finding activities that have ended no more than 120 days ago');
                 var fourMonthsAgo = new Date();
                 fourMonthsAgo.setDate(fourMonthsAgo.getDate() - 120 )
 
@@ -67,49 +68,50 @@ module.exports = {
             },
 
 
-            // now lookup the Projects for these Activities
-            // when we are done we want hashProjects [ minID ] = project
-            function(next) {
+            // // now lookup the Projects for these Activities
+            // // when we are done we want hashProjects [ minID ] = project
+            // function(next) {
+                
+            //     AD.log('... look up all projects for these activities ');
+            //     var ids = [];
+            //     var tempHash = {};  // projID : minID
 
-                var ids = [];
-                var tempHash = {};  // projID : minID
+            //     // collect all the project id's to look up:
+            //     listActivities.forEach(function(activity){
+            //         if(activity.team) {
+            //             ids.push(activity.team.IDProject);
 
-                // collect all the project id's to look up:
-                listActivities.forEach(function(activity){
-                    if(activity.team) {
-                        ids.push(activity.team.IDProject);
+            //             // a reverse lookup for our projectID : ministryID
+            //             tempHash[activity.team.IDProject] = activity.team.IDMinistry;
+            //         }
+            //     })
 
-                        // a reverse lookup for our projectID : ministryID
-                        tempHash[activity.team.IDProject] = activity.team.IDMinistry;
-                    }
-                })
+            //     // if we have some peojects to lookup:
+            //     if ( ids.length > 0) {
 
-                // if we have some peojects to lookup:
-                if ( ids.length > 0) {
+            //         FCFProject.find({IDProject:ids})
+            //         .then(function(list){
 
-                    FCFProject.find({IDProject:ids})
-                    .then(function(list){
+            //             // for each project, populate our hashProjects
+            //             list.forEach(function(project){
+            //                 var minID = tempHash[project.IDProject];
+            //                 hashProjects[ minID ] = project;
+            //             })
 
-                        // for each project, populate our hashProjects
-                        list.forEach(function(project){
-                            var minID = tempHash[project.IDProject];
-                            hashProjects[ minID ] = project;
-                        })
+            //             next();
 
-                        next();
+            //         })
+            //         .catch(function(err){
+            //             next(err);
+            //         })
 
-                    })
-                    .catch(function(err){
-                        next(err);
-                    })
+            //     } else {
 
-                } else {
-
-                    next();
-                }
+            //         next();
+            //     }
                 
 
-            },
+            // },
 
 
 
@@ -117,16 +119,19 @@ module.exports = {
             // we only want:  id, activity_name, team_name, PersonName
             function(next) {
 
+                AD.log('... flatten for client');
                 listActivities.forEach(function(entry){
-                    var obj = {};
-                    obj.id = entry.id;
-                    obj.activity_name = entry.activity_name;
-                    obj.team_name = entry.team.MinistryDisplayName;
-                    obj.imageURL =  entry.default_image || '/data/fcf/images/activities/placeholder_activity.jpg';
-                    obj.ProjectOwner = '?';
-                    if (hashProjects[entry.team.IDMinistry]) {
-                        obj.ProjectOwner = hashProjects[entry.team.IDMinistry].displayName(langCode);
-                    }
+                    var obj = entry.toClient();  //{};
+                    // obj.id = entry.id;
+                    // obj.activity_name = entry.activity_name;
+                    // obj.team_name = entry.team.MinistryDisplayName;
+
+                    // obj.imageURL = entry.imageURL();
+                    
+                    // obj.ProjectOwner = '?';
+                    // if (hashProjects[entry.team.IDMinistry]) {
+                    //     obj.ProjectOwner = hashProjects[entry.team.IDMinistry].displayName(langCode);
+                    // }
                     
 
                     FinalData.push(obj);
@@ -144,6 +149,8 @@ module.exports = {
                 ADCore.comm.error(res, err, 500);
             } else {
 
+                AD.log('... final data:', FinalData);
+                AD.log('<green>::: end activityreport.activities() :::</green>');
                 ADCore.comm.success(res, FinalData);
             }
 

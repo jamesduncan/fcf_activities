@@ -8,18 +8,14 @@ module.exports={
     paths: {
 
 
-        // "dropzone.js"  : "dropzone/dropzone.min.js",
-        // "dropzone.css" : "dropzone/dropzone.css",
-        "select3.js"   : "js/select3/select3-full.min.js",
-        "select3.css"  : "js/select3/select3.css"
+        "selectivity.js"   : "js/selectivity/selectivity-full.min.js",
+        "selectivity.css"  : "js/selectivity/selectivity-full.min.css"
     },
     shim : {
 
-        // 'dropzone.js'  : { packaged:false },
-        // 'dropzone.css' : { packaged:false },
 
-        'select3.js'  : { packaged:false },
-        'select3.css' : { packaged:false },
+        'selectivity.js'  : { packaged:false },
+        'selectivity.css' : { packaged:false },
 
 
         //// Don't include our labels in our production.js

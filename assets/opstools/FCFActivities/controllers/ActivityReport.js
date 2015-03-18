@@ -9,8 +9,9 @@ steal(
 
         'dropzone.js',
         'dropzone.css',
-        'select3.js',
-        'select3.css',
+
+        'selectivity.js',
+        'selectivity.css',
 //        'appdev/widgets/ad_delete_ios/ad_delete_ios.js',
         // '//opstools/FCFActivities/views/ActivityReport/ActivityReport.ejs',
 function(){
@@ -228,7 +229,7 @@ function(){
             this.dom.inputImage.val('');
             this.dom.inputCaption.val('');
             this.dom.inputDate.val('');
-            this.dom.inputTags.select3('value', []);
+            this.dom.inputTags.selectivity('value', []);
             this.dom.peopleObjects.find('li.fcf-activity-people-objects').show();
 
 
@@ -252,15 +253,35 @@ function(){
             // else UPDATE this one
             if (this.currentlyEditingImage) {
 
+                var activityID = this.currentlyEditingImage.activity;
+                self.clearImageList();
             
                 this.currentlyEditingImage.destroy()
                 .fail(function(err){
 //// TODO: how do we handle Errors?
 
                 })
-                .then(function(data){
+                .then(function(obj){
 
-                    self.clearForm();    
+                    self.clearForm();   
+
+                    // if the related activity's default_image is updated:
+                    if (obj.default_image) {
+
+                        // for each activity in our list:
+                        self.listActivities.forEach(function(activity){
+                            if (activity.id == activityID) {
+
+                                // todo:  this is stupid!  we need to have our activities reflect the model on the 
+                                //        server!
+                                activity.attr('imageURL', obj.default_image);
+                            }
+                        })
+                    }
+
+                    self.refreshPeopleTaggedInActivities( activityID );
+                    self.refreshPeopleTaggedInImages();
+
 console.log('... listImages:', self.listImages);                    
                 })
             }
@@ -315,7 +336,7 @@ console.log('... loading Form with image:',image.getID())
             this.dom.inputDate.datepicker('update', new Date(image.date));
             this.values.date = image.date;
 
-            this.dom.inputTags.select3('value', []);
+            this.dom.inputTags.selectivity('value', []);
             this.dom.peopleObjects.find('li.fcf-activity-people-objects').show();
 
             image.taggedPeople.forEach(function(personID){
@@ -372,7 +393,23 @@ console.log('... loading Form with image:',image.getID())
                         self.listImages.unshift(obj);
                         self.clearForm();
 
+
+                        // if the related activity's default_image is updated:
+                        if (obj.default_image) {
+
+                            // for each activity in our list:
+                            self.listActivities.forEach(function(activity){
+                                if (activity.id == valuesObj.activity) {
+
+                                    // todo:  this is stupid!  we need to have our activities reflect the model on the 
+                                    //        server!
+                                    activity.attr('imageURL', obj.default_image);
+                                }
+                            })
+                        }
+
                         self.refreshPeopleTaggedInActivities( valuesObj.activity );
+                        self.refreshPeopleTaggedInImages(obj);
 
                     })
 
@@ -380,7 +417,9 @@ console.log('... loading Form with image:',image.getID())
 
                     // else UPDATE this one
                     this.currentlyEditingImage.attr(valuesObj);
-                    // this.currentlyEditingImage.attr('taggedPeople', taggedPeople); // update our taggedPeople array
+
+                    // not sure why, but it seems this is how to update the embedded taggedPeople[]
+                    this.currentlyEditingImage.attr('taggedPeople', valuesObj.taggedPeople); // update our taggedPeople array
                     this.currentlyEditingImage.save()
                     .fail(function(err){
 //// TODO: how do we handle Errors?
@@ -390,9 +429,28 @@ console.error(err);
                     .then(function(data){
 
 console.log(' ... returnedData:', data);
+                        // we should get the actual image/path back:
+                        self.currentlyEditingImage.attr('image', data.image);
+                        self.currentlyEditingImage.attr('taggedPeople', data.taggedPeople);
+
+                        // if the related activity's default_image is updated:
+                        if (data.default_image) {
+
+                            // for each activity in our list:
+                            self.listActivities.forEach(function(activity){
+                                if (activity.id == valuesObj.activity) {
+
+                                    // todo:  this is stupid!  we need to have our activities reflect the model on the 
+                                    //        server!
+                                    activity.attr('imageURL', data.default_image);
+                                }
+                            })
+                        }
+
                         self.clearForm();  
 
                         self.refreshPeopleTaggedInActivities( valuesObj.activity );
+                        self.refreshPeopleTaggedInImages(data);
 
                     })
 
@@ -478,7 +536,7 @@ console.log(' ... returnedData:', data);
 
             // compile the taggedPeople:
             var taggedPeople = [];
-            var listTags = this.dom.inputTags.select3('data');
+            var listTags = this.dom.inputTags.selectivity('data');
 
 // console.log('listTags:', listTags);
             listTags.forEach(function(tag) {
@@ -553,6 +611,17 @@ console.log(' ... returnedData:', data);
             this.element.find('.fcf-activity-tag-list').html(' ');
 
 
+            //// 
+            //// Create a template for our Image's Tagged People:
+            //// (NOTE: do this before creating the Image List Template)
+
+            var imageListTaggedPeopleTemplate =  this.domToTemplate(this.element.find('.fcf-activity-image-tag-list'));
+            can.view.ejs('FCFActivities_ActivityReport_ImageTaggedPeople', imageListTaggedPeopleTemplate);
+
+            // remove the template from the DOM
+            this.element.find('.fcf-activity-image-tag-list').html(' ');
+
+
             ////
             //// Create our Activity List Template
             ////
@@ -587,6 +656,9 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             can.view.ejs('FCFActivities_ActivityReport_PersonList', template);
 
 
+
+
+
             ////
             //// Attach to DOM elements
             ////
@@ -600,8 +672,11 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
             // Image List Column:
             this.dom.titleActivity = this.element.find('.fcf-activity-activity-name');
+            this.dom.activityStartDate = this.element.find('.fcf-activity-activity-startdate');
+            this.dom.activityEndDate = this.element.find('.fcf-activity-activity-enddate');
             this.dom.titleActivityProject = this.element.find('.fcf-activity-activity-project-name');
             this.dom.titleActivityTeam    = this.element.find('.fcf-activity-activity-team-name');
+            
             this.dom.listImages           = this.element.find('.fcf-activity-report-activity-images');
             this.dom.listImages.children().remove();
             this.dom.listImages.css('height', "400px");
@@ -660,7 +735,7 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                 console.warn('labelKey:'+ labelKey + ' :: no label returned.');
                 label = '*people in photo';
             }
-            this.dom.inputTags.select3({
+            this.dom.inputTags.selectivity({
                 items: [ {id:0, text:'no items loaded' }],
                 multiple: true,
                 placeholder:label
@@ -668,6 +743,10 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             this.dom.inputTags.on('change', function(obj, a, b) {
                 self.personSelected(obj);
             })
+            this.dom.inputTags.on('selectivity-close', function() {
+                self.dom.inputTags.css('z-index', 999);  // fix z position bug!
+            })
+            this.dom.inputTags.css('z-index', 999);
 
 
             // var emptyList = new can.List([]);
@@ -682,7 +761,16 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             this.dom.buttons.delete = this.element.find('#fcf-activity-image-form-delete');
 
 
+            // attach to structural DOM elements to help our resizing calculations
+            this.dom.resize = {};
+            this.dom.resize.pagination = this.element.find('#fcf-activity-pagination');
+            this.dom.resize.navButtons = this.element.find('#fcf-activity-actionsbtn');
+            this.dom.resize.navButtonsInner = this.dom.resize.navButtons.find('.btnactions');
+            this.dom.resize.contentSection = this.element.find('#fcf-activity-content-section');
 
+            this.dom.resize.activityList = this.dom.resize.contentSection.find('.fcf-activity-contentsection-activityList');
+            this.dom.resize.activityListLabel = this.dom.resize.activityList.find('.fcf-activity-activityList-label');
+            this.dom.resize.activityListContent = this.dom.listActivities;
         },
 
 
@@ -720,8 +808,8 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                     });
                 })
 
-                // initialize the select3 tag selector with converted list
-                self.dom.inputTags.select3({
+                // initialize the selectivity tag selector with converted list
+                self.dom.inputTags.selectivity({
                     items: data,
                     multiple: true,
                     placeholder: 'people in photo'
@@ -824,7 +912,7 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
                     // remove existing activity <div>
                     self.dom.listActivities.find('div.fcf-activity-list-item').remove();
-                    self.dom.listActivities.append(can.view('FCFActivities_ActivityReport_ActivityList', {activities: self.listActivities, whoami:self.whoami }));
+                    self.dom.listActivities.append(can.view('FCFActivities_ActivityReport_ActivityList', {activities: self.listActivities, ProjectName:self.selectedTeam.ProjectOwner, whoami:self.whoami }));
 
 
                     // refresh all the activities' tagged people
@@ -962,6 +1050,68 @@ console.warn('***** imageListTemplate:', imageListTemplate);
         },
 
 
+        refreshPeopleTaggedInImages:function(image){
+            var self = this;
+
+            var listImages = [];
+            if (typeof image == 'undefined') {
+                listImages = this.listImages;
+            } else {
+                listImages.push(image);
+            }
+
+            listImages.forEach(function(img){
+
+                // get the proper tag list for this image
+                var pTag = self.element.find('.fcf-activity-image-tag-list[imageID='+img.id+']');
+                pTag.html(' ');
+                pTag.append(can.view('FCFActivities_ActivityReport_ImageTaggedPeople', {taggedPeople:img.taggedPeople, teammates:self.listTeammates,  whoami:self.whoami }))
+
+            })
+
+
+        },
+
+
+
+        resize:function(height) {
+
+console.log('////// resize! : '+height);
+            
+            // we have an outer <div> with 20px of spacing added:
+            height = height - 20; // todo: get this from the <div>
+
+            // set the height of our outer div
+            this.element.css('height', height+'px');
+
+            // height of our inner content = outer.height - pagination.height - navButtons.height
+            var heightPagination = this.dom.resize.pagination.outerHeight(true);
+            var heightNavButtons = this.dom.resize.navButtons.outerHeight(true);
+            var heightNavButtons = heightNavButtons + this.dom.resize.navButtonsInner.outerHeight(true);
+            var heightInnerContent = height - heightPagination - heightNavButtons;
+
+console.log('heightPagination:'+heightPagination);
+console.log('heightNavButtons:'+heightNavButtons);
+console.log('heightInnerContent:'+heightInnerContent);
+
+            this.dom.resize.contentSection.css('height', heightInnerContent+'px');
+
+
+            // height of our Activity List Column
+            var heightActivityListOuter = heightInnerContent - 20; // activity list has a 20px bottom margain
+            this.dom.resize.activityList.css('height', heightActivityListOuter + 'px')
+            var heightActivityLabel = this.dom.resize.activityListLabel.outerHeight(true);
+            // height of activityListContent = heightActivityListOuter - heightLabel - 20px inner padding-bottom
+            var heightActivityListContent = heightActivityListOuter - heightActivityLabel - 20;
+            this.dom.resize.activityListContent.css('height', heightActivityListContent+'px');
+
+
+            // height of our image column (combined columns 2 & 3)
+            
+
+        },
+
+
 
         selectActivity: function( activity) {
 
@@ -983,12 +1133,13 @@ console.warn('***** imageListTemplate:', imageListTemplate);
         },
 
 
+
         /**
          * @function personSelected
          *
-         * called everytime the select3 widget is updated.
+         * called everytime the selectivity widget is updated.
          *
-         * NOTE: will be called when a personObj is clicked and select3 widget is
+         * NOTE: will be called when a personObj is clicked and selectivity widget is
          * programatically updated.  However that method doesn't produce .added, 
          * .removed  properties to the opt parameter.
          *
@@ -1040,19 +1191,35 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                 self.listImages = list;
                 self.dom.listImages.append( can.view('FCFActivities_ActivityReport_ImageList', {images:list, teammates:self.listTeammates, whoami:self.whoami}));
 
+
+                self.refreshPeopleTaggedInImages();
+
                 self.selectImageRow( self.dom.listImages.find('.addImage'));
                 self.clearForm();
             })
 
 
             this.dom.titleActivity.text(this.selectedActivity.activity_name);
-            this.dom.titleActivityProject.text(this.selectedActivity.ProjectOwner);
-            this.dom.titleActivityTeam.text(this.selectedActivity.team_name);
+            this.dom.activityStartDate.text(this.toDate(this.selectedActivity.date_start));
+            this.dom.activityEndDate.text(this.toDate(this.selectedActivity.date_end));
+            this.dom.titleActivityProject.text(this.selectedTeam.ProjectOwner);
+            this.dom.titleActivityTeam.text(this.selectedTeam.MinistryDisplayName);
 
             // load the images for this activity  
                 // @resource  FCFImages, ActivityImages
                 // @findAll, @find, @create, @update, @destroy
 
+        },
+
+        toDate:function(date) {
+
+            if ((!date)
+                || (date == '') ){
+                return 'ongoing';
+            }
+
+            var parts = date.split('T');
+            return parts[0];
         },
 
 
@@ -1150,7 +1317,7 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
             // if the current list of tags doesn't already have this tag 
             // then add it.
-            var currList = this.dom.inputTags.select3('data');
+            var currList = this.dom.inputTags.selectivity('data');
             var currListIDs = [];
             currList.forEach(function(entry){
                 currListIDs.push(entry.id);
@@ -1162,7 +1329,7 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
 
 
-            // var currList = this.dom.inputTags.select3('data');
+            // var currList = this.dom.inputTags.selectivity('data');
             // var currListHash = {};
             // currList.forEach(function(curr){
             //     currListHash[curr.id] = curr.text;
@@ -1172,7 +1339,7 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             //     currList.push({id:person.attr('IDPerson'), text:person.attr('display_name')})
             // }
             
-            this.dom.inputTags.select3('data', currList);
+            this.dom.inputTags.selectivity('data', currList);
 
             ev.preventDefault();
         },

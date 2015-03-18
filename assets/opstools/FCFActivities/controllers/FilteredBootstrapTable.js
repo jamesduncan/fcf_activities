@@ -99,6 +99,12 @@ function(){
      *      dataToTerm          {fn}   a fn(data) called on each data entry provided.  should return 
      *                                 a {string} search term representing that data obj. 
      *     
+     *      rowStyle            {fn}   a fn(row, index) {} that returns what css style should be 
+     *                                 applied to the row.
+     *                                  return {}   for nothing
+     *                                  return { classes:'cssStyle' }  to assign a style
+     *
+     *  
      *
      *  Methods:
      *  --------
@@ -120,6 +126,13 @@ function(){
                 scrollToSelect:true,            // scroll to bootstrap-table entry upon selection
                 filterTable:false,              // auto filter bootstrap-table data to match typeahead
 
+                rowStyle:false,                 // the row style formatter fn
+                                                // function(row,index) { return {} }
+
+                cssSelected:'active',           // a css style to set a selected row to
+
+                modelID:'id',                   // {string} the unique id field for our data objects
+
                 // callbacks:
                 dataCursorOn:function(el) {},   // fn() called when typeahead cursor is on an option
                 rowClicked:function(el) {},     // fn() called when table row clicked
@@ -135,6 +148,24 @@ function(){
             }, options);
             this.options = options;
 
+
+
+            //// figure out rowStyle settings
+            // tableOptions.rowStyle takes precedence
+            // a provided rowStyle comes next
+            // our default self.rowStyle is last
+            if(typeof this.options.tableOptions.rowStyle == 'undefined') {
+
+                if (this.options.rowStyle) {
+                    this.options.tableOptions.rowStyle = this.options.rowStyle
+                } else {
+                    this.options.tableOptions.rowStyle = function(row, indx) {
+                        return self.rowStyle(row, indx);
+                    }
+                }
+            }
+
+
             // Call parent init
             // this._super(element, options);
 
@@ -142,10 +173,15 @@ function(){
             this.dataHash = {};       // term :  { data }
             this.posHash = {};        // term :  # position (0 - data.length -1)
 
+
+            this.selectedModel = null;  // {obj} keeps track of which model is considered selected
+            this.selectionField = null; // {string} which field of .selectedModel is used for comparison
+
+
             this.table = null;
             this.listData = this.options.data;
 
-            this.attachDOM();   // Attach Typeahead.js
+            this.attachDOM();   // Attach Typeahead.js & Bootstraptable.js
 
             if (this.options.data) {
                 this.load(this.options.data);
@@ -211,7 +247,21 @@ function(){
 
                 var data = self.dataHash[val];
                 if (data) {
-                    self.options.termSelected(data);
+                    self.select(data);          // set which data row should be selected
+                    self.load(self.listData);   // ##Hack! to refresh selected item! (is there a better way?)
+
+                    // ## bootstraptable.js has a settimeout() when reloading data
+                    // if we continue on too quickly, the table header wont display 
+                    // correctly in certain situations: 
+                    //  - header is not visible, so bootstraptable repaints *another* header in table
+                    //  - which causes a new row and might then popup the scroll bar
+                    //  - when .resetView() is called after that, the scrollbar is originally there
+                    //    so the header is adjusted over for that
+                    //  - when all data is displayed, scroll bar is not shown
+                    //  ---> result: header is not in correct position.
+                    AD.sal.setImmediate(function() {
+                        self.options.termSelected(data);
+                    })
                 }
 
             });
@@ -228,7 +278,23 @@ function(){
                 var data = self.dataHash[val];
                 if (data) {
                     self.textFilter.typeahead('close');
-                    self.options.termSelected(data);
+
+                    self.select(data);          // set which data row should be selected
+                    self.load(self.listData);   // ##Hack! to refresh selected item! (is there a better way?)
+
+                    // ## bootstraptable.js has a settimeout() when reloading data
+                    // if we continue on too quickly, the table header wont display 
+                    // correctly in certain situations: 
+                    //  - header is not visible, so bootstraptable repaints *another* header in table
+                    //  - which causes a new row and might then popup the scroll bar
+                    //  - when .resetView() is called after that, the scrollbar is originally there
+                    //    so the header is adjusted over for that
+                    //  - when all data is displayed, scroll bar is not shown
+                    //  ---> result: header is not in correct position.
+                    AD.sal.setImmediate(function() {
+                        self.options.termSelected(data);
+                    })
+                    
                 }
 
             });
@@ -240,11 +306,11 @@ function(){
             this.table.bootstrapTable(this.options.tableOptions);
             this.table
             .on('click-row.bs.table', function (e, row, $element) {
-// console.log('bootstraptable:row clicked');
+                self.selected($element);
                 self.options.rowClicked(row);
             })
             .on('dbl-click-row.bs.table', function (e, row, $element) {
-// console.log('bootstraptable:row double-clicked');
+                self.selected($element);
                 self.options.rowDblClicked(row);
             });
 
@@ -370,6 +436,87 @@ function(){
 
         ready:function() {
             this.table.bootstrapTable('hideLoading');
+        },
+
+
+        resetView: function() {
+            this.table.bootstrapTable('resetView');
+        },
+
+
+        rowStyle: function(row, index) {
+
+            if (this.selectedModel) {
+
+                var rVal = row[this.selectionField];
+                var sVal = this.selectedModel[this.selectionField];
+
+                if (rVal == sVal) {
+
+                    // this is a match!
+                    return { classes: this.options.cssSelected };
+                }
+
+            }
+            
+            // if we get here, then don't apply a css selection
+            return {};
+        },
+
+
+        /*
+         * select()
+         *
+         * called externally with a given model that should be displayed as selected.
+         *
+         * @param {obj} model  the Model of the data row that should be selected.
+         * @param {string} field  the field to compare in our search.
+         */
+        select:function(model, field) {
+
+            field = field || this.options.modelID;  // default to 'id' for typical Models
+
+            // make sure calling model has a field value:
+            if (typeof model[field] != 'undefined') {
+
+                this.selectedModel = model;
+                this.selectionField = field;
+
+
+                var listData = this.table.bootstrapTable('getData');
+                var indx = -1;
+                listData.forEach(function(data){
+                    indx++;
+                    if (typeof data[field] != 'undefined') {
+                        if (data[field] == model[field]) {
+
+                        }
+                    }
+                })
+
+            } else {
+                console.error('FilteredBootstrapTable.select(): model did not contain the given field ['+field+']  model:', model);
+            }
+
+        },
+
+
+        /*
+         * selected()
+         *
+         * called when a row is clicked/dblClicked on.  It will set the css style 
+         * to the provided options.cssSelected if one is provided.
+         *
+         * @param {$el} the TR row that was selected.
+         */
+        selected:function($el) {
+
+            if (this.options.cssSelected) {
+
+                // remove any previous selected markings from any of our row
+                this.table.find('.'+this.options.cssSelected).removeClass(this.options.cssSelected);
+                $el.addClass(this.options.cssSelected);
+            }
         }
 
 
