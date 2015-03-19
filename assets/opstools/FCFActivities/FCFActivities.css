@@ -164,7 +164,7 @@ body {
 
 .opsportal-container-masthead {
 	color:#fff;
-	margin-bottom:20px;
+/*	margin-bottom:20px;  <--- this disrupts the display of other tools! */
 	background-color:#404040 !important;
 	-webkit-box-shadow: 0px 2px 12px 1px rgba(0,0,0,0.3);
 	-moz-box-shadow: 0px 2px 12px 1px rgba(0,0,0,0.3);
@@ -462,6 +462,17 @@ ul.checkbox li {list-style:none !important;}
 }
 */
 
+#fcf-activity-image-upload {
+	padding-top: 0px; 
+	padding-bottom: 0px; 
+	height:150px;
+	overflow-y:auto;
+}
+
+#fcf-activity-image-uploaded {
+	width:100%;
+}
+
 /*Overlap the CSS opsportal here*/
 
-.opsportal-stage-container {background-color:transparent !important; padding-bottom:20px;}
+.opsportal-stage-container {background-color:transparent !important; padding-bottom:20px; margin-top: 20px; }
