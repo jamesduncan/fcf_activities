@@ -66,7 +66,7 @@ function(){
 
 
             this.keyVisiblePortal = 'Portal';    // keep track of which portal is visible
-
+            this.resizePortals = {};
 
             this.dataSource = this.options.dataSource; 
 
@@ -219,24 +219,24 @@ function(){
             // attach the Portal Controller
             var Portal = AD.Control.get('opstools.FCFActivities.Portal');
             this.portals.Portal = new Portal(this.element.find('#fcf-activity-portal'));
-
+            this.resizePortals['Portal'] = true;
 
             // attach The Add Choose Ministry Controller
             var Add1 = AD.Control.get('opstools.FCFActivities.AddChooseMinistry');
             this.portals.Add1 = new Add1(this.element.find('#fcf-activity-add-chooseTeam'));
-
+            this.resizePortals['Add1'] = true;
 
             // attach The Add Choose Activity Controller
             var Add2 = AD.Control.get('opstools.FCFActivities.AddChooseActivity');
             this.portals.Add2 = new Add2(this.element.find('#fcf-activity-add-chooseActivity'));
-
+            this.resizePortals['Add2'] = true;
 
             var Report = AD.Control.get('opstools.FCFActivities.ActivityReport');
             this.portals.Report = new Report(this.element.find('#fcf-activity-add-report'));
+            this.resizePortals['Report'] = true;
 
-
-            var Confirm = AD.Control.get('opstools.FCFActivities.ConfirmStep');
-            this.portals.Confirm = new Confirm(this.element.find('#confirmstep'));
+            // var Confirm = AD.Control.get('opstools.FCFActivities.ConfirmStep');
+            // this.portals.Confirm = new Confirm(this.element.find('#confirmstep'));
         },
 
 
@@ -259,6 +259,14 @@ function(){
             // tell the currently visible portal to resize to this available height:
             var portal = this.portals[this.keyVisiblePortal];
             if (portal.resize) portal.resize(hAvailable);
+
+            // mark all other portals as needing a resize()
+            for (var k in this.resizePortals) {
+                this.resizePortals[k] = (k != portal);
+            }
+
+            this.lastResizeValue = hAvailable;
+
         },
 
 
@@ -268,6 +276,10 @@ function(){
 
                 if (k == key) {
                     this.portals[k].show();
+                    if (this.resizePortals[k]) {
+                        this.portals[k].resize(this.lastResizeValue);
+                        this.resizePortals[k] = false;
+                    }
                 } else {
                     this.portals[k].hide();
                 }

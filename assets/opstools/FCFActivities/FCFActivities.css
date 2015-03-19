@@ -197,7 +197,7 @@ body {
 	box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);		
 }
 
-#content { overflow:hidden;}
+#content { overflow-y:auto;}
 
 .nomargin {margin:0;}
 	

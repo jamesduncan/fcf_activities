@@ -251,6 +251,31 @@ function(){
         // },
 
 
+        resize: function(height) {
+
+            // items needing resizing:
+            // #wrap:  
+            //      has bottom padding -20
+
+            // #content: 
+            //      #wrap: -20
+            //      inner padding: -10, -10
+            //      pagenation: -25
+            //      navbuttons: -35
+            //      bottom margin: -20
+
+
+            // height is our avialable height according to our FCFActivity controller
+            this.element.find('[resize-adj]').each(function(indx, el){
+
+                var $el = $(el);
+                var adj = parseInt($el.attr('resize-adj'), 10);
+
+                $el.css('height', (height+adj) + 'px');
+            })
+        },
+
+
         // return the model instace of the UserTeam entry selected by this page
         value: function() {
 

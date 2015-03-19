@@ -12,14 +12,8 @@
   <link href="mockups/portal-scratch.css" rel="stylesheet" />
   <link href="mockups/bootstraptable/bootstrap-table.css" rel="stylesheet" />
    
-  <script type="text/javascript" src="mockups/jquery-1.11.1.min.js" defer></script>
-  <script type="text/javascript" src="mockups/jquery-ui.js" defer></script>
-  <script type="text/javascript" src="mockups/bootstrap.min.js" defer ></script>
-  <script type="text/javascript" src="mockups/jquery.sidr.min.js" defer ></script>
-  <script type="text/javascript" src="mockups/bootstraptable/bootstrap-table.js" defer></script>
-  <script type="text/javascript" src="mockups/typeahead.jquery.min.js"></script> 
 
-  <script type="text/javascript" src="mockup_setup.js" defer></script>
+
   <!-- End of Mockup Related Files -->
 
 
@@ -55,6 +49,9 @@
 
 
 <!-- HTML Mockup Here -->
+<!--
+      We are not putting this here for now:
+
 
             <div class="container">
               <div class="row">
@@ -62,12 +59,12 @@
                 <div class="col-md-6 col-sm-6 col-xs-6 menulink"><a href="#">New Reports</a>&nbsp;|&nbsp;<a href="#">View Reports</a></div>
               </div>
             </div>
-
+-->
 
                 <!--PAGE 1-->
 
                 <div id="fcf-activity-add-chooseTeam" class="container rbac-display rbac-page1">
-                  <div id="wrap" class="col-md-12">
+                  <div id="wrap" class="col-md-12" resize-adj="-20">
                         <!--Top-->
                         <div id="pagination" class="col-md-12">
                           <div class="row">
@@ -78,29 +75,27 @@
                         <!--End Top-->
                       <!--Content-->      
                       <div class="col-md-12">
-                        <div id="content" class="col-md-12">
+                        <div id="content" class="col-md-12" resize-adj="-120">
 
                           <div class="col-md-12 nopadding">
-                              <h4><span appp-label-key="fcf.assignment.Choose.Team.Instructions">Instructions</span></h4>
-                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam a nunc in est faucibus faucibus. Vestibulum sapien mi, placerat nec arcu vitae, dapibus ultrices sem. Sed in augue eget odio pretium hendrerit. Sed fringilla, sem sed dictum tempor, leo libero egestas felis, vitae rutrum quam magna aliquet est.</p>
+                              <h4><span appp-label-key="fcf.assignment.Choose.Team.InstructionsLabel">Instructions</span></h4>
+                              <p appp-label-key="fcf.assignment.Choose.Team.Instructions">Please select which Team to which you would like add an Activity. Either double-click on the name of the team or type in the name in the Search box.</p>
                               <p>&nbsp;</p>
                               <h4><span appp-label-key="fcf.assignment.Choose.Team.Desc" >What Ministry Team is this activity associated with?</span></h4>
                           </div>
-                          <div class="col-md-12 marginbot15">
+                          <div class="col-md-12 ">
                             <!--Search-->
                             <div class="col-md-6 nopadding">
-                            <div class="fcf-team-list-search form-group nopadding">
-                                <div class="input-group">
-                                  <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                  <input type="text" class="form-control fcf-team-filter typeahead" placeholder="Search for Team">
-                                </div> 
-                            </div>
+                              <div class="fcf-team-list-search form-group nopadding">
+                                  <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                    <input type="text" class="form-control fcf-team-filter typeahead" placeholder="Search for Team">
+                                  </div> 
+                              </div>
                             </div>
                             <!-- /Searh-->
                             <div class="col-md-6"></div>              
                           </div>
-                          
-                      
                           
                             <div class="col-md-12">
                               <table class="fcf-team-list table" data-toggle="table" data-cache="false" data-height="299" >
@@ -129,13 +124,14 @@
                               </table>
                             </div>
                           
-                          <div class="col-md-12 marginbot15 margintop15 align-right">
-                            <a id="fcf-activity-add-chooseteam-next" class="btn custombtn" href="#" role="button" rbac-show="rbac-page2">Next</a>
-                          </div>
+                          
                         </div>
+                        
                       </div>
-                      <!--/Content-->
-                      <div class="col-md-12 align-right bck"><a href="#">Back to Dashboard</a></div>            
+                      <div id="fcf-activity-actionsbtn" class="col-md-12 align-right">
+                          <button id="fcf-activity-add-chooseteam-next" class="btn custombtn" href="#" role="button" rbac-show="rbac-page2">Next</button>
+                      </div>
+                                 
                   </div>
                 </div>                
 
@@ -147,100 +143,99 @@
         
         <!--PAGE 2-->
 
-                    <div >
-                      <div id="wrap" class="col-md-12">
-                            <!--Top-->
-                            <div id="pagination" class="col-md-12">
-                              <div class="row">
-                                <div class="col-md-10"></div>
-                                <div class="col-md-2 align-right marginbot5"><span appp-label-key="fcf.assignment.add.step2">Step 2 of 3</span></div>
-                              </div>
-                            </div>
-                            <!--End Top-->
-                          <!--Content-->      
-                          <div class="col-md-12">
-                            <div id="content" class="col-md-12">
-                              <div class="col-md-12 nopadding">
-                                    <h4>
-                    <span appp-label-key="fcf.assignment.Choose.Instructions">Instructions</span>
-                  </h4>
-                  <p> 
-                    <span appp-label-key="fcf.assignment.Choose.Activity.Team" >Team:</span> <span class="fcf-activity-add-chooseActivity-teamName" >[[= team.attr("MinistryDisplayName")]]</span>
-                  </p>
-                  <p>
-                    <span appp-label-key="fcf.assignment.Choose.Activity.Desc1" >Choose one of the following activities associated with this team.</span>
-                  </p>
-                  <p>
-                    <span appp-label-key="fcf.assignment.Choose.Activity.Desc2" >If you do not see an activity in the list then click the add activity button.</span>
-                  </p>
-                              </div>
-
-                <div class="col-md-12 marginbot15">
-                  <!--Search-->
-                  <div class="col-md-6 nopadding">
-                    <div class="fcf-activity-list-search form-group nopadding">
-                        <div class="input-group">
-                          <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                          <input type="text" class="form-control fcf-activity-filter typeahead" placeholder="Search for Activity">
-                        </div> 
-                    </div>
+        <div >
+          <div id="wrap" class="col-md-12" resize-adj="-20">
+                <!--Top-->
+                <div id="pagination" class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2 align-right marginbot5"><span appp-label-key="fcf.assignment.add.step2">Step 2 of 3</span></div>
                   </div>
-                  <!-- /Searh-->
-                  <div class="col-md-6"></div>              
                 </div>
-                             
-                                <div class="col-md-12">
-                                  <table class="fcf-activity-list table"  data-cache="false" data-height="299">
-                                    <thead>
-                                      <tr>
-                                        <th data-field="activity_name" appp-label-key="fcf.assignment.Activity" > Activity Name</th>
-                                        <th data-field="createdBy" appp-label-key="fcf.assignment.SubmittedBy">Submitted by</th>
-                                        <th data-field="approvedBy" appp-label-key="fcf.assignment.ApprovedBy">Approved by</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <!--  activities.forEach(function(activity){   -->
-                                        <tr class="template"  addata="" >
-                      <td>
-                        [[= activity.attr("activity_name")]]
-                      </td>
-                      <td>
-                        [[= activity.attr("createdBy")]]
-                      </td>
-                      <td>
-                        [[= activity.attr("approvedBy")]]
-                      </td>
-                    </tr>
-                    <!-- }) -->
+                <!--End Top-->
+              <!--Content-->      
+              <div class="col-md-12">
+                <div id="content" class="col-md-12"  resize-adj="-120">
+                    <div class="col-md-12 nopadding">
+                        <h4>
+                          <span appp-label-key="fcf.assignment.Choose.Instructions">Instructions</span>
+                        </h4>
+                        <p> 
+                          <span appp-label-key="fcf.assignment.Choose.Activity.Team" >Team:</span> <span class="fcf-activity-add-chooseActivity-teamName" >[[= team.attr("MinistryDisplayName")]]</span>
+                        </p>
+                        <p>
+                          <span appp-label-key="fcf.assignment.Choose.Activity.Desc1" >Choose one of the following activities associated with this team.</span>
+                        </p>
+                        <p>
+                          <span appp-label-key="fcf.assignment.Choose.Activity.Desc2" >If you do not see an activity in the list then click the add activity button.</span>
+                        </p>
+                    </div>
 
-                                      <tr class='mockup'>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                        <td>Otto</td>
-                                      </tr>
-                                      <tr class='mockup' >
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                        <td>Otto</td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                                <div class="col-md-12">
-                                  <a id="fcf-activity-add-chooseAssignment-addAssignment" class="btn custombtn margintop15" href="#" role="button" data-toggle="modal" data-target="#fcf-modal-new-Activity"><span appp-label-key="fcf.activity.Add" >Add Activity</span></a>
-                                </div>
-                      
-                              
-                                <div class="col-md-12 marginbot15 align-right">
-                                  <a id="fcf-activity-add-chooseAssignment-previous" class="btn custombtn marginrght15" href="#" role="button" rbac-show="rbac-page1"><span appp-label-key="fcf.assignment.Prev" >Previous</span></a><a id="fcf-activity-add-chooseAssignment-next" class="btn custombtn" href="#" role="button" rbac-show="rbac-page3"><span appp-label-key="fcf.assignment.Next" >Next</span></a>
-                                </div>
-                              
+                    <div class="col-md-12 ">
+                        <!--Search-->
+                        <div class="col-md-6 nopadding">
+                            <div class="fcf-activity-list-search form-group nopadding">
+                                <div class="input-group">
+                                  <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                  <input type="text" class="form-control fcf-activity-filter typeahead" placeholder="Search for Activity">
+                               </div> 
                             </div>
-                          </div>
-                          <!--/Content-->
-            
-                      </div>  
-                    </div>   
+                        </div>
+                        <!-- /Searh-->
+                        <div class="col-md-6"></div>              
+                    </div>
+                             
+                    <div class="col-md-12">
+                      <table class="fcf-activity-list table"  data-cache="false" data-height="299">
+                        <thead>
+                          <tr>
+                            <th data-field="activity_name" appp-label-key="fcf.assignment.Activity" > Activity Name</th>
+                            <th data-field="createdBy" appp-label-key="fcf.assignment.SubmittedBy">Submitted by</th>
+                            <th data-field="approvedBy" appp-label-key="fcf.assignment.ApprovedBy">Approved by</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <!--  activities.forEach(function(activity){   -->
+                          <tr class="template"  addata="" >
+                            <td>
+                              [[= activity.attr("activity_name")]]
+                            </td>
+                            <td>
+                              [[= activity.attr("createdBy")]]
+                            </td>
+                            <td>
+                              [[= activity.attr("approvedBy")]]
+                            </td>
+                          </tr>
+                          <!-- }) -->
+
+                          <tr class='mockup'>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                            <td>Otto</td>
+                          </tr>
+                          <tr class='mockup' >
+                            <td>the Bird</td>
+                            <td>@twitter</td>
+                            <td>Otto</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-12">
+                      <a id="fcf-activity-add-chooseAssignment-addAssignment" class="btn custombtn margintop15" href="#" role="button" data-toggle="modal" data-target="#fcf-modal-new-Activity"><span appp-label-key="fcf.activity.Add" >Add Activity</span></a>
+                    </div>
+         
+                  </div>
+                  
+                </div>
+                <div id="fcf-activity-actionsbtn" class="col-md-12 align-right">
+                      <button id="fcf-activity-add-chooseAssignment-previous" class="btn custombtn marginrght15" href="#" role="button" rbac-show="rbac-page1"><span appp-label-key="fcf.assignment.Prev" >Previous</span></button><button id="fcf-activity-add-chooseAssignment-next" class="btn custombtn" href="#" role="button" rbac-show="rbac-page3"><span appp-label-key="fcf.assignment.Next" >Next</span></button>
+                </div>
+                <!--/Content-->
+  
+            </div>  
+          </div>   
 
         <!--/END PAGE 2-->
 
@@ -250,74 +245,72 @@
                       <div class="modal-dialog">
                         <div class="modal-content modal-add-activity">
                           <div class="modal-header">
-                           <p><span appp-label-key="fcf.assignment.addAssignment.Title" >Add a New Activity</span></p>
+                              <p><span appp-label-key="fcf.assignment.addAssignment.Title" >Add a New Activity</span></p>
                           </div>
                           <div class="modal-body inner-add-activity">
-                           <!---->
-                           <form> 
-                                <input type="hidden" id="activity-team" name='team' />
+
+                              <!---->
+                              <input type="hidden" id="activity-team" name='team' />
                               <div class="form-group">
                                 <label for="activityName"><span appp-label-key="fcf.assignment.Choose.ActivityName">Activity Name</span></label>
                                 <p><span appp-label-key="fcf.assignment.addAssignment.Choose.ActivityNameDesc" >Please use a name everyone associated with the activity will organize</span></p>
                                 <input type="text" class="form-control" placeholder="Activity Name" id="activityName" appp-label-key="fcf.assignment.Choose.ActivityName" name="name" required >
                               </div>
-                           </form>
-                           <!---->
-                           <div class="form-inline">
-                <div class="form-group">
-                   <label for="dateStart" appp-label-key="fcf.assignment.addAssignment.Choose.startDate">Start Date</label>
-                   <input type="date" class="form-control" id="dateStart" name="startDate" />
-                </div>
-                <div class="form-group">
-                   <label for="dateEnd" appp-label-key="fcf.assignment.addAssignment.Choose.endDate">End Date</label>
-                   <input type="date" class="form-control" id="dateEnd" name="endDate"/>
-                </div>
-              </div>
-                           <!---->
-                           <div class="row margintop10">
-                            <div class="col-md-12">
-                              <label><span appp-label-key="fcf.assignment.Choose.TeamObjectives">Team Objectives</span></label>
-                              <p><span appp-label-key="fcf.assignment.Choose.TeamObjectivesDesc" > Every activity must meet at least one objective. Please choose all that apply:</span></p>
-                                <ul class="checkbox objectives-section">
-                                  <!-- objectives.forEach(function(objective){ -->
-                                    <li>
-                                        <label><input type="checkbox" value="[[= objective.id ]]" name="objective" /> [[= objective.description ]]</label>
-                                    </li>
-                                    <!-- }) -->
-                                    <li class="mockup" >
-                                        <label><input type="checkbox" id="chk2" name="chk2">Objective 2</label>
-                                    </li>
-                                    <li class="mockup">
-                                        <label><input type="checkbox" id="chk3" name="chk2">Objective 3</label>
-                                    </li>
-                                    <li class="mockup">
-                                        <label><input type="checkbox" id="chk3" name="chk3">Objective 4</label>
-                                    </li>                                
-                                </ul>
-                                       
-                            </div>
-                           </div>
-                           <!---->
-                           <div class="row margintop10">
-                             <div class="col-md-12">
-                                <label><span appp-label-key="fcf.assignment.Choose.Description">Description</span></label>
-                                <p><span appp-label-key="fcf.assignment.Choose.DescriptionDesc" >Please describe this activity using the team objective as guideline </span></p>
-                                <textarea type="textarea" class="form-control" placeholder="Description" id="activityDescription" appp-label-key="fcf.assignment.Choose.Description" name="description">
-                </textarea>
-                             </div>
-                           </div>
-                           <!---->
-                            <div class="modal-footer">
-                              <button id="cancel-add-assignment" type="button" class="btn custombtn" data-dismiss="modal"><span appp-label-key="fcf.assignment.Cancel">Cancel</span></button>
-                              <button id="add-assignment" type="button" class="btn custombtn"><span appp-label-key="fcf.assignment.Add">Add</span></button>
-                            </div>       
+                           
+                              <!---->
+                              <div class="form-inline">
+                                  <div class="form-group">
+                                      <label for="dateStart" appp-label-key="fcf.assignment.addAssignment.Choose.startDate">Start Date</label>
+                                      <input type="date" class="form-control" id="dateStart" name="startDate" />
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="dateEnd" appp-label-key="fcf.assignment.addAssignment.Choose.endDate">End Date</label>
+                                      <input type="date" class="form-control" id="dateEnd" name="endDate"/>
+                                  </div>
+                              </div>
+                              <!---->
+                              <div class="row margintop10">
+                                <div class="col-md-12">
+                                    <label><span appp-label-key="fcf.assignment.Choose.TeamObjectives">Team Objectives</span></label>
+                                    <p><span appp-label-key="fcf.assignment.Choose.TeamObjectivesDesc" > Every activity must meet at least one objective. Please choose all that apply:</span></p>
+                                    <ul class="checkbox objectives-section">
+                                      <!-- objectives.forEach(function(objective){ -->
+                                        <li>
+                                            <label><input type="checkbox" value="[[= objective.id ]]" name="objective" /> [[= objective.description ]]</label>
+                                        </li>
+                                        <!-- }) -->
+                                        <li class="mockup" >
+                                            <label><input type="checkbox" id="chk2" name="chk2">Objective 2</label>
+                                        </li>
+                                        <li class="mockup">
+                                            <label><input type="checkbox" id="chk3" name="chk2">Objective 3</label>
+                                        </li>
+                                        <li class="mockup">
+                                            <label><input type="checkbox" id="chk3" name="chk3">Objective 4</label>
+                                        </li>                                
+                                    </ul>
+                                           
+                                </div>
+                              </div>
+                              <!---->
+                              <div class="row margintop10">
+                                  <div class="col-md-12">
+                                      <label><span appp-label-key="fcf.assignment.Choose.Description">Description</span></label>
+                                      <p><span appp-label-key="fcf.assignment.Choose.DescriptionDesc" >Please describe this activity using the team objective as guideline </span></p>
+                                      <textarea type="textarea" class="form-control" placeholder="Description" id="activityDescription" appp-label-key="fcf.assignment.Choose.Description" name="description"></textarea>
+                                  </div>
+                              </div>
+                              <!---->
+                              <div class="modal-footer">
+                                  <button id="cancel-add-assignment" type="button" class="btn custombtn" data-dismiss="modal"><span appp-label-key="fcf.assignment.Cancel">Cancel</span></button>
+                                  <button id="add-assignment" type="button" class="btn custombtn"><span appp-label-key="fcf.assignment.Add">Add</span></button>
+                              </div>       
                           </div>
-                    
+
                         </div>
                       </div>
                     </div>
                 <!-- /Modal for Add Activity -->
-
         </div>
 
 
@@ -327,7 +320,7 @@
 
 
       <!--PAGE 3-->
-                <div id='fcf-activity-add-report' class="rbac-display rbac-page3" style="display:none;">
+                <div id='fcf-activity-add-report' class="rbac-display rbac-page3" style="display:none;" resize-adj="-20" >
                     <div class="container">
                       <div id="wrap" class="col-md-12">
                             <!--Top-->
@@ -339,25 +332,27 @@
                             </div>
                             <!--End Top-->
                             <!--Content-->      
-                              <div class="col-md-12">
+                              <div id="fcf-activity-content-section" class="col-md-12" resize-adj="-95">
                                 <div class="col-md-12">
-                                  <div class="row">
+                                  <div class="">
                                     <!--All Activity list-->
                                     <div class="col-md-4 nopadleft">
-                                      <div class="col-md-12 innner-content padrigt1">
-                                        <label class="margintop15 marginbot15"><span appp-label-key="fcf.activity.report.AllActivities" >All Activities for </span><span class='fcf-activity-team-name'>[TEAM]</span></label>
-                                        <div id="lc-activity" class="fcf-activity-report-activities col-md-12 nopadding">
+                                      <div class="col-md-12 innner-content padrigt1 fcf-activity-contentsection-activityList" resize-adj="-115" >
+                                        <label class="margintop15 marginbot15 fcf-activity-activityList-label"><span appp-label-key="fcf.activity.report.AllActivities" >All Activities for </span><span class='fcf-activity-team-name'>[TEAM]</span></label>
+                                        <div id="lc-activity" class="fcf-activity-report-activities col-md-12 nopadding" resize-adj="-175">
                                           <!-- activities.forEach(function(activity) {  -->
                                           
                                           <div class="imgleft fcf-activity-list-item" obj-embed="activity" >
                                             
                                                 <div class="col-md-12 col-sm-12 nopadleft">
-                                                  <div class="col-md-5 col-sm-3 col-xs-4 nopadding"><img src="images/fcf_activities/img1.jpg"></div>
+                                                  <div class="col-md-5 col-sm-3 col-xs-4 nopadding"><img src="images/fcf_activities/img1.jpg" style="width:120px;"></div>
                                                   <div class="col-md-6 col-sm-8 col-xs-7">
-                                                    <p><span class="orange">[[= activity.attr("activity_name") ]]</span><br/><span class="blue">Family Connection(team)</span></p>
+                                                    <p><span class="orange">[[= activity.attr("activity_name") ]]</span><br/><span class="blue fcf-activity-activity-project-name">[[= ProjectName ]]</span></p>
                                                     <p class="fcf-activity-tag-list" activityID="[[= activity.attr('id') ]]">
 
 <!-- 
+
+var displayedTags = []; 
 taggedPeople.forEach(function(personID){
 
     var foundPerson = null;
@@ -370,17 +365,24 @@ taggedPeople.forEach(function(personID){
 
     if (foundPerson) {   
 
-      ]] [[= foundPerson.display_name ]],  <!--
+        if (foundPerson.IDPerson != whoami.IDPerson) {
+
+            displayedTags.push(foundPerson.display_name); 
+
+        } else {
+            displayedTags.unshift(' <span class="orange">'+foundPerson.display_name+'</span>');
+        }
 
     }
 
 })
 
--->
+]] [[== displayedTags.join(', ') ]]  <!--
 
-                                                      <span class="orange">Tum</span></p>
+
+--><span class="orange mockup">Tum</span></p>
                                                   </div>
-                                                  <div class="col-md-1 col-sm-1 col-xs-1 nopadding"><img src="images/fcf_activities/tag.jpg"></div>
+                                                  <div class="col-md-1 col-sm-1 col-xs-1 nopadding"><img class="fcf-activity-list-item-tag" activityID="[[= activity.attr('id') ]]" src="images/fcf_activities/tag.jpg"></div>
                                                 </div>  
                                        
                                           </div>
@@ -461,19 +463,20 @@ taggedPeople.forEach(function(personID){
 
                                     <!--Activity Report--> 
                                     <div class="col-md-8 innner-content">
-                                      <div class="row margintop15">
+                                      <div class="row margintop15" resize-adj="-145">
+
                                         <!--Uploaded Photos-->
                                         <div class="col-md-6">
                                           <div class="row marginbot15">
                                             <div class="col-md-12">
                                               <label>Current Activity Report</label>
-                                              <p><span class="orange fcf-activity-activity-name">[Activity Name]</span>   <span class="blue">10/1/14 - Ongoing</span></p>
-                                              <p class="blue">[Project Name]</br>[Team Name]</p>
+                                              <p><span class="orange fcf-activity-activity-name">[Activity Name]</span>   <span class="blue"><span class="fcf-activity-activity-startdate">10/1/14</span> - <span class="fcf-activity-activity-enddate">Ongoing</span></span></p>
+                                              <p class="blue"><span class="fcf-activity-activity-project-name">[Project Name]</span></br><span class="fcf-activity-activity-team-name">[Team Name]</span></p>
                                             </div>
                                           </div>
-                                          <div id="uploaded-img" class="col-md-12 padrigt1">
+                                          <div id="uploaded-img" class="col-md-12 padrigt1" resize-adj="-276">
                                             <label class="margintop15 marginbot15">Uploaded Photos</label>
-                                            <div id="upload-scroll" class="fcf-activity-report-activity-images col-md-12 nopadding">
+                                            <div id="upload-scroll" class="fcf-activity-report-activity-images col-md-12 nopadding" resize-adj="-341">
                                              
                                               <div class="imgleft fcf-activity-image-list-item addImage">
                                                   <div class="row">
@@ -497,35 +500,38 @@ taggedPeople.forEach(function(personID){
                                                         <div class="col-md-4 col-sm-3 col-xs-4 nopadding"><img src="images/fcf_activities/img2.jpg"></div>
                                                         <div class="col-md-8 col-sm-9 col-xs-8">
                                                           <label class="blue">"[[= image.attr("caption") ]]"</label>
-                                                          <p><span class="blue bgfont">People in this photo:</span><br>
-                                                          <span class="orange">Tum</span>
+                                                          <p class="fcf-activity-image-tag-list" imageID="[[= image.attr('id') ]]"><span class="blue bgfont" appp-label-key="fcf.activity.add.report.PeopleInPhoto" >People in this photo:</span><br>
 <!-- 
-console.log('image:', image);
-            var listPeopleIDs = image.attr('taggedPeople');
-console.log('listPeopleIDs:', listPeopleIDs);
-console.log('teammates:', teammates);
 
-            listPeopleIDs.forEach(function(personID){
+var displayedTags = []; 
+taggedPeople.forEach(function(personID){
 
-              var foundPerson = null;
-              teammates.each(function(mate){
-              
-                if (mate.IDPerson == personID) {
-                  foundPerson = mate;
-                }
-              })
+    var foundPerson = null;
+    teammates.each(function(mate){
+    
+      if (mate.IDPerson == personID) {
+        foundPerson = mate;
+      }
+    })
 
-              if (foundPerson) {   
-                
-console.log(foundPerson.display_name);
-                ]] [[= foundPerson.display_name ]]  <!--
+    if (foundPerson) {   
 
-              }
-  
-            })
+        if (foundPerson.IDPerson != whoami.IDPerson) {
+
+            displayedTags.push(foundPerson.display_name); 
+
+        } else {
+            displayedTags.unshift(' <span class="orange">'+foundPerson.display_name+'</span>');
+        }
+
+    }
+
+})
+
+]] [[== displayedTags.join(', ') ]]  <!--
 
 
-          -->
+--> 
 
                                                           </p>
                                                         </div>                            
@@ -591,7 +597,7 @@ console.log(foundPerson.display_name);
                                         <!--Big Image-->
                                         <div class="col-md-6">
                                           <div class="col-md-12 nopadding nomargin">
-                                            <div id="fcf-activity-image-upload" class="dropzone dz-clickable nopadding" style="padding-top: 0px; padding-bottom: 0px;" >
+                                            <div id="fcf-activity-image-upload" class="dropzone dz-clickable nopadding" style="padding-top: 0px; padding-bottom: 0px; height:150px" >
                         <div class="dz-message fcf-activity-icon-picture">
                           <span class="first" appp-label-key="fcf.activity.add.report.DragImageHere">Drag image here</span>
                           <span appp-label-key="fcf.activity.add.report.or">- or -</span>
@@ -634,7 +640,7 @@ console.log(foundPerson.display_name);
 -->
                                           <!--Profile List-->
                                           <div id="profile-list" class="col-md-12 nopadding">
-                                              <div id="profilelist-scroll">
+                                              <div id="profilelist-scroll" resize-adj="-480">
                                                 <div class="col-md-12">
                                                   <ul class="fcf-activitiy-people-list">
                                                   <!-- people.each(function(person){   -->
@@ -674,16 +680,20 @@ console.log(foundPerson.display_name);
                                 </div>
                               </div>
                             <!--/Content-->
-                            <div id="actionsbtn" class="form-inline marginbot15">
+                            <div id="fcf-activity-actionsbtn" class="form-inline col-md-12">
                               <div class="btnactions">
                                 <button id="fcf-activity-image-form-nav-previous" type="submit" class="btn custombtn marginrght10">Previous</button>
-                                <button type="submit" class="btn custombtn marginrght10" data-toggle="modal" data-target="#confirmstep" >Next</button>
+                                <button id="fcf-activity-image-form-nav-finish" type="submit" class="btn custombtn marginrght10" >Finish</button>
                               </div>
                           </div>           
                       </div>
                     </div>
                 </div>
                 <!--/END PAGE 3-->
+               
+
+
+
                 <!-- Modal for Confirm Step -->
                 <div class="modal fade" id="confirmstep" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
@@ -741,6 +751,7 @@ console.log(foundPerson.display_name);
     </div>
 </div>
 
+<script type='text/javascript' src='mockups/steal/steal.js?../../../mockup_setup.js'></script>
 </body>
 
 </html>

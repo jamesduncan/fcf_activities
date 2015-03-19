@@ -1,5 +1,18 @@
+steal(
+	'jquery-1.11.1.min.js'
+).then(
+	'jquery-ui.js'
+).then(
+	'bootstrap.min.js',
+	'bootstraptable/bootstrap-table.js',
+	'jquery.sidr.min.js',
+	'typeahead.jquery.min.js',
+	'selectivity/selectivity-full.min.css',
+	'selectivity/selectivity-full.min.js'
+).then(function() {
 
-$( document ).ready(function() {
+
+// $( document ).ready(function() {
 
 	//  Find all the displayable <divs>
 	var allDisplays = $('.rbac-display');
@@ -29,10 +42,10 @@ $( document ).ready(function() {
 		})
 	})
 
-});
+// });
 
  //Active InActive of Links
-$(document).ready(function () {
+// $(document).ready(function () {
     
     $("ul.art-hmenu>li").on("click", "a", function (event) {
         $("#menu_wrapper .activelink").removeClass("activelink");
@@ -41,11 +54,11 @@ $(document).ready(function () {
 
 
 
-});
+// });
 
-$(function () {
+// $(function () {
   $('[data-toggle="tooltip"]').tooltip()
-})
+// })
 
 
 
@@ -53,7 +66,7 @@ $(function () {
 /////
 ///// Setup Typeahead Search Bars
 /////
-$(document).ready(function () {
+// $(document).ready(function () {
     
     var inputs = [ '.fcf-team-filter', '.fcf-activity-filter'];
     inputs.forEach(function(tag){
@@ -78,13 +91,13 @@ $(document).ready(function () {
 
 	});
 
-});
+// });
 
 
 /////
 ///// Setup bootstrap-table on these tables:
 /////
-$(document).ready(function () {
+// $(document).ready(function () {
 
 	var tables = [ '.fcf-team-list', '.fcf-activity-list', ]
     
@@ -92,13 +105,38 @@ $(document).ready(function () {
     	$(tag).bootstrapTable({});
     })
 
-});
+// });
 
+
+
+////
+//// Setup selctivity on this input:
+////
+// $(document).ready(function(){
+
+	var inputs = ['#image-tags'];
+	inputs.forEach(function(el){
+		var $el = $(el);
+
+		$el.selectivity({
+            items: [ {id:0, text:'no items loaded' }],
+            multiple: true,
+            placeholder:'people in photo'
+        });
+        // $el.on('change', function(obj, a, b) {
+                
+        // })
+        $el.on('selectivity-close', function() {
+        	$el.css('z-index', 999);  // fix z position bug!
+        })
+        $el.css('z-index', 999);
+	})
+// })
 
 
  //For Testing Display with lots of entries in our Tables:  
  // copy the last row x20 
-$(document).ready(function () {
+// $(document).ready(function () {
     
     var allTables = $('table');
     allTables.each(function(i, table){
@@ -112,14 +150,39 @@ $(document).ready(function () {
 	
 
 
-});
+// });
 
 
 //Responsiveness of table scroll
-$(document).ready(function () {
+// $(document).ready(function () {
     $(window).resize(function () {
         $('table[data-toggle="table"]').add($('table[id]')).bootstrapTable('resetView');
     });	
 
-});
+// });
 
+
+// Document Resizing:
+// $(document).ready(function(){
+	$(window).resize(function(){
+
+		// figure out the availableHeight to our Tool
+		var hWindow = $(window).height();
+		var hMasthead = $('.opsportal-container-masthead').outerHeight(true);
+		var availableHeight = hWindow  - hMasthead; 
+
+		// find all elements with a [resize-adj] attribute
+		$('[resize-adj]').each(function(indx, el){
+
+			var $el = $(el);
+			var adj = parseInt($el.attr('resize-adj'), 10);
+
+			$el.css('height', (availableHeight+adj) + 'px');
+		})
+
+
+	})
+// })
+
+
+})  // end steal()

@@ -17,7 +17,7 @@ steal(
 function(){
 
 
-
+    //
     // ActivityReport Controller
     //
     // This controller performs the main work of the adding an image to an 
@@ -742,11 +742,24 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             });
             this.dom.inputTags.on('change', function(obj, a, b) {
                 self.personSelected(obj);
+
+                // now fiddle with the tags
+                self.tagsAdjustHeight();
+                
             })
             this.dom.inputTags.on('selectivity-close', function() {
                 self.dom.inputTags.css('z-index', 999);  // fix z position bug!
             })
             this.dom.inputTags.css('z-index', 999);
+
+            this.dom.resize = {};
+            this.dom.resize.tags = this.dom.inputTags.find('.selectivity-multiple-input-container');
+            this.dom.resize.tagsCurrHeight = 0; //this.dom.resize.tags.outerHeight(true);
+            this.dom.resize.tagsBaseHeight = 0;
+            this.dom.resize.tagsTotalHeight = 0;
+            this.dom.resize.profileScroller = this.element.find("#profilelist-scroll");
+
+            // this.dom.inputTags.find('.selectivity-multiple-input-container').css('height', '42px'); // attempt to lock this widget into a fixed height
 
 
             // var emptyList = new can.List([]);
@@ -762,7 +775,7 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
 
             // attach to structural DOM elements to help our resizing calculations
-            this.dom.resize = {};
+            // this.dom.resize = {};
             this.dom.resize.pagination = this.element.find('#fcf-activity-pagination');
             this.dom.resize.navButtons = this.element.find('#fcf-activity-actionsbtn');
             this.dom.resize.navButtonsInner = this.dom.resize.navButtons.find('.btnactions');
@@ -1078,37 +1091,55 @@ console.warn('***** imageListTemplate:', imageListTemplate);
 
 console.log('////// resize! : '+height);
             
-            // we have an outer <div> with 20px of spacing added:
-            height = height - 20; // todo: get this from the <div>
+//             // we have an outer <div> with 20px of spacing added:
+//             height = height - 20; // todo: get this from the <div>
 
-            // set the height of our outer div
-            this.element.css('height', height+'px');
+//             // set the height of our outer div
+//             this.element.css('height', height+'px');
 
-            // height of our inner content = outer.height - pagination.height - navButtons.height
-            var heightPagination = this.dom.resize.pagination.outerHeight(true);
-            var heightNavButtons = this.dom.resize.navButtons.outerHeight(true);
-            var heightNavButtons = heightNavButtons + this.dom.resize.navButtonsInner.outerHeight(true);
-            var heightInnerContent = height - heightPagination - heightNavButtons;
+//             // height of our inner content = outer.height - pagination.height - navButtons.height
+//             var heightPagination = this.dom.resize.pagination.outerHeight(true);
+//             var heightNavButtons = this.dom.resize.navButtons.outerHeight(true);
+//             var heightNavButtons = heightNavButtons + this.dom.resize.navButtonsInner.outerHeight(true);
+//             var heightInnerContent = height - heightPagination - heightNavButtons;
 
-console.log('heightPagination:'+heightPagination);
-console.log('heightNavButtons:'+heightNavButtons);
-console.log('heightInnerContent:'+heightInnerContent);
+// console.log('heightPagination:'+heightPagination);
+// console.log('heightNavButtons:'+heightNavButtons);
+// console.log('heightInnerContent:'+heightInnerContent);
 
-            this.dom.resize.contentSection.css('height', heightInnerContent+'px');
-
-
-            // height of our Activity List Column
-            var heightActivityListOuter = heightInnerContent - 20; // activity list has a 20px bottom margain
-            this.dom.resize.activityList.css('height', heightActivityListOuter + 'px')
-            var heightActivityLabel = this.dom.resize.activityListLabel.outerHeight(true);
-            // height of activityListContent = heightActivityListOuter - heightLabel - 20px inner padding-bottom
-            var heightActivityListContent = heightActivityListOuter - heightActivityLabel - 20;
-            this.dom.resize.activityListContent.css('height', heightActivityListContent+'px');
+//             this.dom.resize.contentSection.css('height', heightInnerContent+'px');
 
 
-            // height of our image column (combined columns 2 & 3)
-            
+//             // height of our Activity List Column
+//             var heightActivityListOuter = heightInnerContent - 20; // activity list has a 20px bottom margain
+//             this.dom.resize.activityList.css('height', heightActivityListOuter + 'px')
+//             var heightActivityLabel = this.dom.resize.activityListLabel.outerHeight(true);
+// console.log('heightActivityLabel:'+heightActivityLabel);
+//             // height of activityListContent = heightActivityListOuter - heightLabel - 20px inner padding-bottom
+//             var heightActivityListContent = heightActivityListOuter - heightActivityLabel - 20;
+//             this.dom.resize.activityListContent.css('height', heightActivityListContent+'px');
 
+
+//             // height of our image column (combined columns 2 & 3)
+
+            this.element.find('[resize-adj]').each(function(indx, el){
+
+                var $el = $(el);
+                var adj = parseInt($el.attr('resize-adj'), 10);
+
+                $el.css('height', (height+adj) + 'px');
+            })
+
+
+            // if this was our 1st time, then find out base tags height
+            if (this.dom.resize.tagsBaseHeight == 0) {
+                this.dom.resize.tagsBaseHeight = this.dom.resize.tags.outerHeight(true);
+            }
+
+            // our total Height for the section is : base tag Height + scaled size of profile
+            this.dom.resize.tagsTotalHeight = this.dom.resize.profileScroller.outerHeight(true) + this.dom.resize.tagsBaseHeight;
+            this.dom.resize.tagsCurrHeight = 0;  // <-- force a readjust
+            this.tagsAdjustHeight();
         },
 
 
@@ -1129,6 +1160,25 @@ console.log('heightInnerContent:'+heightInnerContent);
             this.dom.listImages.find('.active').removeClass('active');
             if ($row) {
                 $row.addClass('active');
+            }
+        },
+
+
+        tagsAdjustHeight:function() {
+
+            var tHeight = this.dom.resize.tags.outerHeight(true);
+            if (tHeight != this.dom.resize.tagsCurrHeight) {
+
+                var adjustedHeight = this.dom.resize.tagsTotalHeight - tHeight;
+                if (adjustedHeight > 50) {
+                    this.dom.resize.profileScroller.css('height', adjustedHeight+'px' )
+                    this.dom.resize.profileScroller.parent().show();
+                } else {
+                    this.dom.resize.profileScroller.parent().hide();
+                }
+
+                this.dom.resize.tagsCurrHeight = tHeight;
+                
             }
         },
 

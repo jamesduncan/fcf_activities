@@ -53,6 +53,12 @@ function(){
 //         },
 
 
+        resize:function(height) {
+
+            // we don't do anything ...
+        },
+
+
 
         '.fcf-activity-new click': function ($el, ev) {
 
