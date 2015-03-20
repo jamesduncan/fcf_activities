@@ -254,7 +254,8 @@ function(){
             if (this.currentlyEditingImage) {
 
                 var activityID = this.currentlyEditingImage.activity;
-                self.clearImageList();
+                activityID = activityID.id || activityID;  // make sure this isn't an object but just the .id 
+                // self.clearImageList();
             
                 this.currentlyEditingImage.destroy()
                 .fail(function(err){
@@ -282,7 +283,7 @@ function(){
                     self.refreshPeopleTaggedInActivities( activityID );
                     self.refreshPeopleTaggedInImages();
 
-console.log('... listImages:', self.listImages);                    
+// console.log('... listImages:', self.listImages);                    
                 })
             }
 
@@ -1500,6 +1501,12 @@ console.log('////// resize! : '+height);
         },
 
 
+//// testing out Model Event trapping:
+//         '{opstools.FCFActivities.ActivityImage} created': function(l, ev, image) {
+// console.log('l:', l);
+// console.log('ev:', ev);
+// console.log('image:',image);
+//         },
 
 
 
