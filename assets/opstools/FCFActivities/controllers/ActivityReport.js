@@ -851,6 +851,12 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             // load the team:
             AD.util.async.series([
 
+                function(next) {
+
+                    self.clearForm();
+                    next();
+                },
+
 
                 // make sure we have a valid team selected
                 function(next) {
@@ -1470,6 +1476,7 @@ console.log('////// resize! : '+height);
 
                 this.alertUnsavedChanges({
                     cbSecond:function() {
+                        self.clearForm();
                         self.element.trigger(self.CONST.FINISH);
                     }
                 })
@@ -1490,6 +1497,7 @@ console.log('////// resize! : '+height);
 
                 this.alertUnsavedChanges({
                     cbSecond:function() {
+                        self.clearForm();
                         self.element.trigger(self.CONST.PREV);
                     }
                 })

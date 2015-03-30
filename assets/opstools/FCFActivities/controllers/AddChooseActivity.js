@@ -4,9 +4,6 @@ steal(
         'appdev',
         'opstools/FCFActivities/models/TeamActivity.js',
         'opstools/FCFActivities/models/TeamObjective.js',
-        'opstools/FCFActivities/controllers/FilteredBootstrapTable.js',
-//        'opstools/FCFActivities/models/Projects.js',
-//        'appdev/widgets/ad_delete_ios/ad_delete_ios.js',
         // '//opstools/FCFActivities/views/AddChooseActivity/AddChooseActivity.ejs',
 function(){
 
@@ -136,7 +133,7 @@ function(){
 
 
             // attach the FilteredBootstrapTable Controller
-            var Filter = AD.Control.get('opstools.FCFActivities.FilteredBootstrapTable');
+            var Filter = AD.Control.get('OpsPortal.FilteredBootstrapTable');
             this.Filter = new Filter(this.element, {
                 tagFilter: '.fcf-activity-filter',
                 tagBootstrapTable: '.fcf-activity-list',

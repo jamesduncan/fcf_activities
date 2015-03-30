@@ -18,7 +18,7 @@
 
 					<ul class="nav navbar-nav navbar-right">
 						<li>
-							<a href="#fcf-activities/AddActivity1" class="fcf-activity-new">New Activity</a>
+							<a href="#fcf-activities/AddActivity1" class="fcf-activity-new">New/Update Activity</a>
 						</li>
 						
 					</ul>
@@ -450,11 +450,9 @@ taggedPeople.forEach(function(personID){
                                               <p class="blue"><span class="fcf-activity-activity-project-name">[Project Name]</span></br><span class="fcf-activity-activity-team-name">[Team Name]</span></p>
                                             </div>
                                           </div>
-                                          <div id="uploaded-img" class="col-md-12 padrigt1" resize-adj="-276">
-                                            <label class="margintop15 marginbot15">Uploaded Photos</label>
-                                            <div id="upload-scroll" class="fcf-activity-report-activity-images col-md-12 nopadding" resize-adj="-341">
-                                             
-                                              <div class="imgleft fcf-activity-image-list-item addImage">
+<!-- 
+  Asked not to include this:
+                                               <div class="imgleft fcf-activity-image-list-item addImage">
                                                   <div class="row">
                                                     <div class="col-md-12">
                                                       <div class="row">
@@ -466,6 +464,10 @@ taggedPeople.forEach(function(personID){
                                                     </div>  
                                                   </div>
                                               </div>
+-->
+                                          <div id="uploaded-img" class="col-md-12 padrigt1" resize-adj="-276">
+                                            <label class="margintop15 marginbot15">Uploaded Photos</label>
+                                            <div id="upload-scroll" class="fcf-activity-report-activity-images col-md-12 nopadding" resize-adj="-341">
                                              
                                               <!-- images.forEach(function(image){ --> 
                                               
@@ -595,7 +597,7 @@ taggedPeople.forEach(function(personID){
                                                   <input type="text" class="form-control" id="image-caption"  placeholder='caption' name="caption" appp-label-key="fcf.activity.image.form.caption" />
                                                 </div>
                                                 <div class="form-group col-md-6 nopadding nomargin">
-                                                  <input type="text" class="form-control" id="image-date" name="date" />
+                                                  <input type="text" class="form-control" id="image-date" name="date" placeholder="date of photo" />
                                                 </div>
                                               </div>
                                           </form>
