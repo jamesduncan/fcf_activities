@@ -131,12 +131,28 @@ function(){
 
         alertDeleteConfirm: function(opts) {
 
-            this.alertUnsavedChanges({
-                title:'Delete Confirm',
+            // this.alertUnsavedChanges({
+            //     title:'Delete Confirm',
+            //     message:'Are you sure you want to delete this image?',
+            //     labelSecondary:'Yes',
+            //     labelMain:'No',
+            //     cbSecond:opts.cbSecond
+            // })
+
+            bootbox.dialog({
+                title: 'Delete Confirm',
                 message:'Are you sure you want to delete this image?',
-                labelSecondary:'Yes',
-                labelMain:'No',
-                cbSecond:opts.cbSecond
+                buttons: {
+                    yes: {
+                        label:"yes",
+                        className: "btn-primary",
+                        callback:opts.cbSecond
+                    },
+                    no : {
+                        label:"no",
+                        className: "btn-primary"
+                    }
+                }
             })
 
         },
@@ -160,27 +176,41 @@ function(){
         alertUnsavedChanges: function(opts) {
 
             var title = opts.title || "Unsaved Changes";
-            var message = opts.message || "You have made changed that are not saved.  What should I do?";
-            var labelSecondary = opts.labelSecondary || "I don't need them";
-            var labelMain = opts.labelMain || "Keep editing";
+            var message = opts.message || "You have made changes that are not saved.  What should I do?";
+            // var labelSecondary = opts.labelSecondary || "Cancel";
+            // var labelMain = opts.labelMain || "Save";
 
-            var fnSecondary = opts.cbSecond || function() { };
-            var fnMain = opts.cbMain || function () {};
+            // var fnSecondary = opts.cbSecond || function() { };
+            // var fnMain = opts.cbMain || function () {};
+
+            var labelDont = opts.labelDont || "Don't Save";
+            var labelCancel = opts.labelCancel || "Cancel";
+            var labelSave = opts.labelSave || "Save";
+
+            var fnDont = opts.cbDont || function() {};
+            var fnCancel = opts.cbCancel || function() {};
+            var fnSave = opts.cbSave  || function() {};
+
 
 
             bootbox.dialog({
                 message: message,
                 title: title,
                 buttons: {
-                    secondary: {
-                        label: labelSecondary,
-                        className: "btn-success",
-                        callback: fnSecondary
+                    dont: {
+                        label: labelDont,
+                        className: "btn-default",
+                        callback:fnDont
                     },
-                    main: {
-                        label: labelMain,
+                    cancel: {
+                        label: labelCancel,
+                        className: "btn-default",
+                        callback: fnCancel
+                    },
+                    save: {
+                        label: labelSave,
                         className: "btn-primary",
-                        callback: fnMain
+                        callback: fnSave
                     }
                 }
             });
@@ -367,6 +397,7 @@ console.log('... loading Form with image:',image.getID())
 
         formSubmit: function() {
             var self = this;
+            var dfd = AD.sal.Deferred();
 
 
             var valuesObj = this.formValues();
@@ -386,6 +417,7 @@ console.log('... loading Form with image:',image.getID())
                     ActivityImage.create(valuesObj)
                     .fail(function(err){
                         console.error(err);
+                        dfd.reject(err);
                     })
                     .then(function(obj){
 
@@ -411,7 +443,7 @@ console.log('... loading Form with image:',image.getID())
 
                         self.refreshPeopleTaggedInActivities( valuesObj.activity );
                         self.refreshPeopleTaggedInImages(obj);
-
+                        dfd.resolve();
                     })
 
                 } else {
@@ -426,6 +458,7 @@ console.log('... loading Form with image:',image.getID())
 //// TODO: how do we handle Errors?
 
 console.error(err);
+                        dfd.reject(err);
                     })
                     .then(function(data){
 
@@ -452,7 +485,7 @@ console.log(' ... returnedData:', data);
 
                         self.refreshPeopleTaggedInActivities( valuesObj.activity );
                         self.refreshPeopleTaggedInImages(data);
-
+                        dfd.resolve();
                     })
 
                 }
@@ -475,6 +508,7 @@ console.log(' ... returnedData:', data);
                         }
                     });
 
+
                 } else {
 
                     bootbox.dialog({
@@ -490,7 +524,13 @@ console.log(' ... returnedData:', data);
                     });
 
                 }
+
+                // reject the deferred
+                dfd.reject();
             }
+
+
+            return dfd;
         },
 
 
@@ -748,10 +788,10 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                 self.tagsAdjustHeight();
                 
             })
-            this.dom.inputTags.on('selectivity-close', function() {
-                self.dom.inputTags.css('z-index', 999);  // fix z position bug!
-            })
-            this.dom.inputTags.css('z-index', 999);
+            // this.dom.inputTags.on('selectivity-close', function() {
+            //     self.dom.inputTags.css('z-index', 999);  // fix z position bug!
+            // })
+            // this.dom.inputTags.css('z-index', 999);
 
             this.dom.resize = {};
             this.dom.resize.tags = this.dom.inputTags.find('.selectivity-multiple-input-container');
@@ -1296,11 +1336,29 @@ console.log('////// resize! : '+height);
 
             if (this.hasUnsavedChanges()) {
 
+                var fnContinue = function () {
+                    self.selectedActivity = $el.data('activity');
+                    self.selectActivity(self.selectedActivity);
+                    self.updateImageList();
+                }
+
                 this.alertUnsavedChanges({
-                    cbSecond:function() {
-                        self.selectedActivity = $el.data('activity');
-                        self.selectActivity(self.selectedActivity);
-                        self.updateImageList();
+                    cbDont:function() {
+                        fnContinue();
+                    },
+                    cbSave:function() {
+
+                        // click the [save] button
+                        self.formSubmit()
+                        .fail(function(err){
+
+                        })
+                        .then(function(){
+
+                            // only continue if we saved properly.
+                            fnContinue();
+                        })
+                        
                     }
                 })
 
@@ -1321,19 +1379,34 @@ console.log('////// resize! : '+height);
         'div.fcf-activity-image-list-item.addImage click' : function($el, ev) {
             var self = this;
 
+            var fnContinue = function () {
+                self.selectImageRow($el);
+                self.clearForm();
+            }
+
+
             if (this.hasUnsavedChanges()) {
 
                 this.alertUnsavedChanges({
-                    cbSecond:function() {
-                        self.selectImageRow($el);
-                        self.clearForm();
+                    cbDont:function() {
+                        fnContinue();
+                    },
+                    cbSave: function() {
+
+                        self.formSubmit()
+                        .fail(function(err){
+
+                        })
+                        .then(function(){
+
+                            // only continue if we saved properly.
+                            fnContinue();
+                        })
                     }
                 })
 
-
             } else {
-                this.selectImageRow($el);
-                this.clearForm();
+                fnContinue();
             }
             
 
@@ -1344,19 +1417,34 @@ console.log('////// resize! : '+height);
         'div.fcf-activity-image-list-item:not(.addImage) click': function($el, ev) {
             var self = this;
 
+            var fnContinue = function () {
+                self.selectImageRow($el);
+                self.loadForm($el.data('image'));
+            }
+
+
             if (this.hasUnsavedChanges()) {
 
                 this.alertUnsavedChanges({
-                    cbSecond:function() {
-                        self.selectImageRow($el);
-                        self.loadForm($el.data('image'));
+                    cbDont:function() {
+                        fnContinue();
+                    },
+                    cbSave: function() {
+
+                        self.formSubmit()
+                        .fail(function(err){
+
+                        })
+                        .then(function(){
+
+                            // only continue if we saved properly.
+                            fnContinue();
+                        })
                     }
                 })
 
-
             } else {
-                this.selectImageRow($el);
-                this.loadForm($el.data('image'));
+                fnContinue();
             }
             
         },
@@ -1415,18 +1503,29 @@ console.log('////// resize! : '+height);
         '#fcf-activity-image-form-cancel click': function($el, ev) {
             var self = this;
 
-            
+
             if (this.hasUnsavedChanges()) {
 
                 this.alertUnsavedChanges({
-                    cbSecond:function() {
+                    cbDont:function() {
                         self.clearForm()
+                    },
+                    cbSave: function() {
+
+                        self.formSubmit()
+                        .fail(function(err){
+
+                        })
+                        .then(function(){
+
+                            // only continue if we saved properly.
+                            self.clearForm()
+                        })
                     }
                 })
 
-
             } else {
-                this.clearForm();
+                self.clearForm()
             }
 
             ev.preventDefault();
@@ -1472,18 +1571,34 @@ console.log('////// resize! : '+height);
         '#fcf-activity-image-form-nav-finish click': function($el, ev) {
             var self = this;
 
+            var fnContinue = function () {
+                self.clearForm();
+                self.element.trigger(self.CONST.FINISH);
+            }
+
+
             if (this.hasUnsavedChanges()) {
 
                 this.alertUnsavedChanges({
-                    cbSecond:function() {
-                        self.clearForm();
-                        self.element.trigger(self.CONST.FINISH);
+                    cbDont:function() {
+                        fnContinue();
+                    },
+                    cbSave: function() {
+
+                        self.formSubmit()
+                        .fail(function(err){
+
+                        })
+                        .then(function(){
+
+                            // only continue if we saved properly.
+                            fnContinue();
+                        })
                     }
                 })
 
-
             } else {
-                this.element.trigger(this.CONST.FINISH);
+                fnContinue();
             }
 
             
@@ -1493,19 +1608,36 @@ console.log('////// resize! : '+height);
         '#fcf-activity-image-form-nav-previous click': function($el, ev) {
             var self = this;
 
+            var fnContinue = function () {
+                self.clearForm();
+                self.element.trigger(self.CONST.PREV);
+            }
+
+
             if (this.hasUnsavedChanges()) {
 
                 this.alertUnsavedChanges({
-                    cbSecond:function() {
-                        self.clearForm();
-                        self.element.trigger(self.CONST.PREV);
+                    cbDont:function() {
+                        fnContinue();
+                    },
+                    cbSave: function() {
+
+                        self.formSubmit()
+                        .fail(function(err){
+
+                        })
+                        .then(function(){
+
+                            // only continue if we saved properly.
+                            fnContinue();
+                        })
                     }
                 })
 
-
             } else {
-                this.element.trigger(this.CONST.PREV);
+                fnContinue();
             }
+
         },
 
 

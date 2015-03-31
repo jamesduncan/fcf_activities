@@ -485,5 +485,5 @@ ul.checkbox li {list-style:none !important;}
 
 /* update the selectivity z-index to be under the date picker */
 .selectivity-backdrop {
-	z-index:999;
+	z-index:9 !important;
 }

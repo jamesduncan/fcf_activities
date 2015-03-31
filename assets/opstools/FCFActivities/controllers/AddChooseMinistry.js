@@ -272,6 +272,16 @@ function(){
         },
 
 
+        show: function() {
+
+            this._super();
+
+            // make sure the boostrap-table refresh's it's table when shown.
+            this.Filter.resetView();
+
+        },
+
+
         // return the model instace of the UserTeam entry selected by this page
         value: function() {
 
