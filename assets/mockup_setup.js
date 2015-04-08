@@ -8,7 +8,10 @@ steal(
 	'jquery.sidr.min.js',
 	'typeahead.jquery.min.js',
 	'selectivity/selectivity-full.min.css',
-	'selectivity/selectivity-full.min.js'
+	'selectivity/selectivity-full.min.js',
+	'bootstrapValidator.min.js', 
+	'bootstrap-datepicker.min.js',
+	'bootbox.min.js'  
 ).then(function() {
 
 
@@ -183,6 +186,83 @@ steal(
 
 	})
 // })
+
+
+
+
+	//// setup datepickers
+	var opt = {
+        autoclose:true,
+        format: "mm/dd/yyyy",
+        startDate: "01/01/1970",
+    }
+
+    $('#date_start').datepicker(opt)
+    .on('changeDate', function(e) {
+    	$('#fcf-new-activity-form').data('bootstrapValidator').revalidateField('date_start');
+    });
+    $('#date_end').datepicker(opt)
+    .on('changeDate', function(e) {
+    	$('#fcf-new-activity-form').data('bootstrapValidator').revalidateField('date_end');
+    });
+
+
+
+
+
+	// Setup BootstrapValidator on the Add Activity form:
+	$('#fcf-new-activity-form').bootstrapValidator({
+        framework:'bootstrap',
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+
+        	'activity_name': {
+                validators: {
+                    notEmpty: {
+                        message: 'The textbox field is required'
+                    }
+                }
+            },
+
+            'date_start': {
+                validators: {
+                    notEmpty: {
+                        message: 'The date field is required'
+                    },
+
+                    date : {
+                    	format: 'MM/DD/YYYY'
+                    }
+                }
+            },
+
+            'date_end': {
+                validators: {
+                    notEmpty: {
+                        message: 'The date field is required'
+                    },
+
+                    date : {
+                    	format: 'MM/DD/YYYY'
+                    }
+                }
+            },
+
+            'activity_description': {
+                validators: {
+                    notEmpty: {
+                        message: 'The description field is required'
+                    }
+                }
+            },
+
+        }
+    });
 
 
 })  // end steal()
