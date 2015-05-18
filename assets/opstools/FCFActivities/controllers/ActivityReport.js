@@ -637,7 +637,7 @@ console.log(' ... returnedData:', data);
          */
         initDOM: function () {
             var self = this;
-
+            var _this = this;
 
             //// 
             //// Create a template for our Activity's Tagged People:
@@ -723,31 +723,39 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             this.dom.listImages.css('height', "400px");
 
             // Image Form
-            this.dom.dropzone = this.element.find('#fcf-activity-image-upload');
-            this.obj.dropzone = new Dropzone('#fcf-activity-image-upload', {
-                url:'/fcf_activities/activityimageupload',
-                paramName:'imageFile',      // param name on server
-                maxFilesize:100,            // in MB
-                uploadMultiple: false,      // upload >1 file per request?
-                acceptedFiles:'.jpg, .jpeg, .psd, .gif, .png'
+            AD.comm.csrf()
+            .then(function(token){
+
+                _this.dom.dropzone = _this.element.find('#fcf-activity-image-upload');
+                _this.obj.dropzone = new Dropzone('#fcf-activity-image-upload', {
+                    url:'/fcf_activities/activityimageupload',
+                    paramName:'imageFile',      // param name on server
+                    maxFilesize:100,            // in MB
+                    uploadMultiple: false,      // upload >1 file per request?
+                    acceptedFiles:'.jpg, .jpeg, .psd, .gif, .png',
+                    headers: { "X-CSRF-Token" : token }
+                })
+                _this.obj.dropzone.on('success', function(file, response) {
+
+                    console.log('response:', response);
+
+                    _this.obj.dropzone.removeFile(file);
+                    _this.dom.dropzone.addClass('nopadding').css('padding-top', '0px').css('padding-bottom', '0px');
+                    _this.dom.dropzone.find('.dz-message').hide();
+                    var width = _this.dom.dropzone.css('width');
+                    _this.dom.dropzone.find('img').css('width', width).prop('src', response.data.path ).show();
+                    _this.dom.inputImage.val(response.data.name);
+
+                    // make sure our [save] & [cancel] buttons are enabled now:
+                    _this.buttonEnable('save');
+                    _this.buttonEnable('cancel');
+
+                })
+                _this.dom.dropzone.find('img').prop('src', '' ).hide();
             })
-            this.obj.dropzone.on('success', function(file, response) {
-
-                console.log('response:', response);
-
-                self.obj.dropzone.removeFile(file);
-                self.dom.dropzone.addClass('nopadding').css('padding-top', '0px').css('padding-bottom', '0px');
-                self.dom.dropzone.find('.dz-message').hide();
-                var width = self.dom.dropzone.css('width');
-                self.dom.dropzone.find('img').css('width', width).prop('src', response.data.path ).show();
-                self.dom.inputImage.val(response.data.name);
-
-                // make sure our [save] & [cancel] buttons are enabled now:
-                self.buttonEnable('save');
-                self.buttonEnable('cancel');
-
+            .fail(function(err){
+                console.error('*** unable to get CSRF token!  No Dropzone! ');
             })
-            this.dom.dropzone.find('img').prop('src', '' ).hide();
 
             this.dom.imageForm = this.element.find('.fcf-activity-image-form');
 
