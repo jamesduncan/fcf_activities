@@ -258,7 +258,7 @@ function(){
 
             this.dom.inputImage.val('');
             this.dom.inputCaption.val('');
-            this.dom.inputDate.val('');
+            this.dom.inputDate.data("DateTimePicker").date(null);
             this.dom.inputTags.selectivity('value', []);
             this.dom.peopleObjects.find('li.fcf-activity-people-objects').show();
 
@@ -364,7 +364,7 @@ console.log('... loading Form with image:',image.getID())
             this.values.caption = image.caption;
 
             // this.dom.inputDate.val(image.date);
-            this.dom.inputDate.datepicker('update', new Date(image.date));
+            this.dom.inputDate.data("DateTimePicker").date(new Date(image.date));  // datepicker('update', new Date(image.date));
             this.values.date = image.date;
 
             this.dom.inputTags.selectivity('value', []);
@@ -754,7 +754,7 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                 _this.dom.dropzone.find('img').prop('src', '' ).hide();
             })
             .fail(function(err){
-                console.error('*** unable to get CSRF token!  No Dropzone! ');
+                console.error('*** unable to get CSRF token!  No Dropzone for you! ');
             })
 
             this.dom.imageForm = this.element.find('.fcf-activity-image-form');
@@ -768,11 +768,11 @@ console.warn('***** imageListTemplate:', imageListTemplate);
             // this.dom.peopleObjects.css('height', '200px');
 
             var calendarOptions = {
-                format: "mm/dd/yyyy",
-                startDate: "01/01/1970"
+                format: "MM/DD/YYYY",
+                minDate: "01/01/1970"
             };
-            this.dom.inputDate.datepicker(calendarOptions)
-            .on('changeDate', function(){
+            this.dom.inputDate.datetimepicker(calendarOptions)
+            .on('dp.change', function(){
                 self.buttonEnable('save');
                 self.buttonEnable('cancel');
             })
