@@ -507,7 +507,7 @@ AD.log('query:', req.query);
 			// 5) now update the remaining values and save
 			function(next) {
 
-				var fields = [ 'date', 'caption' ];
+				// var fields = [ 'date', 'caption' ];
 				var newDate = req.param('date');
 				if (newDate) {
 					currImage.date = new Date(newDate);
@@ -530,6 +530,8 @@ AD.log('query:', req.query);
 						FCFActivityImagesTrans.findOne({ fcfactivityimages: currImage.id, language_code:langCode })
 						.then(function( trans ){
 							trans.caption = newCaption;
+							finalData.caption = newCaption;
+
 							trans.save()
 							.then(function(){
 
@@ -600,8 +602,8 @@ AD.log('query:', req.query);
 			} else {
 				AD.log('... finalData:', finalData);
 				AD.log("<green>activityimage.update() finished</green>");
-				res.send(finalData);
-				// ADCore.comm.success(res,finalData);
+				// res.send(finalData);
+				ADCore.comm.success(res,finalData);
 
 			}
 
@@ -619,7 +621,7 @@ AD.log('query:', req.query);
 
 		var finalData = {};  
 
-AD.log('<green>ActivityImageController.destroy()</green>');
+		AD.log('<green>ActivityImageController.destroy()</green>');
 
 		var id = req.param('id');
 		if (!id) {
@@ -786,13 +788,7 @@ AD.log('<green>ActivityImageController.destroy()</green>');
 			} else {
 
 				AD.log('<green> activityimage.delete() complete. </green>');
-				
-
-//// TODO: once we update AD.Models.get() to use our AD.comm.send() routines do this:
-				// ADCore.comm.success(res, finalData );
-
-				res.send(finalData);
-
+				ADCore.comm.success(res, finalData );
 			}
 
 		})
