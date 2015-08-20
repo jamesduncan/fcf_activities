@@ -165,7 +165,7 @@ body {
 
 .opsportal-container-masthead {
 	color:#fff;
-	margin-bottom:20px;
+/*	margin-bottom:20px; */
 	background-color:#404040 !important;
 	-webkit-box-shadow: 0px 2px 12px 1px rgba(0,0,0,0.3);
 	-moz-box-shadow: 0px 2px 12px 1px rgba(0,0,0,0.3);
@@ -482,8 +482,22 @@ ul.checkbox li {list-style:none !important;}
 }
 
 
+.opsportal-area-tool-FCFActivities {
+	margin-top: 20px;
+}
 
 /* update the selectivity z-index to be under the date picker */
 .selectivity-backdrop {
 	z-index:9 !important;
+}
+
+/* bootbox button colors */
+.bootbox .btn {
+ background-color:#383B3D;
+
+}
+
+.bootbox .btn:hover {
+ background-color:#858686;
+
 }

@@ -224,36 +224,36 @@
                               <p><span appp-label-key="fcf.assignment.addAssignment.Title" >Add a New Activity</span></p>
                           </div>
                           <div class="modal-body inner-add-activity">
-
+                            <form id="fcf-new-activity-form">
                               <!---->
                               <input type="hidden" id="activity-team" name='team' />
                               <div class="form-group">
-                                <label for="activityName"><span appp-label-key="fcf.assignment.Choose.ActivityName">Activity Name</span></label>
+                                <label for="activity_name"><span appp-label-key="fcf.assignment.Choose.ActivityName">Activity Name</span></label>
                                 <p><span appp-label-key="fcf.assignment.addAssignment.Choose.ActivityNameDesc" >Please use a name everyone associated with the activity will organize</span></p>
-                                <input type="text" class="form-control" placeholder="Activity Name" id="activityName" appp-label-key="fcf.assignment.Choose.ActivityName" name="name" required >
+                                <input type="text" class="form-control" placeholder="Activity Name" appp-label-key="fcf.assignment.Choose.ActivityName" name="activity_name" id="activity_name" required >
                               </div>
                            
                               <!---->
                               <div class="form-inline">
                                   <div class="form-group">
-                                      <label for="dateStart" appp-label-key="fcf.assignment.addAssignment.Choose.startDate">Start Date</label>
-                                      <input type="text" class="form-control" id="dateStart" name="startDate" />
+                                      <label for="date_start" appp-label-key="fcf.assignment.addAssignment.Choose.startDate">Start Date</label>
+                                      <input type="text" class="form-control" id="date_start" name="date_start" />
                                   </div>
                                   <div class="form-group">
-                                      <label for="dateEnd" appp-label-key="fcf.assignment.addAssignment.Choose.endDate">End Date</label>
-                                      <input type="text" class="form-control" id="dateEnd" name="endDate"/>
+                                      <label for="date_end" appp-label-key="fcf.assignment.addAssignment.Choose.endDate">End Date</label>
+                                      <input type="text" class="form-control" id="date_end" name="date_end"/>
                                   </div>
                               </div>
                               <!---->
                               <div class="row margintop10">
-                                <div class="col-md-12">
+                                <div class="col-md-12 form-group">
                                     <label><span appp-label-key="fcf.assignment.Choose.TeamObjectives">Team Objectives</span></label>
                                     <p><span appp-label-key="fcf.assignment.Choose.TeamObjectivesDesc" > Every activity must meet at least one objective. Please choose all that apply:</span></p>
-                                    <ul class="checkbox objectives-section">
+                                    <div class="form-group objectives-section">
                                       <!-- objectives.forEach(function(objective){ -->
-                                        <li>
+                                        <div class="checkbox">
                                             <label><input type="checkbox" value="[[= objective.id ]]" name="objective" /> [[= objective.description ]]</label>
-                                        </li>
+                                        </div>
                                         <!-- }) -->
                                         <li class="mockup" >
                                             <label><input type="checkbox" id="chk2" name="chk2">Objective 2</label>
@@ -264,7 +264,7 @@
                                         <li class="mockup">
                                             <label><input type="checkbox" id="chk3" name="chk3">Objective 4</label>
                                         </li>                                
-                                    </ul>
+                                    </div>
                                            
                                 </div>
                               </div>
@@ -273,14 +273,15 @@
                                   <div class="col-md-12">
                                       <label><span appp-label-key="fcf.assignment.Choose.Description">Description</span></label>
                                       <p><span appp-label-key="fcf.assignment.Choose.DescriptionDesc" >Please describe this activity using the team objective as guideline </span></p>
-                                      <textarea type="textarea" class="form-control" placeholder="Description" id="activityDescription" appp-label-key="fcf.assignment.Choose.Description" name="description"></textarea>
+                                      <textarea type="textarea" class="form-control" placeholder="Description" id="activityDescription" appp-label-key="fcf.assignment.Choose.Description" name="activity_description"></textarea>
                                   </div>
                               </div>
                               <!---->
                               <div class="modal-footer">
                                   <button id="cancel-add-assignment" type="button" class="btn custombtn" data-dismiss="modal"><span appp-label-key="fcf.assignment.Cancel">Cancel</span></button>
                                   <button id="add-assignment" type="button" class="btn custombtn"><span appp-label-key="fcf.assignment.Add">Add</span></button>
-                              </div>       
+                              </div> 
+                            </form>      
                           </div>
 
                         </div>
@@ -592,7 +593,7 @@ taggedPeople.forEach(function(personID){
                                             <form class="fcf-activity-image-form">
                                               <input type="hidden" class="form-control" id="image-image" name="image" />
                                               <input type="hidden" class="form-control" id="image-activity" name="activity" />
-                                              <div id="dc" class="row">
+                                              <div id="dc" class="">
                                                 <div class="form-group col-md-6 nopadding nomargin">
                                                   <input type="text" class="form-control" id="image-caption"  placeholder='caption' name="caption" appp-label-key="fcf.activity.image.form.caption" />
                                                 </div>

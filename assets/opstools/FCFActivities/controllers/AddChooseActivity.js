@@ -71,37 +71,6 @@ function(){
         initDOM: function () {
             var self = this;
 
-//            this.element.html(can.view(this.options.templateDOM, {} ));
-
-            ////
-            //// Create our table entry Template
-            ////
-
-            // // pull the row template from the current table
-            // var rowTemplate = this.domToString( this.element.find('.template') ).replace("template", "");
-
-            // rowTemplate = AD.util.string.replaceAll(rowTemplate, '[[=', '<%= ');
-            // rowTemplate = AD.util.string.replaceAll(rowTemplate, ']]', '%>');
-
-            // // make sure the model instance gets returned for this <tr> element:
-            // // oh, and insert the IDMinistry as data-team-id attrib to the <tr> element
-            // rowTemplate = rowTemplate.replace('addata=""', '<%= (el) -> can.data(el, "activity", activity) %>  data-activity-id="<%= activity.attr(\'id\') %>"')
-
-            // // remove the existing <tr> in the table
-            // this.element.find('.fcf-activity-list tbody:last tr').remove();
-
-            // // now create the list template
-            // var templateString = [
-            //     '<% activities.each(function(activity) { %>',
-            //     rowTemplate,
-            //     '<% }) %>'
-            // ].join('\n');
-
-            // // register template as :  'FCFActivities_AddChooseActivity'
-            // //  NOTE:  DON'T USE '.' as seperators here!!!  -> can.ejs thinks they are file names then... doh!
-            // can.view.ejs('FCFActivities_AddChooseActivity', templateString);
-
-
 
             ////
             //// Create our Objective entry Template
@@ -109,6 +78,7 @@ function(){
 
             var objectivesTemplate = this.domToTemplate(this.element.find('.objectives-section'));
             can.view.ejs('FCFActivities_AddObjectives', objectivesTemplate);
+            this.element.find('.objectives-section').html('');  // clear the contents!
 
 
 
@@ -182,21 +152,21 @@ function(){
             });
 
 
-
             //// Add Activity Modal:
             this.modalAdd = this.element.find("#fcf-modal-new-Activity");
 
-            var calendarOptions = {
-                format: "mm/dd/yyyy",
-                startDate: "01/01/1970",
-                // toggleActive: false,
-                // multidate: false,
-            };
-            this.modalAdd.find('#dateStart').datepicker(calendarOptions);
-            this.modalAdd.find('#dateEnd').datepicker(calendarOptions);
 
-
-            this.form = this.modalAdd.find('#fcf-new-activity-form');
+            //// Create a Form for our Add Activity
+            this.form = new AD.op.Form(this.modalAdd.find('#fcf-new-activity-form'));
+            this.form.bind( AD.Model.get('opstools.FCFActivities.TeamActivity'));
+            this.form.addField('objective', 'array', { notEmpty: {} });
+            this.form.addValidation( 'date_end', { 
+                dateGreaterThan:{
+                    value:"date_start", 
+                    format:"mm/dd/yyyy" 
+                } 
+            });
+            this.form.attach();
 
         },
 
@@ -209,91 +179,38 @@ function(){
          *
          */
         formClear:function() {
-            this.modalAdd.find(':input:not(:checkbox)').val('');
-            this.modalAdd.find(':checkbox').prop('checked', false);
+            this.form.clear();
         },
+
 
 
         formErrors: function(values) {
 
-            var errors = [];
-            
-            if (typeof values == 'undefined') {
-                values = this.formValues();
-            }
+            return this.form.errors();
 
-
-
-            if (values.name == '') {
-                errors.push('A name is Required.');
-            }
-
-            if (values.startDate == '') {
-                errors.push('A start date is Required.');
-            } else {
-
-
-                if (values.endDate != '') {
-                    if (new Date(values.startDate) > new Date(values.endDate)) {
-
-                        errors.push('The end date must come after the start date.')
-                    }
-                }
-            }
-
-            if (values.objective.length == 0) {
-                errors.push('At least one objective should be tied to this Activity.');
-            }
-
-            if (values.description == '') {
-                errors.push('A description is Required.');
-            }
-
-            return errors;
         },
+
 
 
         formValid:function(values) {
 
-            var isValid = true;  // so optimistic
+            return this.form.isValid();
 
-            // image needs to be set:
-            isValid = isValid && (values.name != '');
-            isValid = isValid && (values.startDate != '');
-            // isValid = isValid && (values.endDate != '');
-            isValid = isValid && (values.objective.length > 0 );
-            isValid = isValid && (values.description != '');
-
-            // endDate can't come before startDate
-            if ((values.startDate != '')
-                && (values.endDate != '')) {
-
-                if ( new Date(values.startDate) > new Date(values.endDate)) {
-                    isValid = false;
-                }
-            }
-
-            return isValid;
         },
+
 
 
         formValues: function() {
 
-            var values = this.modalAdd.find(':input').serializeArray();
-            var obj = {};
-            obj.objective = [];
+            var obj = this.form.values();
 
-            values.forEach(function(val){
-                if (val.name != 'objective'){
-                    obj[val.name] = val.value;
-                } else {
-                    obj.objective.push(val.value);
-                }
-                
-            })
+            // make sure .objective is an []
+            if (obj.objective) {
+                if (!$.isArray(obj.objective)) obj.objective = [obj.objective];
+            }
 
+            // manually set our team value
             obj.team = this.selectedTeam.getID();
-
 
             return obj;
         },
@@ -340,15 +257,24 @@ function(){
             })
             .then(function(list){
 
-                // remove the current entries
-                self.modalAdd.find('ul.objectives-section li').remove();
+
+                // tell our form to remove the current objective entries:
+                self.form.elRemove(self.modalAdd.find('.objectives-section [name="objective"]'))
+
+                // remove the current entries from the DOM
+                self.modalAdd.find('.objectives-section div').remove();
 
                 // add the new ones
-                self.modalAdd.find('ul.objectives-section').append(can.view('FCFActivities_AddObjectives', {objectives:list}));
+                self.modalAdd.find('.objectives-section').append(can.view('FCFActivities_AddObjectives', {objectives:list}));
+            
+                // tell our form about the new objective entries:
+                self.form.elAdd(self.modalAdd.find('.objectives-section [name="objective"]'));
+
             })
 
 
         },
+
 
 
         nextDisable: function() {
@@ -359,15 +285,13 @@ function(){
         },
 
 
+
         nextEnable: function() {
             
             this.buttons.next.removeAttr('disabled');
             this.buttons.next.removeClass('disabled');
 
         },
-
-
-
 
 
 
@@ -396,6 +320,7 @@ function(){
         },
 
 
+
         show:function() {
 
             // Call parent show()
@@ -404,6 +329,7 @@ function(){
             // make sure we resetView() on bootstraptable
             this.Filter.resetView();
         },
+
 
 
         // selectRow:function($row) {
@@ -426,11 +352,13 @@ function(){
         // },
 
 
+
         // return the value (IDMinistry) of the team selected by this page
         value: function() {
 
             return this.selectedActivity;
         },
+
 
 
         // // when an entry is clicked on, mark it as selected.
@@ -442,10 +370,12 @@ function(){
         // },
 
 
+
         // when the [Next] button is clicked, then trigger our event:
         '#fcf-activity-add-chooseAssignment-next click': function($el, ev) {
             this.element.trigger(this.CONST.NEXT);
         },
+
 
 
         // when the [Previous] button is clicked, then trigger our event:
@@ -455,27 +385,25 @@ function(){
 
 
 
+        // '[name="name"] input':function($el, ev) {
 
-        '[name="name"] input':function($el, ev) {
-
-            if ($el.val() == '') {
-                $el.parent().removeClass('has-success').addClass('has-error');
-            } else {
-                $el.parent().removeClass('has-error').addClass('has-success');
-            }
-        },
-
-
-        '[name="description"] input':function($el, ev) {
-
-            if ($el.val() == '') {
-                $el.parent().removeClass('has-success').addClass('has-error');
-            } else {
-                $el.parent().removeClass('has-error').addClass('has-success');
-            }
-        },
+        //     if ($el.val() == '') {
+        //         $el.parent().removeClass('has-success').addClass('has-error');
+        //     } else {
+        //         $el.parent().removeClass('has-error').addClass('has-success');
+        //     }
+        // },
 
 
+
+        // '[name="description"] input':function($el, ev) {
+
+        //     if ($el.val() == '') {
+        //         $el.parent().removeClass('has-success').addClass('has-error');
+        //     } else {
+        //         $el.parent().removeClass('has-error').addClass('has-success');
+        //     }
+        // },
 
 
 
@@ -488,12 +416,20 @@ function(){
             var obj = this.formValues();
 
             if (this.formValid(obj) ) {
-
+// obj.date_start = undefined;
                 var Model = AD.Model.get('opstools.FCFActivities.TeamActivity');
                 
                 Model.create(obj)
                 .fail(function(err){
-                    console.error(err);
+
+                    // if ! a form related error
+                    if (!self.form.errorHandle(err)) {
+
+                        // dump it to the console
+                        console.error(err); 
+                        // AD.op.
+                    }
+
                 })
                 .then(function(data){
                     data = data.data || data;
@@ -504,7 +440,7 @@ function(){
 
                     self.listActivities.push(model);
 
-                    self.Filter.select(model);              // set which data row should be selected
+                    self.Filter.selectRow(model);              // set which data row should be selected
                     self.Filter.load(self.listActivities);  // load the new set of data
 
                     self.formClear();
@@ -536,6 +472,8 @@ function(){
             }
 
         },
+
+
 
         '#cancel-add-assignment click': function($el, ev) {
             this.formClear();

@@ -15,8 +15,14 @@ steal(
               "activity_name": "string",
               "activity_description": "string",
               "date_start": "date",
-              "date_end": "string"
+              "date_end": "date"
             };
+        },
+        validations: {
+            "activity_name" : [ 'notEmpty' ],
+            "activity_description" : [ 'notEmpty' ],
+            "date_start" : [ 'notEmpty', 'date:{"format":"mm/dd/yyyy"}' ],
+            "date_end" : [ 'date:{"format":"mm/dd/yyyy"}' ]
         },
         fieldId:'id',
         fieldLabel:'activity_name'

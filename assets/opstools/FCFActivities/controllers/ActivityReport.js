@@ -34,6 +34,11 @@ function(){
     //  
     // For Actual Tagging:  http://goodies.pixabay.com/jquery/tag-editor/demo.html
     //
+    //
+    // NOTES:
+    // The bootstrap-datetimepicker-widget occassionally will not properly display if 
+    // contained in a <div class="row" > 
+    //
 
 
 
@@ -684,7 +689,7 @@ console.log(' ... returnedData:', data);
             var imageListTemplate =  this.domToTemplate(this.element.find('.fcf-activity-report-activity-images'));
             imageListTemplate = AD.util.string.replaceAll(imageListTemplate, 'src="images/fcf_activities/img2.jpg"', 'src="<%= image.attr(\'image\') %>"');
 
-console.warn('***** imageListTemplate:', imageListTemplate);
+// console.warn('***** imageListTemplate:', imageListTemplate);
             can.view.ejs('FCFActivities_ActivityReport_ImageList', imageListTemplate);
 
 
@@ -732,18 +737,43 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                     paramName:'imageFile',      // param name on server
                     maxFilesize:100,            // in MB
                     uploadMultiple: false,      // upload >1 file per request?
-                    acceptedFiles:'.jpg, .jpeg, .psd, .gif, .png',
+                    acceptedFiles:'.jpg, .jpeg, .psd, .gif, .png, .pdf',
                     headers: { "X-CSRF-Token" : token }
                 })
+
+                // locate the image holder in the Dropzone object:
+                var dzImage = _this.dom.dropzone.find('img');
+                    
+                // once the image loads, we need to check the existing values to make sure we 
+                // correct ourselvs for any potential scrollbar:
+                dzImage.on('load', function() {
+
+                    var height = parseInt(_this.dom.dropzone.css('height'));
+
+                    // if the height is > our area (then a vertical scrollbar will appear)
+                    if (parseInt(dzImage.css('height')) > height) {
+
+                        var width = parseInt(_this.dom.dropzone.css('width'));
+
+                        // let's reduce the width to take into account the new scroll bars that will appear
+                        width = width - (AD.util.uiScrollbarSize().width+4);
+                        dzImage.css('width', width);
+                    }
+                })
+
                 _this.obj.dropzone.on('success', function(file, response) {
 
-                    console.log('response:', response);
+                    // NOTE:  file  is the preview icon that is displayed on the dropzone element
 
                     _this.obj.dropzone.removeFile(file);
                     _this.dom.dropzone.addClass('nopadding').css('padding-top', '0px').css('padding-bottom', '0px');
                     _this.dom.dropzone.find('.dz-message').hide();
-                    var width = _this.dom.dropzone.css('width');
-                    _this.dom.dropzone.find('img').css('width', width).prop('src', response.data.path ).show();
+
+                    // place the image in the display area
+                    var width = parseInt(_this.dom.dropzone.css('width'));
+                    dzImage.css('width', width).prop('src', response.data.path ).show();
+
+
                     _this.dom.inputImage.val(response.data.name);
 
                     // make sure our [save] & [cancel] buttons are enabled now:
@@ -751,6 +781,30 @@ console.warn('***** imageListTemplate:', imageListTemplate);
                     _this.buttonEnable('cancel');
 
                 })
+
+                _this.obj.dropzone.on('error', function(file,error,xhr) {
+
+                    var soIGotHere=true;
+
+                    // make sure any existing image is hidden:
+                    dzImage.prop('src', '').hide();
+
+
+                    file.previewElement.addEventListener("click", function() {
+                        _this.obj.dropzone.removeFile(file);
+                    });
+
+                })
+
+
+                _this.obj.dropzone.on('sending', function(){
+
+                    // when a file is being uploaded, disable the buttons:
+                    _this.buttonDisable('save');
+                    _this.buttonDisable('cancel');
+
+                })
+
                 _this.dom.dropzone.find('img').prop('src', '' ).hide();
             })
             .fail(function(err){

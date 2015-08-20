@@ -120,10 +120,10 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
     , create:function(req, res) {
 
         var data = {};
-        data.activity_name = req.param('name');
-        data.activity_description = req.param('description');
-        data.date_start = req.param('startDate');
-        data.date_end = req.param('endDate');
+        data.activity_name = req.param('activity_name');
+        data.activity_description = req.param('activity_description');
+        data.date_start = req.param('date_start');
+        data.date_end = req.param('date_end');
         data.team = req.param('team');
 
 
