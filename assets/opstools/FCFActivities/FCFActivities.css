@@ -449,7 +449,7 @@ ul.checkbox li {list-style:none !important;}
 .imgmid col-md-5 img, .imgmid .col-md-4 img {width:100%}
 
 @media (min-width: 1200px) {
-	.container {width: 1298px !important;}
+/*	.container {width: 1298px !important;}  /// <-- this prevented the OPsPortal from filling the whole screen width.  */
 	
 }
 
