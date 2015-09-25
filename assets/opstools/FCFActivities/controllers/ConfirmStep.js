@@ -4,7 +4,7 @@ steal(
         'appdev',
 //        'opstools/FCFActivities/models/Projects.js',
 //        'appdev/widgets/ad_delete_ios/ad_delete_ios.js',
-        '//opstools/FCFActivities/views/ConfirmStep/ConfirmStep.ejs',
+        // '//opstools/FCFActivities/views/ConfirmStep/ConfirmStep.ejs',
 function(){
 
 

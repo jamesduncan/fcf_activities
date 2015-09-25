@@ -276,7 +276,7 @@ function(){
 
             this.buttonDisable('save');
             this.buttonDisable('cancel');
-            this.dom.buttons.delete.hide();
+            this.dom.buttons.del.hide();
             // this.buttonEnable('delete');
         },
 
@@ -389,10 +389,10 @@ console.log('... loading Form with image:',image.getID())
 
             var personUploaded = image.uploadedBy;
             if (personUploaded.IDPerson == this.whoami.IDPerson) {
-                this.dom.buttons.delete.show();
-                this.buttonEnable('delete');
+                this.dom.buttons.del.show();
+                this.buttonEnable('del');
             } else {
-                this.dom.buttons.delete.hide();
+                this.dom.buttons.del.hide();
             }
             
 
@@ -874,7 +874,7 @@ console.log(' ... returnedData:', data);
             this.dom.buttons = {};
             this.dom.buttons.save = this.element.find('#fcf-activity-image-form-save');
             this.dom.buttons.cancel = this.element.find('#fcf-activity-image-form-cancel');
-            this.dom.buttons.delete = this.element.find('#fcf-activity-image-form-delete');
+            this.dom.buttons.del = this.element.find('#fcf-activity-image-form-delete');
 
 
             // attach to structural DOM elements to help our resizing calculations
@@ -1666,6 +1666,8 @@ console.log('////// resize! : '+height);
             
         },
 
+
+
         // when the [Previous] button is clicked, then trigger our event:
         '#fcf-activity-image-form-nav-previous click': function($el, ev) {
             var self = this;
@@ -1700,7 +1702,7 @@ console.log('////// resize! : '+height);
                 fnContinue();
             }
 
-        },
+        }
 
 
 //// testing out Model Event trapping:
