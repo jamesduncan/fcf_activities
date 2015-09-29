@@ -2,6 +2,9 @@
 steal(
         // List your Controller's dependencies here:
         'appdev',
+        function() {
+            AD.ui.loading.resources(7);
+        },
         '//OpsPortal/classes/OpsTool.js',
         'opstools/FCFActivities/controllers/Portal.js',
         'opstools/FCFActivities/controllers/AddChooseMinistry.js',
@@ -11,6 +14,8 @@ steal(
         '//opstools/FCFActivities/views/FCFActivities/FCFActivities.ejs',
 function(){
 
+    AD.ui.loading.completed(7);
+    
     //
     // FCFActivities 
     // 
