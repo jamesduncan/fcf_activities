@@ -6,6 +6,8 @@
  */
 
 var AD = require('ad-utils');
+var fs = require('fs');
+
 
 module.exports = {
 	
@@ -224,6 +226,64 @@ module.exports = {
                         AD.log(err);
                         next(err);
                     })
+                },
+
+                // step 3: now verify avatar images and use those:
+                function(next) {
+
+
+                    fs.readdir(FCFCore.paths.images.avatars(''), function(err, avatars){
+
+                        if (err) {
+                            next(err);
+                        } else {
+
+                            // turn this into a hash:  
+                            //  ID    :  Name
+                            // '0001' : '0001.jpg'
+                            var hash = {};
+                            for (var i = avatars.length - 1; i >= 0; i--) {
+                                var parts = avatars[i].split('.');
+                                hash[parts[0]] = avatars[i];
+                            };
+
+
+                            // now for each listPerson:
+                            for (var i = listPeople.length - 1; i >= 0; i--) {
+                                var person = listPeople[i];
+                                var id = person.getID();
+
+                                // encode the id into a hashID: 0999, 0099, 0009 
+                                var hashID = '';    // ''
+                                if (id < 1000) {
+                                    hashID += '0';  // '0'
+                                    if (id < 100) {
+                                        hashID += '0'; // '00'
+                                        if (id < 10) {
+                                            hashID += '0';  // '000'
+                                        }
+                                    }
+                                }
+                                hashID += id;
+
+                                if (hash[hashID]) {
+
+                                    var foundName = hash[hashID];
+                                    person.avatar = FCFCore.paths.images.avatars(foundName);
+
+                                    // remove the path before 'assets'
+                                    person.avatar = person.avatar.split('assets')[1];
+
+                                }
+
+
+                            };
+
+                        }
+
+                        next();
+                    })
+ 
                 }
 
             ], function(err, results){

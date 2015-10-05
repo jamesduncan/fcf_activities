@@ -14,6 +14,7 @@
 module.exports = {
     directories:[
         '/assets/data/fcf/images/activities',
+        '/assets/data/fcf/images/avatars',
         '/assets/data/fcf/images/temp'
     ],
 
