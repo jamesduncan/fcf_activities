@@ -163,7 +163,8 @@ function(){
             this.form.addValidation( 'date_end', { 
                 dateGreaterThan:{
                     value:"date_start", 
-                    format:"mm/dd/yyyy" 
+                    format:"mm/dd/yyyy",
+                    canEqual:true 
                 } 
             });
             this.form.attach();

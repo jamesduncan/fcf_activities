@@ -213,6 +213,7 @@ module.exports = {
                     FCFPerson.find({IDPerson:peopleIDs})
                     .then(function(list){
 
+AD.log('... found people:', list);
 
                         list.forEach(function(person){
                             person.display_name = person.displayName(langCode);
@@ -313,17 +314,20 @@ module.exports = {
         })
         .then(function(data){
 
+            var simplePerson = null;
+
             if (!data) {
                 AD.log.error('... did not match a person');
             } else {
                 AD.log('... found');
+
+                simplePerson = {
+                    IDPerson:data.IDPerson,
+                    display_name: data.displayName()
+                }
             }
 
-            var simplePerson = {
-                IDPerson:data.IDPerson,
-                display_name: data.displayName()
-            }
-
+            
             ADCore.comm.success(res, simplePerson );
         })
 
