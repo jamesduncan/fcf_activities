@@ -175,6 +175,7 @@ module.exports = {
 
         } else {
 
+            AD.log('<green>::: activityreport.teammembers() :::</green>');
             var peopleIDs = [];
             var listPeople = null;
 
@@ -193,7 +194,6 @@ module.exports = {
                                     peopleIDs.push(entry.IDPerson);
                                 }
                             })
-
                         }
 
                         next();
@@ -208,16 +208,15 @@ module.exports = {
                 // step 2: now look up all those people:
                 function(next) {
 
-                    AD.log('... teammembers looking up people:', peopleIDs );
+                    AD.log('... looking up people:'+ peopleIDs );
 
                     FCFPerson.find({IDPerson:peopleIDs})
                     .then(function(list){
 
-AD.log('... found people:', list);
-
                         list.forEach(function(person){
                             person.display_name = person.displayName(langCode);
-                            person.avatar = '/images/activities_person_avatar.jpeg';
+                            person.avatar = null; // '/images/activities_person_avatar.jpeg';
+                            AD.log('... found teammember:'+ person.display_name);                        
                         })
                         listPeople = list;
                         next();
@@ -255,17 +254,27 @@ AD.log('... found people:', list);
                                 var id = person.getID();
 
                                 // encode the id into a hashID: 0999, 0099, 0009 
-                                var hashID = '';    // ''
-                                if (id < 1000) {
-                                    hashID += '0';  // '0'
-                                    if (id < 100) {
-                                        hashID += '0'; // '00'
-                                        if (id < 10) {
-                                            hashID += '0';  // '000'
-                                        }
+                                var hashID = '' + id;    // '9'
+                                var attempt = 1;
+                                while (attempt <= 4) {
+                                    if (!hash[hashID]) {
+                                        hashID = '0'+hashID;  // 09, 009
+                                        attempt++;
+                                    } else {
+                                        // found a match so:
+                                        attempt = 5;  // stop the loop
                                     }
                                 }
-                                hashID += id;
+                                // if (id < 1000) {
+                                //     hashID += '0';  // '0'
+                                //     if (id < 100) {
+                                //         hashID += '0'; // '00'
+                                //         if (id < 10) {
+                                //             hashID += '0';  // '000'
+                                //         }
+                                //     }
+                                // }
+                                // hashID += id;
 
                                 if (hash[hashID]) {
 
@@ -285,6 +294,22 @@ AD.log('... found people:', list);
                         next();
                     })
  
+                },
+
+                // step 4: now remove all the people who didn't have an avatar
+                function(next) {
+
+                    var finalList = [];
+                    listPeople.forEach(function(person){
+                        if (person.avatar != null) {
+                            finalList.push(person)
+                        } else {
+                            AD.log('... removing member that did not have avatar: '+ person.display_name);
+                        }
+                    });
+
+                    listPeople = finalList;
+                    next();
                 }
 
             ], function(err, results){
