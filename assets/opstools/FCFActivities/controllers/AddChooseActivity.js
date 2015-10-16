@@ -4,6 +4,7 @@ steal(
         'appdev',
         'opstools/FCFActivities/models/TeamActivity.js',
         'opstools/FCFActivities/models/TeamObjective.js',
+        'OpsPortal/controllers/FilteredBootstrapTable.js',
         // '//opstools/FCFActivities/views/AddChooseActivity/AddChooseActivity.ejs',
 function(){
 
