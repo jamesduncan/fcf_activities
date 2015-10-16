@@ -376,6 +376,7 @@ function(){
         // when the [Next] button is clicked, then trigger our event:
         '#fcf-activity-add-chooseAssignment-next click': function($el, ev) {
             this.element.trigger(this.CONST.NEXT);
+            ev.preventDefault();
         },
 
 
@@ -383,6 +384,7 @@ function(){
         // when the [Previous] button is clicked, then trigger our event:
         '#fcf-activity-add-chooseAssignment-previous click': function($el, ev) {
             this.element.trigger(this.CONST.PREV);
+            ev.preventDefault();
         },
 
 
@@ -451,27 +453,28 @@ function(){
                     self.nextEnable();
                 })
 
-            } else {
+            // } else {
 
-                var errors = this.formErrors(obj);
+                // var errors = this.formErrors(obj);
 
-                if (errors.length>0) {
+                // if (errors.length>0) {
 
-                    bootbox.dialog({
-                        message: 'Please fix these errors before trying again:<br>'+errors.join('<br>'),
-                        title: 'Invalid Form Data',
-                        buttons: {
-                            main: {
-                                label: 'OK',
-                                className: "btn-primary",
-                                callback: function() {}
-                            }
-                        }
-                    });
+                //     bootbox.dialog({
+                //         message: 'Please fix these errors before trying again:<br>'+errors.join('<br>'),
+                //         title: 'Invalid Form Data',
+                //         buttons: {
+                //             main: {
+                //                 label: 'OK',
+                //                 className: "btn-primary",
+                //                 callback: function() {}
+                //             }
+                //         }
+                //     });
 
-                }
+                // }
 
             }
+            ev.preventDefault();
 
         },
 
@@ -480,6 +483,7 @@ function(){
         '#cancel-add-assignment click': function($el, ev) {
             this.formClear();
             this.modalAdd.modal('hide');
+            ev.preventDefault();
         }
 
 
