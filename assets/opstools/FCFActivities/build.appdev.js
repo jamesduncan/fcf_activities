@@ -74,7 +74,7 @@ shouldEcho:true,
                     // exitTrigger:'opstools/FCFActivities/production.css'
                 })
                 .fail(function(err){
-                    AD.log.error('<red>could not complete opstools/FCFActivities build!</red>');
+                    AD.log.error('could not complete opstools/FCFActivities build!');
                     next(err);
                 })
                 .then(function(){
