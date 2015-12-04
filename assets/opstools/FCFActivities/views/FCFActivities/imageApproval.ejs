@@ -1,0 +1,56 @@
+<!--Image Name-->
+<div id="opsportal-activityName" class="off-botm20">
+      <div class="form-group">
+        <label class="lbl-title">Image</label>
+        <div class="op-container off-botm20">
+          <img class="img-responsive" src="<%= data.image %>" alt="R,desponsive image" >                              
+        </div>
+      </div>
+      <div class="form-horizontal">
+       <!--Caption--> 
+       <div class="form-group">
+          <label class="col-sm-1 nopadL control-label lbl-title">Caption:</label>
+          <div class="col-sm-11">
+            <input type="text" class="form-control" id="caption" value="<%= data.caption %>" >
+          </div>
+       </div>
+       <!--/Caption-->
+       <!--Date-->
+       <div class="row">
+         <div class="col-sm-12">
+            <label class="col-sm-1 control-label nopadL lbl-title">Date:</label>
+            <div class="col-sm-11">
+              <div class="row">
+                <div class="col-sm-3">
+                  <input type="date" class="col-xs-2 form-control" value="<%= data.date %>">
+                </div>
+              </div>
+            </div>
+         </div>
+       </div>
+       <!--/Date-->
+     </div>
+</div> 
+<!--/Image Name-->
+<!--People in Photo-->                  
+<div id="opsportal-description">
+  <label class="lbl-title">People in photo:</label>
+    <div class="op-container op-block-border off-botm20">
+      <div class="row" style="margin:0;">
+        <!--List of people with closed button-->
+        <% taggedPeople.forEach(function(person){ %>
+
+
+        <div class="alert people alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <img class="op-avatar pull-left" src="<%= person.avatar %>" alt="Responsive image" ><strong><%= person.display_name %></strong>
+          <input type="hidden" name="taggedPeople" value="<%= person.IDPerson %>">
+        </div>
+
+        <%  }) %>
+                                                                                      
+        <!--/End here-->
+      </div>
+    </div>
+</div>
+<!--/People in Photo-->  

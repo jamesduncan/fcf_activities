@@ -7,6 +7,92 @@
 var AD = require('ad-utils');
 var path = require('path');
 var fs = require('fs');
+var lodash = require('lodash');
+
+
+///// TODO:
+///// Move this into the FCFPerson Model object!
+
+
+var _allAvatars = [];
+var _avatarHash = {};
+
+function allAvatars (cb) {
+    if (_allAvatars.length == 0) {
+        fs.readdir(FCFCore.paths.images.avatars(''), function(err, avatars){
+
+            if (err) {
+                cb(err);
+            } else {
+                _allAvatars = avatars;
+
+                // turn this into a hash:  
+                //  ID    :  Name
+                // '0001' : '0001.jpg'
+                for (var i = avatars.length - 1; i >= 0; i--) {
+                    var parts = avatars[i].split('.');
+                    _avatarHash[parts[0]] = avatars[i];
+                };
+
+                cb(null, _allAvatars);
+            }
+
+        });
+    } else {
+        cb(null, _allAvatars);
+    }
+} 
+
+
+function addAvatar(listPeople, cb) {
+
+    allAvatars(function(err, avatars) {
+
+        if (err) {
+            cb(err);
+            return;
+        }
+
+
+        // now for each listPerson:
+        for (var i = listPeople.length - 1; i >= 0; i--) {
+            var person = listPeople[i];
+            var id = person.getID();
+
+            // encode the id into a hashID: 0999, 0099, 0009 
+            var hashID = '' + id;    // '9'
+            var attempt = 1;
+            while (attempt <= 4) {
+                if (!_avatarHash[hashID]) {
+                    hashID = '0'+hashID;  // 09, 009
+                    attempt++;
+                } else {
+                    // found a match so:
+                    attempt = 5;  // stop the loop
+                }
+            }
+
+            if (_avatarHash[hashID]) {
+
+                var foundName = _avatarHash[hashID];
+                person.avatar = FCFCore.paths.images.avatars(foundName);
+
+                // remove the path before 'assets'
+                person.avatar = person.avatar.split('assets')[1];
+
+            }
+
+
+        };
+
+        cb();
+
+    });
+}
+
+
+
+
 
 module.exports = {
 
@@ -257,6 +343,8 @@ AD.log('query:', req.query);
 			} else {
 				AD.log('... returning data to client:', finalData);
 				ADCore.comm.success(res, finalData );
+
+				PostApprovalRequest({ data: newImage, action:'created' });
 			}
 
 		});
@@ -605,6 +693,8 @@ AD.log('query:', req.query);
 				// res.send(finalData);
 				ADCore.comm.success(res,finalData);
 
+				PostApprovalRequest({ data: currImage, action:'updated' });
+
 			}
 
 		})
@@ -832,4 +922,256 @@ AD.log('query:', req.query);
 	}
 	
 };
+
+
+
+var PostApprovalRequest = function (options) {
+	// options.data   : the data to approve  (image model instance)
+	// 
+console.log('... PostApprovalRequest:', options);
+
+	var action = '[newImage]';
+	if (options.action == 'updated') action = '[updatedImage]';
+
+	var creator = null;
+	var image = null;
+	var activity = null;
+	var teamMembers = null;
+	var listTeammates = null;
+	var listTeammatesTagged = null;
+	var listTeammatesNotTagged = null;
+
+
+	var commonData = null;
+
+	async.series([
+
+
+        // pull full image data:
+        function(next) {
+
+        	FCFActivityImages.findOne(options.data.id)
+        	.populate('translations')
+        	.populate('taggedPeople')
+        	.populate('uploadedBy')
+        	.populate('activity')
+        	.exec(function(err, thisImage){
+
+                if (err) {
+                    var myErr = new Error('Error looking up image');
+                    myErr.error = err;
+                    next(myErr);
+                } else {
+
+// console.log('... found image:', thisImage);
+                    image = thisImage.toClient();
+                    next();
+
+
+                }
+
+        	})
+        },
+
+
+        // Pull all Teammates for this person:
+        function(next) {
+
+        	var peopleIDs = [];
+        	
+            FCFMinistryTeamMember.find({IDMinistry:image.activity.team})
+            .then(function(list){
+
+                if (list) {
+
+                    list.forEach(function(entry){
+                        if (entry.IDPerson) {
+                            peopleIDs.push(entry.IDPerson);
+                        }
+                    })
+                }
+
+                FCFPerson.find({IDPerson:peopleIDs})
+                .then(function(listPeople){
+
+                    listPeople.forEach(function(person){
+                        person.display_name = person.displayName(Multilingual.languages.default());
+                        person.avatar = null; // '/images/activities_person_avatar.jpeg';
+                        AD.log('... found teammember:'+ person.display_name);                        
+                    })
+                    listTeammates = listPeople;
+
+                    addAvatar(listTeammates, function(err) {
+
+                    	if (err) { next(err);  return; }
+
+
+                    	var finalList = [];
+	                    listTeammates.forEach(function(person){
+	                        if (person.avatar != null) {
+// AD.log('... person had avatar:'+ person.display_name);
+
+	                            finalList.push(person)
+	                        } else {
+	                            AD.log('... removing member that did not have avatar: '+ person.display_name);
+	                        }
+	                    });
+
+	                    listTeammates = finalList;
+
+                        next();
+                    });
+
+
+                })
+                .catch(function(err){
+                    AD.log(err);
+                    next(err);
+                })
+
+            })
+            .catch(function(err){
+                AD.log(err);
+                next(err);
+            })
+
+        },
+
+
+        // sort list of ppl in image
+        // and people not in image
+        function(next){
+
+        	listTeammatesTagged = [];
+        	listTeammatesNotTagged = [];
+
+//         	var taggedIDs = _.pluck(image.taggedPeople, 'IDPerson');
+
+// console.log('----> taggedIDs:', taggedIDs);
+
+        	listTeammates.forEach(function(person){
+// console.log('........ person:', person);
+
+        		if (image.taggedPeople.indexOf(person.IDPerson) != -1) {
+        			listTeammatesTagged.push(person);
+        		} else {
+        			listTeammatesNotTagged.push(person);
+        		}
+        	})
+
+        	next();
+        },
+
+
+		// get the activity this image is attached to
+		function(next) {
+			FCFActivity.findOne({ id: options.data.activity})
+			.exec(function(err, myActivity){
+
+				if (err) {
+
+					next(err);
+				} else {
+
+					activity = myActivity;
+
+					activity.translate()
+                    .fail(function(err){
+                        var myErr = new Error('Error translating activity.');
+                        myErr.error = err;
+                        next(myErr);
+                    })
+                    .then(function(){
+                        next();
+                    })
+				}
+			})
+		},
+
+
+		// get the common data for our FCF Approval Requests:
+		function(next) {
+
+			var creatorID = options.data.uploadedBy;
+			if (_.isObject(creatorID)) {
+				creatorID = creatorID.IDPerson;
+			}
+			
+			FCFActivities.approvals.base({
+				icon: 		"fa-file-image-o",
+				action: 	action,
+				createdAt: 	options.data.createdAt,
+				creator:{
+					id:creatorID
+				},
+				callback:{
+                        message:"fcf.activities.image",
+                        reference: { id: options.data.id }
+                    },
+                permissionKey:'fcf.activity.images.approve'
+			})
+			.fail(function(err){
+				next(err);
+			})
+			.then(function(request){
+
+// AD.log('... common request data:', request);
+				commonData = request;
+				next();
+			})
+		},
+
+
+
+		// finish out with our image approval data:
+		function(next) {
+
+			var thisData = {
+
+                "menu":{
+                    "instanceRef":"caption",
+                },
+
+                "form":{
+                    "data":image,
+                    "view":"//opstools/FCFActivities/views/FCFActivities/imageApproval.ejs",
+                    "viewData":{
+                    	"taggedPeople":listTeammatesTagged
+                    }
+                },
+
+
+                "relatedInfo":{
+                    "view":"//opstools/FCFActivities/views/FCFActivities/imageApprovalRelated.ejs",
+                    "viewData":{
+                        "teamID":activity.team,
+                        "activity": activity,
+                        "untaggedPeople": listTeammatesNotTagged
+                    }
+                }
+
+            };
+
+			requestData = lodash.defaultsDeep(thisData, commonData);
+			next();
+		}
+
+	],function(err, results){
+
+
+		if (err) {
+AD.log('!!!! error:', err);
+
+		} else {
+AD.log('....  publishing Request Data:', requestData);
+
+			ADCore.queue.publish('opsportal.approval.create', requestData);
+		}
+
+	})
+
+
+
+
+}
 

@@ -488,6 +488,8 @@ console.log(' ... returnedData:', data);
 
                         self.clearForm();  
 
+                        self.postApproval();
+
                         self.refreshPeopleTaggedInActivities( valuesObj.activity );
                         self.refreshPeopleTaggedInImages(data);
                         dfd.resolve();
@@ -1091,6 +1093,21 @@ console.log(' ... returnedData:', data);
             //     self.modalAdd.find('.objectives-section').append(can.view('FCFActivities_AddObjectives', {objectives:list}));
             // })
 
+
+        },
+
+
+
+        postApproval:function(data){
+
+            AD.comm.service.get({url:'/fcf_activities/activityreport/approve/'+data.id })
+            .fail(function(err){
+                console.error('... activity approval failed:');
+                console.error(err);
+            })
+            .then(function(){
+                console.log('... activity approval sent!');
+            })
 
         },
 

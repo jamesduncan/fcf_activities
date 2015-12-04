@@ -297,6 +297,21 @@ function(){
 
 
 
+        postApproval:function(data){
+
+            AD.comm.service.get({url:'/fcf_activities/activityreport/approve/'+data.id })
+            .fail(function(err){
+                console.error('... activity approval failed:');
+                console.error(err);
+            })
+            .then(function(){
+                console.log('... activity approval sent!');
+            })
+
+        },
+
+
+
         resize: function(height) {
 
             // items needing resizing:
@@ -439,6 +454,8 @@ function(){
                     data = data.data || data;
 
                     console.log('returned Activity:', data);
+
+                    self.postApproval(data);
 
                     var model = new Model(data);
 

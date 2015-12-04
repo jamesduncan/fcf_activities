@@ -1,0 +1,31 @@
+
+<div class="op-widget-masthead">
+  <h3>Submitted By:</h3>
+</div>
+<!--Avatar & Team-->
+<div class="row op-container">
+  <div class="col-xs-6 col-sm-3 col-lg-6 nopadR">
+        <img class="op-avatar" src="<%= user.avatar %>" alt="Responsive image" >
+    </div>
+    <div class="col-xs-6 col-sm-9 col-lg-6 nopadR">
+         <h3 class="nomargintop"><%= user.displayName %></h2>
+         <p><strong>Team(s):</strong></p>
+         <ul class="op-list">
+            <% user.teams.forEach(function(team){ %>
+
+              <li><%= team.MinistryDisplayName %></li>
+
+            <% }) %>
+        </ul>
+    </div>                        
+</div>
+<!--/Avatar & Team-->
+<div class="op-container">
+  <h5 class="op-margin-bottom">Created On: <%= createdAt %></h5>
+    <div class="op-container off-botm20">
+        <label class="lbl-title">For Activity:</label>
+        <p><span><strong><%= activity.activity_name %></strong><br><%= activity.activity_description %></span></p>
+        
+    </div>
+                     
+</div>
