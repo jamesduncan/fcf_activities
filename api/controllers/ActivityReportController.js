@@ -870,7 +870,7 @@ console.log('... found objectives:', list);
                           "context":"fcf.activity"
                         },
                         "instanceRef":"activity_name",
-                        "createdBy":creatorGUID,
+                        "createdBy":creator.displayName(),
                         "date":createdAt
                     },
 
