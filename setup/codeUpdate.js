@@ -7,10 +7,23 @@ var sails,
 
 
 AD.test.sails.lift({
-    models:{
-        connection:'test',
-        migrate:'drop'
+    // disable the http interface and related hooks
+    // to prevent any conflicts with the running sails
+    // process.
+    hooks:{
+        http:false,
+        csrf: false,
+        grunt: false,
+        sockets:false,
+        pubsub:false,
+        views:false
     }
+
+    // DO NOT mess with the model config:
+    // models:{
+    //     // connection:'test',
+    //     // migrate:'drop'
+    // }
 })
 .fail(function(err){
     AD.log.error(err);
@@ -26,26 +39,86 @@ AD.test.sails.lift({
         // make sure these ministries have objectives assigned
         function(next) {
 
-            var ministries = [82, 13, 43, 70, 71, 72];
+            console.log('Verifying Ministry Objectives ...');
+
+            var ministries = []; // [82, 13, 43, 70, 71, 72];
             var numDone = 0;
 
-            ministries.forEach(function(ministryID) {
+            FCFMinistry.find()
+            .exec(function(err, list) {
 
-                checkMinistry(ministryID, function(err){
+                if (err) { 
+                    next(err);
+                } else {
 
-                    // exit immediatly on error
-                    if (err) {
-                        next(err);
+                    if (list.length == 0) {
+                        // nothing to do then.
+                        next();
                     } else {
 
-                        // wait for all ministries to be done before continuing on
-                        numDone++;
-                        if (numDone >= ministries.length) {
+
+                        list.forEach(function(ministry) {
+
+                            checkMinistry(ministry.IDMinistry, function(err){
+
+                                // exit immediatly on error
+                                if (err) {
+                                    next(err);
+                                } else {
+
+                                    // wait for all ministries to be done before continuing on
+                                    numDone++;
+                                    if (numDone >= list.length) {
+                                        next();
+                                    }
+                                }
+                            })
+
+                        })
+                    }
+                }
+            })
+        },
+
+        // preserve our Admin User "person"
+        function(next) {
+            console.log('Preserve Admin User "person" :');
+
+            // get ric's entry:
+            FCFPerson.findOne(929)
+            .exec(function(err, ric){
+                
+                var data = ric.toJSON();
+                // data.IDPerson = 10001;
+                delete data.IDPerson;
+                data.NameLastEng = "Admin";
+                data.NameFirstEng = "Admin";
+
+                FCFPerson.create(data)
+                .exec(function(err, admin){
+
+                    GUID2Person.find({ guid:'A3522A53-CBEC-48E2-BA61-80241D551676'})
+                    .exec(function(err, list){
+
+                        if (err) {
+                            next(err);
+
+                        } else if (list[0]) {
+
+                            var guidLookup = list[0];
+                            guidLookup.person = admin.IDPerson;
+                            guidLookup.save(function(err, savedGuid){
+
+                                next(err);
+                            })
+
+                        } else {
+
+                            AD.log.error('... did not find guid2Person entry for Admin!  why?');
                             next();
                         }
-                    }
+                    })
                 })
-
             })
         }
 
@@ -127,27 +200,32 @@ function checkMinistry (id, cb) {
 
                 console.log('... Ministry['+ id+'] will get '+projectObjectives.length+' spiffy new objectives');
 
-                var numDone = 0;
-                projectObjectives.forEach(function(objective){
+                if (projectObjectives.length == 0) {
+                    next();
+                } else { 
+                    
+                    var numDone = 0;
+                    projectObjectives.forEach(function(objective){
 
-                    var data = objective.toJSON();
-                    delete data.IDObjective;
-                    data.IDMinistry = id;
-                    FCFObjective.create(data)
-                    .exec(function(err, newObjective) {
+                        var data = objective.toJSON();
+                        delete data.IDObjective;
+                        data.IDMinistry = id;
+                        FCFObjective.create(data)
+                        .exec(function(err, newObjective) {
 
-                        if (err) {
-                            next(err);
-                        } else {
+                            if (err) {
+                                next(err);
+                            } else {
 
-                            numDone++;
-                            if (numDone >= projectObjectives.length) {
-                                next();
+                                numDone++;
+                                if (numDone >= projectObjectives.length) {
+                                    next();
+                                }
                             }
-                        }
-                    })
+                        })
 
-                })
+                    })
+                }
 
             }
         }
