@@ -8,6 +8,7 @@ steal(
         },
         '//opstools/FCFActivities/controllers/FCFActivities.js',
         '//opstools/FCFActivities/FCFActivities.css',
+        '//opstools/FCFActivities/opsportal-theme-fcf.css',
         '/site/labels/opstool-FCFActivities.js'
 ).then(function(){
 
