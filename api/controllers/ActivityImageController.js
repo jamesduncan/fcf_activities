@@ -930,8 +930,8 @@ var PostApprovalRequest = function (options) {
 	// 
 console.log('... PostApprovalRequest:', options);
 
-	var action = '[newImage]';
-	if (options.action == 'updated') action = '[updatedImage]';
+	var action = 'fcf.activityapproval.newImage';
+	if (options.action == 'updated') action = 'fcf.activityapproval.updatedImage';
 
 	var creator = null;
 	var image = null;

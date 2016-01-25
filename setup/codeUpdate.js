@@ -120,6 +120,47 @@ AD.test.sails.lift({
                     })
                 })
             })
+        }, 
+
+
+        // update all Objectives to have something for their thai descriptions.
+        function(next) {
+
+            var numToDo = 0;
+            var numDone = 0;
+
+            FCFObjective.find()
+            .then(function(objectives) {
+
+                objectives.forEach(function(objective){
+
+                    if ((objective.ObjectiveDescThai == null)
+                        || (objective.ObjectiveDescThai == '')){
+
+                        objective.ObjectiveDescThai = '[th]'+objective.objectiveDescEng;
+                        numToDo++;
+                        objective.save()
+                        .then(function(){
+
+                            numDone++;
+                            if (numDone >= numToDo) {
+                                next();
+                            }
+                        })
+                        .catch(function(err){
+                            next(err);
+                        })
+                    }
+                })
+
+                if (numToDo == 0) {
+                    next();
+                }
+            })
+            .catch(function(err){
+                next(err);
+            })
+
         }
 
     ],function(err, results){

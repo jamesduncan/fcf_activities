@@ -140,6 +140,7 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
         }
 
         var langCode = ADCore.user.current(req).getLanguageCode();
+        data.language_code = data.language_code || langCode;
 
 
         var newActivity = null;

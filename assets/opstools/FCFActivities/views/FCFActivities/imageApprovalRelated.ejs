@@ -1,6 +1,10 @@
-
+<!-- 
+#  Appdev Label Info:
+#label_context:opstool-FCFActivities
+#language_code:en
+-->
 <div class="op-widget-masthead">
-  <h3>Submitted By:</h3>
+  <h3><span app-label-key="fcf.activityapproval.submittedBy">Submitted By:</span></h3>
 </div>
 <!--Avatar & Team-->
 <div class="row op-container">
@@ -9,7 +13,7 @@
     </div>
     <div class="col-xs-6 col-sm-9 col-lg-6 nopadR">
          <h3 class="nomargintop"><%= user.displayName %></h2>
-         <p><strong>Team(s):</strong></p>
+         <p><strong><span app-label-key="fcf.imageapproval.teams">Team(s):</span></strong></p>
          <ul class="op-list">
             <% user.teams.forEach(function(team){ %>
 
@@ -21,9 +25,9 @@
 </div>
 <!--/Avatar & Team-->
 <div class="op-container">
-  <h5 class="op-margin-bottom">Created On: <%= createdAt %></h5>
+  <h5 class="op-margin-bottom"><span app-label-key="fcf.imageapproval.createdOn">Created On: <%= createdAt %></span></h5>
     <div class="op-container off-botm20">
-        <label class="lbl-title">For Activity:</label>
+        <label class="lbl-title"><span app-label-key="fcf.imageapproval.forActivity">For Activity:</span></label>
         <p><span><strong><%= activity.activity_name %></strong><br><%= activity.activity_description %></span></p>
         
     </div>

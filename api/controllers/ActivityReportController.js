@@ -7,6 +7,8 @@
 
 var AD = require('ad-utils');
 var fs = require('fs');
+var path = require('path');
+
 
 var _allAvatars = [];
 var _avatarHash = {};
@@ -718,6 +720,7 @@ AD.log('... received error!:', err);
 
 
         var activity = null;
+        var language_code = ADCore.user.current(req).getLanguageCode();
         var creatorGUID = null;
         var objectives = null;
         var creator = null;
@@ -734,25 +737,27 @@ AD.log('... received error!:', err);
                 .exec(function(err, modelActivity){
 
                     if (err) {
-console.log('... .findOne() error:', err);
+// console.log('... .findOne() error:', err);
 
                         var myErr = new Error('Error loading Activity:');
                         myErr.error = err;
                         next(myErr);
                     } else {
-console.log('... translating');
+// console.log('... translating');
                         activity = modelActivity;
+                    
 
-                        activity.translate()
+                        // note: .translate() flattens the values to the base object
+                        activity.translate(language_code)
                         .fail(function(err){
-console.log('... .translate() error:', err );
+// console.log('... .translate() error:', err );
 
                             var myErr = new Error('Error translating activity.');
                             myErr.error = err;
                             next(myErr);
                         })
                         .then(function(){
-console.log('... Activity.afterCreate(): translated:', activity);
+// console.log('... Activity.afterCreate(): translated:', activity);
                             next();
                         })
 
@@ -866,8 +871,8 @@ console.log('... found objectives:', list);
                     "menu":{
                         "icon":"fa-calendar",
                         "action": {
-                          "key":"[newActivity]",
-                          "context":"fcf.activity"
+                          "key":"fcf.activityapproval.newActivity",
+                          "context":"opstool-FCFActivities"
                         },
                         "instanceRef":"activity_name",
                         "createdBy":creator.displayName(),
@@ -879,7 +884,8 @@ console.log('... found objectives:', list);
                         "data":activity,
                         "view":"//opstools/FCFActivities/views/FCFActivities/activityApproval.ejs",
                         "viewData":{
-                            "objectives":objectives
+                            "objectives":objectives,
+                            "language_code":language_code
                         }
                     },
 
@@ -900,7 +906,7 @@ console.log('... found objectives:', list);
 
                     "callback":{
                         message:"fcf.activities.activity",
-                        reference: { id: creator.getID() }
+                        reference: { id: activity.id }
                     },
 
 

@@ -1,27 +1,32 @@
-
+<!-- 
+#  Appdev Label Info:
+#label_context:opstool-FCFActivities
+#language_code:en
+-->
           <div class="modal-body inner-add-activity">
             <form id="fcf-new-activity-form">
-              <input type="hidden" id="activity-team" name='team' />
+              <input type="hidden" id="activity-team" name='team' value="<%= data.team %>" />
+              <input type="hidden"  name='language_code' value="<%= language_code %>" />
               <div class="form-group">
-                <label for="activity_name"><span appp-label-key="fcf.assignment.Choose.ActivityName">Activity Name</span></label>
-                <p><span appp-label-key="fcf.assignment.addAssignment.Choose.ActivityNameDesc" >Please use a name everyone associated with the activity will organize</span></p>
-                <input type="text" class="form-control" placeholder="Activity Name" appp-label-key="fcf.assignment.Choose.ActivityName" name="activity_name" value="<%= data.activity_name %>" required >
+                <label for="activity_name"><span app-label-key="fcf.assignment.Choose.ActivityName">Activity Name</span></label>
+                <p><span app-label-key="fcf.assignment.addAssignment.Choose.ActivityNameDesc" >Please use a name everyone associated with the activity will organize</span></p>
+                <input type="text" class="form-control" placeholder="Activity Name" app-label-key="fcf.assignment.Choose.ActivityName" name="activity_name" value="<%= data.activity_name %>" required >
               </div>
 
               <div class="form-inline">
                   <div class="form-group">
-                      <label for="date_start" appp-label-key="fcf.assignment.addAssignment.Choose.startDate">Start Date</label>
+                      <label for="date_start" app-label-key="fcf.assignment.addAssignment.Choose.startDate">Start Date</label>
                       <input type="text" class="form-control" id="date_start" name="date_start" value="<%= data.date_start %>" />
                   </div>
                   <div class="form-group">
-                      <label for="date_end" appp-label-key="fcf.assignment.addAssignment.Choose.endDate">End Date</label>
+                      <label for="date_end" app-label-key="fcf.assignment.addAssignment.Choose.endDate">End Date</label>
                       <input type="text" class="form-control" value="<%= data.date_end %>"  name="date_end"/>
                   </div>
               </div>
               <div class="row margintop10">
                 <div class="col-md-12 form-group">
-                    <label><span appp-label-key="fcf.assignment.Choose.TeamObjectives">Team Objectives</span></label>
-                    <p><span appp-label-key="fcf.assignment.Choose.TeamObjectivesDesc" > Every activity must meet at least one objective. Please choose all that apply:</span></p>
+                    <label><span app-label-key="fcf.assignment.Choose.TeamObjectives">Team Objectives</span></label>
+                    <p><span app-label-key="fcf.assignment.Choose.TeamObjectivesDesc" > Every activity must meet at least one objective. Please choose all that apply:</span></p>
                     <div class="form-group objectives-section">
                       <% objectives.forEach(function(objective){ 
                           var checked = '';
@@ -29,10 +34,18 @@
                               if (selectedO.IDObjective == objective.IDObjective) {
                                 checked = ' checked="checked" ';
                               }
-                          })
+                          });
+
+                          var objectiveLabel = objective.ObjectiveDescEng;
+                          if (AD.lang.currentLanguage != 'en') {
+                            objectiveLabel = objective.ObjectiveDescThai;
+                            if (objectiveLabel == null) {
+                              objectiveLabel = '[th]'+objective.ObjectiveDescEng;
+                            }
+                          }
                       %>
                         <div class="checkbox">
-                            <label><input type="checkbox" value="[[= objective.IDObjective ]]" name="objective" <%= checked %> /> <%= objective.ObjectiveDescEng %></label>
+                            <label><input type="checkbox" value="<%= objective.IDObjective %>" name="objectives" <%= checked %> /> <%= objectiveLabel %></label>
                         </div>
                       <% }) %>                               
                     </div>
@@ -41,9 +54,9 @@
               </div>
               <div class="row margintop10">
                   <div class="col-md-12">
-                      <label><span appp-label-key="fcf.assignment.Choose.Description">Description</span></label>
-                      <p><span appp-label-key="fcf.assignment.Choose.DescriptionDesc" >Please describe this activity using the team objective as guideline </span></p>
-                      <textarea type="textarea" class="form-control" placeholder="Description" id="activityDescription" appp-label-key="fcf.assignment.Choose.Description" name="activity_description"><%= data.activity_description %></textarea>
+                      <label><span app-label-key="fcf.assignment.Choose.Description">Description</span></label>
+                      <p><span app-label-key="fcf.assignment.Choose.DescriptionDesc" >Please describe this activity using the team objective as guideline </span></p>
+                      <textarea type="textarea" class="form-control"  id="activityDescription" name="activity_description"><%= data.activity_description %></textarea>
                   </div>
               </div>
             </form>      

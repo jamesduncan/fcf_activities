@@ -80,6 +80,14 @@ function(){
             this.initPortals();
 
             this.initEvents();
+
+            // this.on('opsportal.tool.hide', function(data){
+            //     console.log('FCFActivities told to hide.');
+            // })
+
+            // this.on('opsportal.tool.show', function(data){
+            //     console.log('FCFActivities told to show.');
+            // })
             
 // for Testing:
 // this.showPortal('Report');
@@ -142,8 +150,10 @@ function(){
                 }
                 
 
-            })
+            });
 
+
+            this.translate();  // translate our area interface.
         },
 
 

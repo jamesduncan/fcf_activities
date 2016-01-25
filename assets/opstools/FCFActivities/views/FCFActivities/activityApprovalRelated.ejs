@@ -1,6 +1,10 @@
-
+<!-- 
+#  Appdev Label Info:
+#label_context:opstool-FCFActivities
+#language_code:en
+-->
 <div class="op-widget-masthead">
-  <h3>Submitted By:</h3>
+  <h3><span app-label-key="fcf.activityapproval.submittedBy">Submitted By:</span></h3>
 </div>
 <!--Avatar & Team-->
 <div class="row op-container">
@@ -9,7 +13,7 @@
     </div>
     <div class="col-xs-6 col-sm-9 col-lg-6 nopadR">
          <h3 class="nomargintop"><%= user.displayName %></h2>
-         <p><strong>Team(s):</strong></p>
+         <p><strong><span app-label-key="fcf.activityapproval.teams">Team(s):</span></strong></p>
          <ul class="op-list">
             <% user.teams.forEach(function(team){ %>
 
@@ -21,9 +25,9 @@
 </div>
 <!--/Avatar & Team-->
 <div class="op-container">
-  <h5 class="op-margin-bottom">Created On: <%= createdAt %></h5>
+  <h5 class="op-margin-bottom"><span app-label-key="fcf.activityapproval.createdOn">Created On: <%= createdAt %></span></h5>
     <div class="op-container off-botm20">
-        <label class="lbl-title">Under Team:</label>
+        <label class="lbl-title"><span app-label-key="fcf.activityapproval.underTeam">Under Team:</span></label>
 
         <%
 
@@ -41,7 +45,7 @@
         
     </div>
     <div class="op-container">
-        <label class="lbl-title">Under Project:</label>
+        <label class="lbl-title"><span app-label-key="fcf.activityapproval.underProject">Under Project:</span></label>
         <p><span><strong>Project Name</strong></span><br>project description can be longer than you might think here.</p>
     </div>                        
 </div>
