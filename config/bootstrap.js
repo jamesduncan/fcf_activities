@@ -7,9 +7,40 @@
  * For more information on bootstrapping your app, check out:
  * http://sailsjs.org/#documentation
  */
-
+var path = require('path');
+var AD = require('ad-utils');
 module.exports = function (cb) {
 
-    cb();       // successful response
+    AD.module.permissions(path.join(__dirname, '..', 'setup', 'permissions'), cb);
     // cb(err);   // in case of an unrecoverable error
+
+
+    // create a listner for when our Activity entries are approved
+    ADCore.queue.subscribe('fcf.activities.activity', function(message, data){
+
+    	// data.status    : {string}  'approved'  or 'rejected'
+    	// data.data      : {obj} any updated values from the ProcessApproval form
+    	// data.reference : {obj} the reference info we sent
+
+
+AD.log('FCF Activity Approval Result:', data);
+
+
+    });
+
+
+        // create a listner for when our Image entries are approved
+    ADCore.queue.subscribe('fcf.activities.image', function(message, data){
+
+    	// data.status    : {string}  'approved'  or 'rejected'
+    	// data.data      : {obj} any updated values from the ProcessApproval form
+    	// data.reference : {obj} the reference info we sent
+
+
+AD.log('FCF Image Approval Result:', data);
+
+
+    });
+
+
 };
