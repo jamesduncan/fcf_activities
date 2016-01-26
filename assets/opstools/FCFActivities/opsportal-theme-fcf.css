@@ -103,7 +103,6 @@ h1, h2, h3, h4, h5 { color: #EF9216; }
 .op-menu-widget, #op-menu-widget { background-color: #444; }
 .op-menu-widget ul li, .op-menu-widget .op-icon i { color: #fff !important; }
 
-.op-block { background-color: #f0f0f0; }
 .op-block-masthead h3 { color: #666666 !important; }
 
 /* =Button Styles */
@@ -410,15 +409,22 @@ ul {padding:0;margin:0}
 }
 
 .op-block h1, .op-block h2, .op-block h3, .op-block h4, .op-block h5 { 
-    color: #333; 
+    color:#eee; 
 }
 
-.op-block-border{
-    background-color: #f0f0f0;
+.op-block
+{
+    background-color: #1F6B8D;
+    color:#eee;
 }
 
-.op-container > .op-widget-body {
+.op-block-border, .workspace > .op-block {
+    background-color:#BBD3D7 !important;
+}
+
+.op-widget-body {
     background-color: #bbd3d7;
+    color: #000;
 }
 
 #op-list-menu {
