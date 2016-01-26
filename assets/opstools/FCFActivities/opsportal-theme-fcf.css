@@ -428,6 +428,7 @@ ul {padding:0;margin:0}
 .op-block-border, .workspace > .op-block {
     background-color:#BBD3D7 !important;
     border-radius: 20px 0px 20px 20px;
+    border: none;
 }
 
 .op-widget-body {
@@ -447,5 +448,9 @@ ul {padding:0;margin:0}
 
 .opsportal-content-area > p {
     color:#eee;
+    padding: 10px;
+}
+
+.op-block-border > .op-container {
     padding: 10px;
 }
