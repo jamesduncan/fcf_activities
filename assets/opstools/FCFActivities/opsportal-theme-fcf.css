@@ -15,7 +15,7 @@ a, a:hover, a:visited {
 	color: #333333; 
 }
 
-h1, h2, h3, h4, h5 { color: #666666; }
+h1, h2, h3, h4, h5 { color: #EF9216; }
 
 .overflow-h { overflow:hidden }
 
@@ -66,8 +66,6 @@ h1, h2, h3, h4, h5 { color: #666666; }
 }
 
 .op-widget { background-color: #f0f0f0; }
-.op-widget h3 { color: #666666 !important; }
-.op-widget p { color: #777777 !important; }
 
 .op-widget .op-list li.active { 
 	background-color: rgba(255, 255, 255, 0.65) !important; 
@@ -389,4 +387,44 @@ ul {padding:0;margin:0}
 	}
  }
 
+/* Fix left gap */
+.col-xs-2 {
+    padding-left: 0px !important;
+}
 
+.op-stage-masthead {
+    background-color:#F0F0F0; 
+}
+
+.op-stage-masthead h2 {
+    padding-left: 20px;
+    color: #666666 !important;
+}
+
+.op-widget {
+    background-color: #1f6b8d;
+}
+
+.op-widget h3, .op-widget p {
+    color: #bbd3d7 !important;
+}
+
+.op-block h1, .op-block h2, .op-block h3, .op-block h4, .op-block h5 { 
+    color: #333; 
+}
+
+.op-block-border{
+    background-color: #f0f0f0;
+}
+
+.op-container > .op-widget-body {
+    background-color: #bbd3d7;
+}
+
+#op-list-menu {
+    background-color: #444 !important;
+}
+
+.opsportal-content-area {
+    background-color: #f0f0f0;
+}
