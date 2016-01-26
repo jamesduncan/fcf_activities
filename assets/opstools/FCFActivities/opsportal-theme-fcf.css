@@ -402,6 +402,7 @@ ul {padding:0;margin:0}
 
 .op-widget {
     background-color: #1f6b8d;
+    border-right: none; 
 }
 
 .op-widget h3, .op-widget p {
@@ -416,15 +417,23 @@ ul {padding:0;margin:0}
 {
     background-color: #1F6B8D;
     color:#eee;
+    border-radius: 20px 0px 20px 20px;
+}
+
+.workspace > .op-block-border {
+    padding: 10px;
+    border-radius: 20px 0px 0px 0px;
 }
 
 .op-block-border, .workspace > .op-block {
     background-color:#BBD3D7 !important;
+    border-radius: 20px 0px 20px 20px;
 }
 
 .op-widget-body {
     background-color: #bbd3d7;
     color: #000;
+    border-radius: 20px 0px 20px 20px;
 }
 
 #op-list-menu {
@@ -432,5 +441,11 @@ ul {padding:0;margin:0}
 }
 
 .opsportal-content-area {
-    background-color: #f0f0f0;
+    background-color: #1F6B8D;    
+    border-radius: 20px 0px 20px 20px;
+}
+
+.opsportal-content-area > p {
+    color:#eee;
+    padding: 10px;
 }
