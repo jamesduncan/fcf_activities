@@ -53,17 +53,21 @@
                 <div class="light-blue-wrap col-md-12" resize-adj="-120">
                 
                   <div class="overflow-h col-md-12">
+
                     <h4><span app-label-key="fcf.assignment.Choose.Team.InstructionsLabel">Instructions</span></h4>
                     <p app-label-key="fcf.assignment.Choose.Team.Instructions">Please select which Team to which you would like add an Activity. Either double-click on the name of the team or type in the name in the Search box.</p>
                     <p>&nbsp;</p>
                     <h4><span app-label-key="fcf.assignment.Choose.Team.Desc" >What Ministry Team is this activity associated with?</span></h4>
+
                   </div>
                   <div class="col-md-12 ">
                   <!--Search-->
                   <div class="col-md-4 nopadLR">
                       <div class="input-group">
                       <span class="input-group-btn"><button class="btn " type="button"><i class="fa fa-search"></i></button></span>
+
                       <input type="text" class="form-control typeahead fcf-team-filter" placeholder="Search for Team" app-label-key="fcf.assignment.searchForTeam">
+
                       </div> 
                   </div>
                   <!-- /Searh-->
@@ -74,8 +78,10 @@
                     <table class="fcf-team-list table table-bordered op-table " data-toggle="table" data-cache="false" data-height="299" >
                     <thead>
                       <tr>
+
                       <th data-field="MinistryDisplayName" ><span app-label-key="fcf.assignment.MinistryTeam">Ministry Team</span></th>
                       <th data-field="ProjectOwner" ><span app-label-key="fcf.assignment.projectOwner">Project/Owner</span></th>
+
                       </tr>
                     </thead>
                     <tbody>
@@ -104,7 +110,9 @@
             
             
                       <div id="fcf-activity-actionsbtn" class="col-md-12">
+
                           <button id="fcf-activity-add-chooseteam-next" class="btn op-btn btn-primary pull-right " href="#" role="button" rbac-show="rbac-page2"><span app-label-key="fcf.assignment.Next" >Next</span></button>
+
                       </div>
                                  
                   </div>
@@ -122,7 +130,9 @@
           <div class="op-container fcf-blue-wrap off-top20 overflow-h" resize-adj="-20">
             <!--Top-->
             <div class="row op-container">
+
                 <div class="col-md-12"><p class="pull-right light-txt" app-label-key="fcf.assignment.add.step2">Step 2 of 3</p></div>
+
             </div>        
             <!--End Top-->
         
@@ -132,6 +142,7 @@
             <div class="light-blue-wrap op-container overflow-h"  resize-adj="-120">
               <div class="col-md-12 overflow-h">
                 <h4>
+
                   <span app-label-key="fcf.assignment.Choose.Instructions">Instructions</span>
                 </h4>
                 <p> 
@@ -142,6 +153,7 @@
                 </p>
                 <p>
                   <span app-label-key="fcf.assignment.Choose.Activity.Desc2" >If you do not see an activity in the list then click the add activity button.</span>
+
                 </p>
               </div>
 
@@ -155,10 +167,12 @@
                      </div> 
                   </div>
                 </div>
+
                 <!-- /Search-->
                 <div class="col-md-8 overflow-h">
 
                   <a id="fcf-activity-add-chooseAssignment-addAssignment" class="btn op-btn btn-primary pull-right" href="#" role="button" data-toggle="modal" data-target="#fcf-modal-new-Activity"><span app-label-key="fcf.activity.Add" >Add Activity</span></a>
+
                 </div>
 
 
@@ -168,9 +182,11 @@
                 <table class="fcf-activity-list table table-bordered op-table "  data-cache="false" data-height="299">
                 <thead>
                   <tr>
+
                   <th data-field="activity_name" app-label-key="fcf.assignment.Activity" > Activity Name</th>
                   <th data-field="createdBy" app-label-key="fcf.assignment.SubmittedBy">Submitted by</th>
                   <th data-field="approvedBy" app-label-key="fcf.assignment.ApprovedBy">Approved by</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -286,8 +302,10 @@
                               </div>
                               <!---->
                               <div class="modal-footer">
+
                                   <button id="cancel-add-assignment" type="button" class="btn op-btn btn-primary" data-dismiss="modal"><span app-label-key="fcf.assignment.Cancel">Cancel</span></button>
                                   <button id="add-assignment" type="button" class="btn op-btn btn-primary"><span app-label-key="fcf.assignment.Add">Add</span></button>
+
                               </div> 
                             </form>      
                           </div>
@@ -303,7 +321,9 @@
                       <div class="fcf-blue-wrap col-md-12">
                             <!--Top-->
                               <div class="row op-container">
+
                                 <div class="col-md-12 "><p class="pull-right light-txt" app-label-key="fcf.activity.add.report.step">Step 3 of 3</p></div>
+
                               </div>
                             <!--End Top-->
                             <!--Content-->      
@@ -311,7 +331,9 @@
                                     <!--All Activity list-->
                                     <div class="col-md-4 ">
                                       <div class="col-md-12 light-blue-wrap fcf-activity-contentsection-activityList" resize-adj="-115" >
+
                                         <label class="fcf-activity-activityList-label padleft15 off-top10 "><span app-label-key="fcf.activity.report.AllActivities" >All Activities for </span><span class='fcf-activity-team-name'>[TEAM]</span></label>
+
                                         <div id="lc-activity" class="fcf-activity-report-activities op-container" resize-adj="-175">
                                           <!-- activities.forEach(function(activity) {  -->
                                           
@@ -441,7 +463,9 @@
                                         <div class="col-md-6">
                                           <div class="row op-container">
                                             <div class="col-md-12 off-top10">
+
                                               <label class="" app-label-key="fcf.assignment.report.currentActivityReport">Current Activity Report</label>
+
                                               <p><span class="orange fcf-activity-activity-name">[Activity Name]</span>   <span class="blue"><span class="fcf-activity-activity-startdate">10/1/14</span> - <span class="fcf-activity-activity-enddate">Ongoing</span></span></p>
                                               <p class="blue"><span class="fcf-activity-activity-project-name">[Project Name]</span></br><span class="fcf-activity-activity-team-name">[Team Name]</span></p>
                                             </div>
@@ -591,7 +615,9 @@ taggedPeople.forEach(function(personID){
                                               <input type="hidden" class="form-control" id="image-activity" name="activity" />
                                               <div id="dc" class="">
                                                 <div class="form-group col-md-6   nomargin">
+
                                                   <input type="text" class="form-control" id="image-caption"  placeholder='caption' name="caption" app-label-key="fcf.activity.image.form.caption" />
+
                                                 </div>
                                                 <div class="form-group col-md-6   nomargin">
                                                   <input type="text" class="form-control" id="image-date" name="date" placeholder="date of photo" />
@@ -601,7 +627,9 @@ taggedPeople.forEach(function(personID){
                                           </div>
                                           <div class="col-md-12 ">
                                             <div class="form-group">
+
                                               <div type="text" id="image-tags" name="tags" placeholder='people in photo' app-label-key="fcf.activity.image.form.tags"> </div>
+
                                             </div>
                                           </div>
                       
@@ -638,9 +666,11 @@ taggedPeople.forEach(function(personID){
                                           <!--/Profile List-->
                                           <div class="col-md-12 align-r">
                                             
+
                                               <button id="fcf-activity-image-form-delete" type="button" class="btn op-btn btn-primary "><span app-label-key="fcf.assignment.imageform.Delete" >Delete</span></button>
                                               <button id="fcf-activity-image-form-cancel" type="submit" class="btn op-btn btn-primary"><span app-label-key="fcf.assignment.imageform.Cancel" >Cancel</span></button>
                                               <button id="fcf-activity-image-form-save" type="submit" class="btn op-btn btn-primary" ><span app-label-key="fcf.assignment.imageform.SaveImage" >Save Image</span></button>
+
                                        
                                           </div>
                                           <!--/END Form-->         
@@ -654,8 +684,10 @@ taggedPeople.forEach(function(personID){
                               </div>
                             <!--/Content-->
                             <div id="fcf-activity-actionsbtn" class="form-inline col-md-12 align-r ">
+
                                 <button id="fcf-activity-image-form-nav-previous" type="submit" class="btn op-btn btn-primary"><span app-label-key="fcf.assignment.Prev" >Previous</span></button>
                                 <button id="fcf-activity-image-form-nav-finish" type="submit" class="btn op-btn btn-primary" ><span app-label-key="fcf.assignment.finish" >Finish</span></button>
+
                           </div>           
                       </div>
 
