@@ -36,182 +36,22 @@ AD.log('FCF Activity Approval Result:', data);
                 .populate('translations')
                 .then(function(activity){
 
-//// LEFT OFF HERE:  update entry with values returned.
-console.log();
-console.log('----------------------');
-console.log('... updatedValues:', updatedValues);
+// console.log();
+// console.log('----------------------');
+// console.log('... updatedValues:', updatedValues);
 
-console.log();
-console.log('... activity:', activity);
-console.log();
+// console.log();
+// console.log('... activity:', activity);
+// console.log();
 
-                    async.series([
+                    Multilingual.model.sync({
+                        model:activity,
+                        data:updatedValues
+                    })
+                    .fail(function(err){
 
-                        // update all the activity values
-                        function(done) {
-
-                            // update base fields
-                            var fields = modelAttributes({model:activity}); // get the base fields for model
-                            var dates = modelAttributes({model:activity, type:'date'}); 
-
-        // console.log('... fields1:', fields);
-                            fields = _.difference(fields, ['id', 'createdAt', 'updatedAt']); // remove these fields:
-                            fields = _.difference(fields, dates);
-        // console.log('... fields:', fields);
-                            fields.forEach(function(f){
-                                if (typeof updatedValues[f] != 'undefined') {
-        // console.log('    .... f:activity.'+f+':', updatedValues[f]);
-                                    activity[f] = updatedValues[f];
-                                }
-                                
-                            })
-
-                            
-                            // update the dates
-                            dates.forEach(function(date){
-                                activity[date] = AD.util.moment(new Date(updatedValues[date])).format('YYYY-MM-DD')+'';
-                            })
-
-
-                            // find each of our collections:  hasMany relationships
-                            var collections = modelCollections({model:activity});
-                            collections.forEach(function(field){
-        // console.log('... collection:', field);
-
-                                // if we've been given updatedValues
-                                if (updatedValues[field]) {
-console.log('... updatedValues['+field+']:', updatedValues[field]);
-
-                                    //// convert current values into an array of IDs
-                                    var currentValues = activity[field];
-                                    var currentIDs = [];
-                                    currentValues.forEach(function(cv){
-        // console.log('... cv:', cv);
-                                        if (typeof cv == 'string') {
-                                            currentIDs.push( parseInt(cv) );
-                                        } else {
-                                            if (cv.IDObjective) {
-                                                currentIDs.push( cv.IDObjective );
-                                            }
-                                        }
-                                    })
-
-
-                                    //// convert the updatedValues to an array of IDs:
-                                    var newIDs = [];
-                                    if ( !_.isArray( updatedValues[field] ) ){
-                                        updatedValues[field] = [ updatedValues[field] ];
-                                    }
-                                    updatedValues[field].forEach(function(nv){
-                                        if (typeof nv == 'string') {
-                                            newIDs.push( parseInt(nv) );
-                                        } else if(typeof nv == 'object') {
-                                            if (cv.IDObjective) {
-                                                newIDs.push( cv.IDObjective );
-                                            }
-                                        } else {
-                                            // must just be integers:
-                                            newIDs.push(cv);
-                                        }
-                                    });
-
-                                    var idsToAdd = _.difference(newIDs, currentIDs);
-                                    var idsToRemove = _.difference(currentIDs, newIDs);
-// console.log('... currentIDs:', currentIDs);
-// console.log('... newIDs:', newIDs);
-// console.log('... idsToAdd:', idsToAdd);
-// console.log('... idsToRemove:', idsToRemove);
-
-                                    idsToAdd.forEach(function(id){
-                                        activity[field].add(id);
-                                    })
-
-                                    idsToRemove.forEach(function(id){
-                                        activity[field].remove(id);
-                                    })
-
-                                }
-                            });
-
-                        // final save and then call to Trans
-console.log('     B4 .save():', activity);
-
-                            activity.save()
-                            .then(function(updatedActivity){
-console.log('         .... updatedActivity:', updatedActivity);
-                                activity = updatedActivity;
-                                done();
-                            });
-
-                        },
-
-
-                        // update the multilingual entry
-                        function(done) {
-
-                            var multilingualFields = modelMultilingualFields({model:activity});
-console.log('... multilingual:', multilingualFields);
-                            if (updatedValues.language_code) {
-console.log('... multilingual label to update:');
-console.log('    .... all translations:', activity.translations);
-                                var trans = null;
-                                activity.translations.forEach(function(t){
-                                    if (t.language_code == updatedValues.language_code) {
-                                        trans = t;
-                                    }
-                                })
-                                if (trans) {
-console.log('   ... found translation:', trans);
-
-                                    var transModel = modelTransModel({model:activity});
-                                    transModel.findOne(trans.id)
-                                    .then(function(transEntry){
-
-                                        multilingualFields.forEach(function(field){
-                                            if (typeof updatedValues[field] != 'undefined') {
-                                                transEntry[field] = updatedValues[field];
-                                            }
-                                        });
-
-                                        transEntry.save()
-                                        .then(function(updatedTrans){
-
-                                            done();
-                                        })
-                                        .catch(function(err){
-
-                                            ADCore.error.log('Error updating translation entry:', {
-                                                transEntry:transEntry,
-                                                error:err
-                                            })
-                                            done(err);
-                                        })
-
-
-                                    })
-
-                                } else {
-
-                                    // no matching translation for given language_code
-                                    ADCore.error.log('No matching translation for given language_code', {
-                                        updatedValue:updatedValues,
-                                        activity:activity
-                                    });
-                                    done();
-                                    
-                                }
-
-                            } else {
-
-                                // nothing to translate
-                                done();
-                            }
-
-                        }
-
-
-                    ], function(err, results) {
-
+                    })
+                    .done(function(updatedActivity){
 
                         FCFCommonApprovalHandler ({
                             Model:      FCFActivity,
@@ -220,33 +60,8 @@ console.log('   ... found translation:', trans);
                             transType:  "activity",
                             // sourceLang: updatedValues.language_code || Multilingual.languages.default()
                         });
-                   
 
                     })
-
-
-//// LEFT OFF HERE:
-////  - migrate logic to Multilingual.model.sync() 
-
-
-                    // Multilingual.model.sync({
-                    //     model:activity,
-                    //     data:updatedValues
-                    // })
-                    // .fail(function(err){
-
-                    // })
-                    // .done(function(updatedActivity){
-
-                    //     FCFCommonApprovalHandler ({
-                    //         Model:      FCFActivity,
-                    //         id:         data.reference.id,
-                    //         pops:       [ "objectives", "translations" ],
-                    //         transType:  "activity",
-                    //         // sourceLang: updatedValues.language_code || Multilingual.languages.default()
-                    //     });
-
-                    // })
 
 
                 })
@@ -280,18 +95,52 @@ console.log('   ... found translation:', trans);
     	// data.reference : {obj} the reference info we sent
 
 
-AD.log('FCF Image Approval Result:', data);
+// AD.log('FCF Image Approval Result:', data);
 
         // if activity is approved, then pass this on to the Translation Request tool.
         if (data.status == 'approved') {
 // AD.log('... setting approved:');
 
-            FCFCommonApprovalHandler ({
-                Model:      FCFActivityImages,
-                id:         data.reference.id,
-                pops:       [ "uploadedBy", "translations" ],
-                transType:  "image"
-            });
+            var updatedValues = JSON.parse(data.data);
+            if (updatedValues) {
+                FCFActivityImages.findOne(data.reference.id)
+                .populate('translations')
+                .populate('taggedPeople')
+                .then(function(image){
+
+                    Multilingual.model.sync({
+                        model:image,
+                        data:updatedValues
+                    })
+                    .fail(function(err){
+
+                    })
+                    .done(function(updatedActivity){
+
+                        FCFCommonApprovalHandler ({
+                            Model:      FCFActivityImages,
+                            id:         data.reference.id,
+                            pops:       [ "uploadedBy", "translations" ],
+                            transType:  "image"
+                        });
+
+                    })
+
+                })
+
+
+            } else {
+
+                // no values to update, so pass along translation Request
+                FCFCommonApprovalHandler ({
+                    Model:      FCFActivityImages,
+                    id:         data.reference.id,
+                    pops:       [ "uploadedBy", "translations" ],
+                    transType:  "image"
+                });
+            }
+
+
 
         } else {
             
@@ -519,9 +368,9 @@ function modelTransModel(options){
     var model = options.model;
     var Model = options.Model || model._Klass();
 
-    if (Model._attributes.translations) {
+    if (Model.attributes.translations) {
 
-        var transKey = Model._attributes.translations.collection.toLowerCase();
+        var transKey = Model.attributes.translations.collection.toLowerCase();
         return sails.models[transKey];
     }
 console.log('....  ??? no translations:', Model);

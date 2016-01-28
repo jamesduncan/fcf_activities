@@ -100,10 +100,10 @@ module.exports = {
 	// get /fcf_activities/activityimage?[filterCondition]
 	find:function(req, res) {
 
-AD.log('-----------------');
-AD.log('params:', req.params);
-AD.log('body:', req.body);
-AD.log('query:', req.query);
+// AD.log('-----------------');
+// AD.log('params:', req.params);
+// AD.log('body:', req.body);
+// AD.log('query:', req.query);
 
 		var filter = req.query;
 
@@ -188,7 +188,9 @@ AD.log('query:', req.query);
 		var newImage = null;
 		var finalData = null;
 
-
+		var languageCode = ADCore.user.current(req).getLanguageCode();
+// console.log('*** create image: languageCode:'+languageCode);
+		values.language_code = languageCode;
 		async.series([
 
 			// 1) figure out who is doing this:
@@ -218,7 +220,17 @@ AD.log('query:', req.query);
 					AD.log('... Multilingual.model.created() : ', image);
 
 					newImage = image;
-					next();
+					newImage.translate(languageCode)
+					.fail(function(err){
+
+						ADCore.error.log('Error translating newly created image:', {error: err, image:newImage, languageCode:languageCode });
+						next(err);
+					})
+					.then(function(image){
+						
+						next();
+					})
+					
 
 				})
 				.fail(function(err){
@@ -290,7 +302,7 @@ AD.log('query:', req.query);
 				.then(function(data){
 
 					AD.log('... newImage.save() : data:', data);
-					finalData = data.toClient();
+					finalData = data.toClient(languageCode);
 					next();
 
 				})
@@ -344,7 +356,17 @@ AD.log('query:', req.query);
 				AD.log('... returning data to client:', finalData);
 				ADCore.comm.success(res, finalData );
 
-				PostApprovalRequest({ data: newImage, action:'created' });
+				// newImage.translate(languageCode)
+				// .fail(function(err){
+
+				// 	ADCore.error.log('Error translating newly created image:', {error: err, image:newImage, languageCode:languageCode });
+				// })
+				// .then(function(image){
+					
+					PostApprovalRequest({ data: newImage, action:'created', languageCode:languageCode });
+				// })
+
+				
 			}
 
 		});
@@ -693,7 +715,7 @@ AD.log('query:', req.query);
 				// res.send(finalData);
 				ADCore.comm.success(res,finalData);
 
-				PostApprovalRequest({ data: currImage, action:'updated' });
+				PostApprovalRequest({ data: currImage, action:'updated', languageCode:langCode });
 
 			}
 
@@ -928,10 +950,12 @@ AD.log('query:', req.query);
 var PostApprovalRequest = function (options) {
 	// options.data   : the data to approve  (image model instance)
 	// 
-console.log('... PostApprovalRequest:', options);
+// console.log('... PostApprovalRequest:', options);
 
 	var action = 'fcf.activityapproval.newImage';
 	if (options.action == 'updated') action = 'fcf.activityapproval.updatedImage';
+
+	var languageCode = options.languageCode || Multilingual.languages.default();
 
 	var creator = null;
 	var image = null;
@@ -964,7 +988,7 @@ console.log('... PostApprovalRequest:', options);
                 } else {
 
 // console.log('... found image:', thisImage);
-                    image = thisImage.toClient();
+                    image = thisImage.toClient(languageCode);
                     next();
 
 
@@ -1036,6 +1060,9 @@ console.log('... PostApprovalRequest:', options);
             })
 
         },
+
+////// LEFT OFF HERE:
+/// figure out where to add language_code to template data
 
 
         // sort list of ppl in image
@@ -1136,7 +1163,8 @@ console.log('... PostApprovalRequest:', options);
                     "data":image,
                     "view":"//opstools/FCFActivities/views/FCFActivities/imageApproval.ejs",
                     "viewData":{
-                    	"taggedPeople":listTeammatesTagged
+                    	"taggedPeople":listTeammatesTagged,
+                    	"language_code":languageCode
                     }
                 },
 
@@ -1160,10 +1188,10 @@ console.log('... PostApprovalRequest:', options);
 
 
 		if (err) {
-AD.log('!!!! error:', err);
+AD.log.error('!!!! error:', err);
 
 		} else {
-AD.log('....  publishing Request Data:', requestData);
+// AD.log('....  publishing Request Data:', requestData);
 
 			ADCore.queue.publish('opsportal.approval.create', requestData);
 		}
