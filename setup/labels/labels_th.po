@@ -6,392 +6,392 @@ msgstr ""
 #. #########################################
 #. Labels for context: opstool-FCFActivities
 #. Source language: en
-#. Target language: en
+#. Target language: th
 #. #########################################
 
 
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Team
 msgid "T3am"
-msgstr "T3am"
+msgstr "[th]Team"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Project
 msgid "Owner"
-msgstr "Owner"
+msgstr "[th]Owner"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Team
 msgid "Choose Your Team"
-msgstr "Choose Your Team"
+msgstr "[th]Choose Your Team"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Team.Instructions
 msgid "Please select which Team to which you would like add an Activity. Either double-click on the name of the team or type in the name in the Search box."
-msgstr "Please select which Team to which you would like add an Activity. Either double-click on the name of the team or type in the name in the Search box."
+msgstr "[th]Please select which Team to which you would like add an Activity. Either double-click on the name of the team or type in the name in the Search box."
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Team.Desc
 msgid "What Ministry Team is this activity associated with?"
-msgstr "What Ministry Team is this activity associated with?"
+msgstr "[th]What Ministry Team is this activity associated with?"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Team.step1
 msgid "Step 1 of 3"
-msgstr "Step 1 of 3"
+msgstr "[th]Step 1 of 3"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Next
 msgid "Next"
-msgstr "Next"
+msgstr "[th]Next"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Previous
 msgid "Previous"
-msgstr "Previous"
+msgstr "[th]Previous"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activityapproval.submittedBy
 msgid "Submitted By:"
-msgstr "Submitted By:"
+msgstr "[th]Submitted By:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activityapproval.teams
 msgid "Team(s):"
-msgstr "Team(s):"
+msgstr "[th]Team(s):"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activityapproval.createdOn
 msgid "Created On: <%= createdAt %>"
-msgstr "Created On: <%= createdAt %>"
+msgstr "[th]Created On: <%= createdAt %>"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activityapproval.underTeam
 msgid "Under Team:"
-msgstr "Under Team:"
+msgstr "[th]Under Team:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activityapproval.underProject
 msgid "Under Project:"
-msgstr "Under Project:"
+msgstr "[th]Under Project:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.ActivityName
 msgid "Activity Name"
-msgstr "Activity Name"
+msgstr "[th]Activity Name"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.addAssignment.Choose.ActivityNameDesc
 msgid "Please use a name everyone associated with the activity will organize"
-msgstr "Please use a name everyone associated with the activity will organize"
+msgstr "[th]Please use a name everyone associated with the activity will organize"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.addAssignment.Choose.startDate
 msgid "Start Date"
-msgstr "Start Date"
+msgstr "[th]Start Date"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.addAssignment.Choose.endDate
 msgid "End Date"
-msgstr "End Date"
+msgstr "[th]End Date"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.TeamObjectives
 msgid "Team Objectives"
-msgstr "Team Objectives"
+msgstr "[th]Team Objectives"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.TeamObjectivesDesc
 msgid "Every activity must meet at least one objective. Please choose all that apply:"
-msgstr "Every activity must meet at least one objective. Please choose all that apply:"
+msgstr "[th]Every activity must meet at least one objective. Please choose all that apply:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Description
 msgid "Description"
-msgstr "Description"
+msgstr "[th]Description"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.DescriptionDesc
 msgid "Please describe this activity using the team objective as guideline"
-msgstr "Please describe this activity using the team objective as guideline"
+msgstr "[th]Please describe this activity using the team objective as guideline"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activityapproval.newActivity
 msgid "New Activity"
-msgstr "New Activity"
+msgstr "[th] New Activity"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.imageapproval.image
 msgid "Image"
-msgstr "Image"
+msgstr "[th]Image"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.imageapproval.caption
 msgid "Caption:"
-msgstr "Caption:"
+msgstr "[th]Caption:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.imageapproval.date
 msgid "Date:"
-msgstr "Date:"
+msgstr "[th]Date:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.imageapproval.peopleInPhoto
 msgid "People in photo:"
-msgstr "People in photo:"
+msgstr "[th]People in photo:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.imageapproval.teams
 msgid "Team(s):"
-msgstr "Team(s):"
+msgstr "[th]Team(s):"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.imageapproval.createdOn
 msgid "Created On: <%= createdAt %>"
-msgstr "Created On: <%= createdAt %>"
+msgstr "[th]Created On: <%= createdAt %>"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.imageapproval.forActivity
 msgid "For Activity:"
-msgstr "For Activity:"
+msgstr "[th]For Activity:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activityapproval.newImage
 msgid "New Image"
-msgstr "New Image"
+msgstr "[th] New Image"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activityapproval.updatedImage
 msgid "Updated Image"
-msgstr "Updated Image"
+msgstr "[th] Updated Image"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Team.InstructionsLabel
 msgid "Instructions"
-msgstr "Instructions"
+msgstr "[th]Instructions"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.add.step2
 msgid "Step 2 of 3"
-msgstr "Step 2 of 3"
+msgstr "[th]Step 2 of 3"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Instructions
 msgid "Instructions"
-msgstr "Instructions"
+msgstr "[th]Instructions"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Activity.Team
 msgid "Team:"
-msgstr "Team:"
+msgstr "[th]Team:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Activity.Desc1
 msgid "Choose one of the following activities associated with this team."
-msgstr "Choose one of the following activities associated with this team."
+msgstr "[th]Choose one of the following activities associated with this team."
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Choose.Activity.Desc2
 msgid "If you do not see an activity in the list then click the add activity button."
-msgstr "If you do not see an activity in the list then click the add activity button."
+msgstr "[th]If you do not see an activity in the list then click the add activity button."
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activity.Add
 msgid "Add Activity"
-msgstr "Add Activity"
+msgstr "[th]Add Activity"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Activity
 msgid "Activity Name"
-msgstr "Activity Name"
+msgstr "[th]Activity Name"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.SubmittedBy
 msgid "Submitted by"
-msgstr "Submitted by"
+msgstr "[th]Submitted by"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.ApprovedBy
 msgid "Approved by"
-msgstr "Approved by"
+msgstr "[th]Approved by"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Prev
 msgid "Previous"
-msgstr "Previous"
+msgstr "[th]Previous"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.addAssignment.Title
 msgid "Add a New Activity"
-msgstr "Add a New Activity"
+msgstr "[th]Add a New Activity"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Cancel
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "[th]Cancel"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Add
 msgid "Add"
-msgstr "Add"
+msgstr "[th]Add"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activity.add.report.step
 msgid "Step 3 of 3"
-msgstr "Step 3 of 3"
+msgstr "[th]Step 3 of 3"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activity.report.AllActivities
 msgid "All Activities for"
-msgstr "All Activities for"
+msgstr "[th]All Activities for"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activity.add.report.PeopleInPhoto
 msgid "People in this photo:"
-msgstr "People in this photo:"
+msgstr "[th]People in this photo:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activity.add.report.DragImageHere
 msgid "Drag image here"
-msgstr "Drag image here"
+msgstr "[th]Drag image here"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activity.add.report.or
 msgid "- or -"
-msgstr "- or -"
+msgstr "[th]- or -"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activity.add.report.ClickToOpenFileBrowser
 msgid "Click to open the file browser"
-msgstr "Click to open the file browser"
+msgstr "[th]Click to open the file browser"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activity.image.form.caption
 msgid ""
-msgstr ""
+msgstr "[th]"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.activity.image.form.tags
 msgid ""
-msgstr ""
+msgstr "[th]"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.imageform.Delete
 msgid "Delete"
-msgstr "Delete"
+msgstr "[th]Delete"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.imageform.Cancel
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "[th]Cancel"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.imageform.SaveImage
 msgid "Save Image"
-msgstr "Save Image"
+msgstr "[th]Save Image"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.Activities
 msgid "Activities:"
-msgstr "Activities:"
+msgstr "[th]Activities:"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.newUpdateActivity
 msgid "New/Update Activity"
-msgstr "New/Update Activity"
+msgstr "[th]New/Update Activity"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.searchForTeam
 msgid ""
-msgstr ""
+msgstr "[th]"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.MinistryTeam
 msgid "Ministry Team"
-msgstr "Ministry Team"
+msgstr "[th]Ministry Team"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.projectOwner
 msgid "Project/Owner"
-msgstr "Project/Owner"
+msgstr "[th]Project/Owner"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.report.currentActivityReport
 msgid "Current Activity Report"
-msgstr "Current Activity Report"
+msgstr "[th]Current Activity Report"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.assignment.finish
 msgid "Finish"
-msgstr "Finish"
+msgstr "[th]Finish"
 
 #. path: opstool-FCFActivities
-#. code: en
+#. code: th
 #. key: fcf.toolActivityReporting
 msgid "Dashboard"
-msgstr "Dashboard"
+msgstr "[th] Dashboard"
 
