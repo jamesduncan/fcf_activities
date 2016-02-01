@@ -137,7 +137,7 @@ AD.test.sails.lift({
                     if ((objective.ObjectiveDescThai == null)
                         || (objective.ObjectiveDescThai == '')){
 
-                        objective.ObjectiveDescThai = '[th]'+objective.objectiveDescEng;
+                        objective.ObjectiveDescThai = '[th]'+objective.ObjectiveDescEng;
                         numToDo++;
                         objective.save()
                         .then(function(){

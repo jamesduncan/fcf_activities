@@ -324,7 +324,7 @@ module.exports= {
 
             var allLanguages = null;
             var sourceLang = null;
-AD.log('... FCFActivities.translations.base():');
+// AD.log('... FCFActivities.translations.base():');
 
 
             options.objectFieldRef = options.objectFieldRef  || options.fieldNames[0];  // just use the 1st one
