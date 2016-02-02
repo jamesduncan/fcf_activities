@@ -289,7 +289,7 @@ function FCFCommonTranslationHandler (options) {
 
     })
     .catch(function(err){
-        ADCore.error.log('FCFActivities: Can\'t lookup Model from provided reference:', { error:err, reference:data.reference, note:'this is a catch, so it might be catching another error from somewhere else!' });
+        ADCore.error.log('FCFActivities: Can\'t lookup Model from provided reference:', { error:err, options:options, note:'this is a catch, so it might be catching another error from somewhere else!' });
     })
 }
 

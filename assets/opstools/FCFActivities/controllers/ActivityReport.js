@@ -791,7 +791,23 @@ console.log(' ... returnedData:', data);
                     // make sure any existing image is hidden:
                     dzImage.prop('src', '').hide();
 
+//// TODO: catch a CSRF error, and then reset our header with a new CSRF token.
+////   error = "CSRF mismatch"
+////
+/* 
+Ideas:
+see if onProcessing will give you access to Headers
+url:  https://github.com/enyo/dropzone/wiki
 
+Dropzone.options.myDropzone = {
+  init: function() {
+    this.on("processing", function(file) {
+      this.options.url = "/some-other-url";
+    });
+  }
+};
+
+*/
                     file.previewElement.addEventListener("click", function() {
                         _this.obj.dropzone.removeFile(file);
                     });
