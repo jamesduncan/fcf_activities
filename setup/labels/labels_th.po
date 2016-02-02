@@ -14,62 +14,62 @@ msgstr ""
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Team
-msgid "T3am"
+msgid "Team"
 msgstr "[th]Team"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Project
 msgid "Owner"
-msgstr "[th]Owner"
+msgstr "เจ้าของ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Team
 msgid "Choose Your Team"
-msgstr "[th]Choose Your Team"
+msgstr "เลือกกลุ่ม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Team.Instructions
 msgid "Please select which Team to which you would like add an Activity. Either double-click on the name of the team or type in the name in the Search box."
-msgstr "[th]Please select which Team to which you would like add an Activity. Either double-click on the name of the team or type in the name in the Search box."
+msgstr "กรุณาเลือกกลุ่มที่คุณต้องการจะเพิ่มกิจกรรม โดยกดที่ชื่อของกลุ่มสองครั้งติดกันหรือพิมพ์ชื่อกลุ่มเข้าไปที่กล่องค้นหา"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Team.Desc
 msgid "What Ministry Team is this activity associated with?"
-msgstr "[th]What Ministry Team is this activity associated with?"
+msgstr "กิจกรรมนี้เกี่ยวข้องกับกลุ่มพันธกิจใด"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Team.step1
 msgid "Step 1 of 3"
-msgstr "[th]Step 1 of 3"
+msgstr "ขั้นตอนที่ 1 ถึง 3"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Next
 msgid "Next"
-msgstr "[th]Next"
+msgstr "ต่อไป"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Previous
 msgid "Previous"
-msgstr "[th]Previous"
+msgstr "ก่อนหน้านี้"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activityapproval.submittedBy
 msgid "Submitted By:"
-msgstr "[th]Submitted By:"
+msgstr "ผู้ส่ง"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activityapproval.teams
 msgid "Team(s):"
-msgstr "[th]Team(s):"
+msgstr "กลุ่ม:"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -81,91 +81,91 @@ msgstr "[th]Created On: <%= createdAt %>"
 #. code: th
 #. key: fcf.activityapproval.underTeam
 msgid "Under Team:"
-msgstr "[th]Under Team:"
+msgstr "ภายใต้กลุ่ม:"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activityapproval.underProject
 msgid "Under Project:"
-msgstr "[th]Under Project:"
+msgstr "ภายใต้โครงการ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.ActivityName
 msgid "Activity Name"
-msgstr "[th]Activity Name"
+msgstr "ชื่อกิจกรรม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.addAssignment.Choose.ActivityNameDesc
 msgid "Please use a name everyone associated with the activity will organize"
-msgstr "[th]Please use a name everyone associated with the activity will organize"
+msgstr "[th]Description here."
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.addAssignment.Choose.startDate
 msgid "Start Date"
-msgstr "[th]Start Date"
+msgstr "วันที่เริ่มต้น"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.addAssignment.Choose.endDate
 msgid "End Date"
-msgstr "[th]End Date"
+msgstr "วันที่สิ้นสุด"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.TeamObjectives
 msgid "Team Objectives"
-msgstr "[th]Team Objectives"
+msgstr "วัตถุประสงค์ของกลุ่ม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.TeamObjectivesDesc
 msgid "Every activity must meet at least one objective. Please choose all that apply:"
-msgstr "[th]Every activity must meet at least one objective. Please choose all that apply:"
+msgstr "ทุกกิจกรรมควรจะมีอย่างน้อยหนึ่งวัตถุประสงค์ กรุณาเลือทุกกิจกรรมที่เกี่ยวข้อง"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Description
 msgid "Description"
-msgstr "[th]Description"
+msgstr "บรรยาย"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.DescriptionDesc
 msgid "Please describe this activity using the team objective as guideline"
-msgstr "[th]Please describe this activity using the team objective as guideline"
+msgstr "กรุณาอธิบายกิจกรรมนี้โดยใช้วัตถุประสงค์ของกลุ่มเป็นแนวทาง"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activityapproval.newActivity
 msgid "New Activity"
-msgstr "[th] New Activity"
+msgstr "กิจกรรมใหม่"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.imageapproval.image
 msgid "Image"
-msgstr "[th]Image"
+msgstr "รูปภาพ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.imageapproval.caption
 msgid "Caption:"
-msgstr "[th]Caption:"
+msgstr "คำบรรยายใต้ภาพ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.imageapproval.date
 msgid "Date:"
-msgstr "[th]Date:"
+msgstr "วันที่"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.imageapproval.peopleInPhoto
 msgid "People in photo:"
-msgstr "[th]People in photo:"
+msgstr "ผู้ที่อยู่ในรูปภาพ"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -177,43 +177,43 @@ msgstr "[th]Team(s):"
 #. code: th
 #. key: fcf.imageapproval.createdOn
 msgid "Created On: <%= createdAt %>"
-msgstr "[th]Created On: <%= createdAt %>"
+msgstr "สร้างเมื่อ: <%= createdAt %>"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.imageapproval.forActivity
 msgid "For Activity:"
-msgstr "[th]For Activity:"
+msgstr "สำหรับกิจกรรม:"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activityapproval.newImage
 msgid "New Image"
-msgstr "[th] New Image"
+msgstr "รูปภาพใหม่"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activityapproval.updatedImage
 msgid "Updated Image"
-msgstr "[th] Updated Image"
+msgstr "รูปภาพที่ทำการอัพเดทแล้ว (ปรับให้เป็นปัจจุบัน)"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Team.InstructionsLabel
 msgid "Instructions"
-msgstr "[th]Instructions"
+msgstr "คำแนะนำ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.add.step2
 msgid "Step 2 of 3"
-msgstr "[th]Step 2 of 3"
+msgstr "ขั้นตอนที่ 2 ใน 3"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Instructions
 msgid "Instructions"
-msgstr "[th]Instructions"
+msgstr "Instructions"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -243,7 +243,7 @@ msgstr "[th]Add Activity"
 #. code: th
 #. key: fcf.assignment.Activity
 msgid "Activity Name"
-msgstr "[th]Activity Name"
+msgstr "Activity Name"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -320,13 +320,13 @@ msgstr "[th]Click to open the file browser"
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.image.form.caption
-msgid ""
+msgid "caption"
 msgstr "[th]"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.image.form.tags
-msgid ""
+msgid "tags"
 msgstr "[th]"
 
 #. path: opstool-FCFActivities
@@ -339,7 +339,7 @@ msgstr "[th]Delete"
 #. code: th
 #. key: fcf.assignment.imageform.Cancel
 msgid "Cancel"
-msgstr "[th]Cancel"
+msgstr "Cancel"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -362,7 +362,7 @@ msgstr "[th]New/Update Activity"
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.searchForTeam
-msgid ""
+msgid "search"
 msgstr "[th]"
 
 #. path: opstool-FCFActivities

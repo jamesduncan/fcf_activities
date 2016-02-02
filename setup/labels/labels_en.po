@@ -14,8 +14,8 @@ msgstr ""
 #. path: opstool-FCFActivities
 #. code: en
 #. key: fcf.assignment.Team
-msgid "T3am"
-msgstr "T3am"
+msgid "Team"
+msgstr "Team"
 
 #. path: opstool-FCFActivities
 #. code: en
@@ -320,14 +320,14 @@ msgstr "Click to open the file browser"
 #. path: opstool-FCFActivities
 #. code: en
 #. key: fcf.activity.image.form.caption
-msgid ""
-msgstr ""
+msgid "caption"
+msgstr "caption"
 
 #. path: opstool-FCFActivities
 #. code: en
 #. key: fcf.activity.image.form.tags
-msgid ""
-msgstr ""
+msgid "tags"
+msgstr "tags"
 
 #. path: opstool-FCFActivities
 #. code: en
@@ -362,8 +362,8 @@ msgstr "New/Update Activity"
 #. path: opstool-FCFActivities
 #. code: en
 #. key: fcf.assignment.searchForTeam
-msgid ""
-msgstr ""
+msgid "search"
+msgstr "search"
 
 #. path: opstool-FCFActivities
 #. code: en
