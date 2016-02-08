@@ -305,6 +305,7 @@ body {
 #fcf-activity-image-upload {
 	padding-top: 0px; 
 	padding-bottom: 0px; 
+	padding: 0px;
 	height:150px; /*Fixed Width for the Container of DropZone*/
 /*	width:331px; Fixed Height for the Container of DropZone*/
 }
