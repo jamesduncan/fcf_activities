@@ -740,7 +740,8 @@ console.log(' ... returnedData:', data);
                     maxFilesize:100,            // in MB
                     uploadMultiple: false,      // upload >1 file per request?
                     acceptedFiles:'.jpg, .jpeg, .psd, .gif, .png, .pdf',
-                    headers: { "X-CSRF-Token" : token }
+                    headers: { "X-CSRF-Token" : token },
+                    addRemoveLinks: true
                 })
 
                 // locate the image holder in the Dropzone object:
