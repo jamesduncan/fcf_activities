@@ -763,7 +763,7 @@ module.exports= {
                 icon:FCFActivities.icons.image,
                 labelKey:'fcf.activityapproval.newImage',
 
-                view:'//opstools/FCFActivities/views/FCFActivities/imageTranslation.ejs',
+                view:'/opstools/FCFActivities/views/FCFActivities/imageTranslation.ejs',
                 viewData:{ image: FCFCore.paths.forURL(FCFCore.paths.images.activities(image.image)) },
 
                 person:image.uploadedBy,

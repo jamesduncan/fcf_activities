@@ -1,35 +1,33 @@
-module.exports={
-    // map: {
-    //     "*": {
-    //       "jquery/jquery.js" : "jquery",
-    //       "can/util/util.js": "can/util/jquery/jquery.js"
-    //     }
-    // },
-    paths: {
-
-
-        "selectivity.js"   : "js/selectivity/selectivity-full.min.js",
-        "selectivity.css"  : "js/selectivity/selectivity-full.min.css"
-    },
-    shim : {
-
-
-        'selectivity.js'  : { packaged:false },
-        'selectivity.css' : { packaged:false },
-
-
-        //// Don't include our labels in our production.js
-        'site/labels/opstool-FCFActivities.js' : { packaged:false, ignore:true },
-
-
-    }
-    // ext: {
-    //     js: "js",
-    //     css: "css",
-    //     less: "steal/less/less.js",
-    //     coffee: "steal/coffee/coffee.js",
-    // }
+module.exports = {
+	"map": {
+		"selectivity": "js/selectivity/selectivity-full.min",
+		"selectivity.css": "js/selectivity/selectivity-full.min.css",
+		"dropzone": "js/dropzone/dropzone.min",
+        "dropzone.css": "js/dropzone/dropzone.min.css"
+	},
+	"paths": {
+		"opstools/FCFActivities": "opstools/FCFActivities/FCFActivities.js",
+		"selectivity": "js/selectivity/selectivity-full.min.js",
+		"selectivity.css": "js/selectivity/selectivity-full.min.css"
+	},
+	"bundle": [
+		"opstools/FCFActivities"
+	],
+	"meta": {
+		"opstools/FCFActivities": {
+			"deps": [
+				"dropzone",
+				"selectivity",
+				"selectivity.css"
+			]
+		},
+		"js/dropzone/dropzone.min": {
+			"exports": "Dropzone",
+			"format": "global",
+			"deps": [
+				"js/dropzone/dropzone.min.css"
+			],
+			"sideBundle": true
+		}
+	}
 };
-    
-
-
