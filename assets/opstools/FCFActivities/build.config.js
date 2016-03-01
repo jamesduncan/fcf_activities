@@ -17,9 +17,15 @@ module.exports = {
 		"opstools/FCFActivities": {
 			"deps": [
 				"dropzone",
-				"selectivity",
-				"selectivity.css"
+				"selectivity"
 			]
+		},
+		"js/selectivity/selectivity-full.min": {
+			"format": "global",
+			"deps": [
+				"js/selectivity/selectivity-full.min.css"
+			],
+			"sideBundle": true
 		},
 		"js/dropzone/dropzone.min": {
 			"exports": "Dropzone",
