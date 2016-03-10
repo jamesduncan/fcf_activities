@@ -1,3 +1,4 @@
+/* global NameMiddleThai */
 /**
  * RenderReportController
  *
@@ -30,93 +31,108 @@ module.exports = {
 		// var langCode = ADCore.user.current(req).getLanguageCode();
 		var langCode = 'th'; // TODO
 
-		var personId = req.param('personId');
+		// TODO Find params
+		var findFilter = {};
 
-		// if no personId provided, return an error.
-		if (!personId) {
-			var err = new Error('No Person id provided.');
-			ADCore.comm.error(res, err, 500);
-			return;
-		}
-
-		var person = {};
+		var persons = [];
 		var activities = [];
-		var reportData = {};
+		var results = [];
 
 		async.series([
 
 			function (next) {
 
 				// Find person object
-				FCFPerson.find({ IDPerson: personId })
+				FCFPerson.find(findFilter)
 					.populate('taggedInImages')
 					.fail(function (err) {
 						AD.log(err);
 						next(err);
 					})
 					.then(function (p) {
-						if (p.length > 0) {
-							person = p[0];
-							next();
-						}
-						else {
+						if (p.length < 1)
 							next('Could not found any person.');
-						}
-					});
-			},
 
-			function (next) {
-				var activityIds = _.map(person.taggedInImages, function (img) {
-					return img.activity;
-				});
-				
-				// Find activities
-				FCFActivity.find({ id: _.uniq(activityIds) })
-					.populate('translations', { language_code: langCode })
-					.fail(function (err) {
-						AD.log(err);
-						next(err);
-					})
-					.then(function (a) {
-						activities = a;
+						persons = p;
 						next();
 					});
 			},
 
 			function (next) {
-				// Subtract fields
-				reportData.person_name = (person.NameTitleThai ? person.NameTitleThai + ' ' : '') +
-				(person.NameFirstThai ? person.NameFirstThai + ' ' : '') +
-				(person.NameMiddleThai ? person.NameMiddleThai + ' ' : '') +
-				(person.NameLastThai ? person.NameLastThai + ' ' : '');
+				async.map(persons, function (p, callback) {
+					var activityIds = _.map(p.taggedInImages, function (img) {
+						return img.activity;
+					});
 
-				reportData.person_age = person.DateBirth ? getAge(person.DateBirth) : 'N/A';
-				reportData.person_nationality = person.PlaceOfBirth ? person.PlaceOfBirth : 'N/A';
-				reportData.person_passport_number = person.PPNumber ? person.PPNumber : 'N/A';
-				reportData.person_work_address = person.WorkAddress ? person.WorkAddress : 'N/A';
-				reportData.person_home_address = person.PhysicalAddress ? person.PhysicalAddress : 'N/A';
+					if (activityIds && activityIds.length > 0) {
+						// Find activities
+						FCFActivity.find({ id: _.uniq(activityIds) })
+							.populate('translations', { language_code: langCode })
+							.then(function (a) {
+								p.activities = _.map(a, function (act, index) {
+									return {
+										'order': index + 1,
+										'title': act.translations[0].activity_name
+									}
+								});
 
-				reportData.person_visa_start_date = 'TODO - Visa start date';
-				reportData.person_visa_expire_date = person.VisaDateExpire ? person.VisaDateExpire : 'N/A';
-
-				reportData.person_job_title = person.JobTitle ? person.JobTitle : 'N/A';
-				reportData.person_job_description = person.JobDescSimple ? person.JobDescSimple : 'N/A';
-
-				reportData.person_activities = _.map(activities, function (a, index) {
-					return {
-						'order': index + 1,
-						'title' : a.translations[0].activity_name
-					};
+								callback(null, p);
+							});
+					}
+					else {
+						callback(null, p);
+					}
+				}, function (err, results) {
+					next();
 				});
 
-				reportData.organization_name = 'TODO - Organization name';
-				reportData.organization_chief_name = 'TODO - Chief name';
-				reportData.organization_chief_position = 'TODO - Chief position';
-				reportData.workplace_name = 'TODO - Workplace name';
+			},
+
+			function (next) {
+				// Remove persons who does not have any activities
+				 _.remove(persons, function(p) {
+					return !p.activities || p.activities.length < 1;
+				});
+				
+				next();
+			},
+
+			function (next) {
+
+				// Subtract fields
+				results = _.map(persons, function (p) {
+					var reportData = {};
+
+					reportData.person_name = (p.NameTitleThai ? p.NameTitleThai + ' ' : '') +
+					(p.NameFirstThai ? p.NameFirstThai + ' ' : '') +
+					(p.NameMiddleThai ? p.NameMiddleThai + ' ' : '') +
+					(p.NameLastThai ? p.NameLastThai + ' ' : '');
+
+					reportData.person_age = p.DateBirth ? getAge(p.DateBirth) : 'N/A';
+					reportData.person_nationality = p.PlaceOfBirth ? p.PlaceOfBirth : 'N/A';
+					reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A';
+					reportData.person_work_address = p.WorkAddress ? p.WorkAddress : 'N/A';
+					reportData.person_home_address = p.PhysicalAddress ? p.PhysicalAddress : 'N/A';
+
+					reportData.person_visa_start_date = 'TODO - Visa start date';
+					reportData.person_visa_expire_date = p.VisaDateExpire ? p.VisaDateExpire : 'N/A';
+
+					reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A';
+					reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A';
+
+					reportData.person_activities = p.activities;
+
+					reportData.organization_name = 'TODO - Organization name';
+					reportData.organization_chief_name = 'TODO - Chief name';
+					reportData.organization_chief_position = 'TODO - Chief position';
+					reportData.workplace_name = 'TODO - Workplace name';
+					
+					return reportData;
+				});
 
 				next();
 			}
-		], function (err, results) {
+		], function (err, r) {
 
 			if (err) {
 
@@ -124,7 +140,7 @@ module.exports = {
 			} else {
 
 				AD.log('<green>::: end renderreport.activities() :::</green>');
-				ADCore.comm.success(res, reportData);
+				ADCore.comm.success(res, results);
 			}
 		});
 	}

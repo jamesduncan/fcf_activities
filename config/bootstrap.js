@@ -273,8 +273,24 @@ module.exports = function (cb) {
 			[
 				"fcf.activities"
 			],
-			"/fcf_activities/renderreport/activities"
-		);
+			"/fcf_activities/renderreport/activities",
+			[
+				{
+					"title": "Start Date",
+					"fieldName": "startDate",
+					"type": "date"
+				},
+				{
+					"title": "End Date",
+					"fieldName": "endDate",
+					"type": "date"
+				},
+				{
+					"title": "Member Name",
+					"fieldName": "memberName",
+					"type": "string"
+				}
+			]);
 	}
 
 };
