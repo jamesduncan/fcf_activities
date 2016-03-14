@@ -9,14 +9,14 @@
  */
 var path = require('path');
 var AD = require('ad-utils');
-module.exports = function (cb) {
+module.exports = function(cb) {
 
     AD.module.permissions(path.join(__dirname, '..', 'setup', 'permissions'), cb);
     // cb(err);   // in case of an unrecoverable error
 
 
     // create a listner for when our Activity entries are approved
-    ADCore.queue.subscribe('fcf.activities.activity', function (message, data) {
+    ADCore.queue.subscribe('fcf.activities.activity', function(message, data) {
 
 		// data.status    : {string}  'approved'  or 'rejected'
 		// data.data      : {obj} any updated values from the ProcessApproval form
@@ -34,7 +34,7 @@ module.exports = function (cb) {
                 FCFActivity.findOne(data.reference.id)
 					.populate('objectives')
 					.populate('translations')
-					.then(function (activity) {
+					.then(function(activity) {
 
 						// console.log();
 						// console.log('----------------------');
@@ -48,10 +48,10 @@ module.exports = function (cb) {
 							model: activity,
 							data: updatedValues
 						})
-							.fail(function (err) {
+							.fail(function(err) {
 
 							})
-							.done(function (updatedActivity) {
+							.done(function(updatedActivity) {
 
 								FCFCommonApprovalHandler({
 									Model: FCFActivity,
@@ -88,7 +88,7 @@ module.exports = function (cb) {
 
 
     // create a listner for when our Image entries are approved
-    ADCore.queue.subscribe('fcf.activities.image', function (message, data) {
+    ADCore.queue.subscribe('fcf.activities.image', function(message, data) {
 
 		// data.status    : {string}  'approved'  or 'rejected'
 		// data.data      : {obj} any updated values from the ProcessApproval form
@@ -106,16 +106,16 @@ module.exports = function (cb) {
                 FCFActivityImages.findOne(data.reference.id)
 					.populate('translations')
 					.populate('taggedPeople')
-					.then(function (image) {
+					.then(function(image) {
 
 						Multilingual.model.sync({
 							model: image,
 							data: updatedValues
 						})
-							.fail(function (err) {
+							.fail(function(err) {
 
 							})
-							.done(function (updatedActivity) {
+							.done(function(updatedActivity) {
 
 								FCFCommonApprovalHandler({
 									Model: FCFActivityImages,
@@ -143,7 +143,7 @@ module.exports = function (cb) {
 
 
         } else {
-            
+
 			// AD.log('... not approved?  ', data);
         }
     });
@@ -151,7 +151,7 @@ module.exports = function (cb) {
 
 
     // create a listner for when our Activities are translated
-    ADCore.queue.subscribe('fcf.activities.translated', function (message, data) {
+    ADCore.queue.subscribe('fcf.activities.translated', function(message, data) {
 
         // data.reference
         // data.language_code   // toLanguage
@@ -176,7 +176,7 @@ module.exports = function (cb) {
 
 
     // create a listner for when our Images are translated
-    ADCore.queue.subscribe('fcf.activities.image.translated', function (message, data) {
+    ADCore.queue.subscribe('fcf.activities.image.translated', function(message, data) {
 
         // data.reference
         // data.language_code   // toLanguage
@@ -204,93 +204,50 @@ module.exports = function (cb) {
 	if (ProcessReport) {
 		ProcessReport.addDataSource(
 			{
-				"name": "FCF Activity",
+				"name": "FCF Staff",
 				"schema": {
 					"fields": [
-						{
-							"name": "person_name",
-							"type": "string"
-						},
-						{
-							"name": "person_age",
-							"type": "number"
-						},
-						{
-							"name": "person_nationality",
-							"type": "string"
-						},
-						{
-							"name": "person_passport_number",
-							"type": "string"
-						},
-						{
-							"name": "person_work_address",
-							"type": "string"
-						},
-						{
-							"name": "person_home_address",
-							"type": "string"
-						},
-						{
-							"name": "person_visa_start_date",
-							"type": "date"
-						},
-						{
-							"name": "person_visa_expire_date",
-							"type": "date"
-						},
-						{
-							"name": "person_job_title",
-							"type": "string"
-						},
-						{
-							"name": "person_job_description",
-							"type": "string"
-						},
-						{
-							"name": "person_activites",
-							"type": "string"
-						},
-						{
-							"name": "organization_name",
-							"type": "string"
-						},
-						{
-							"name": "organization_chief_name",
-							"type": "string"
-						},
-						{
-							"name": "organization_chief_position",
-							"type": "string"
-						},
-						{
-							"name": "workplace_name",
-							"type": "string"
-						}
+						{ "name": "person_id", "type": "number" },
+						{ "name": "person_name", "type": "string" },
+						{ "name": "person_age", "type": "number" },
+						{ "name": "person_nationality", "type": "string" },
+						{ "name": "person_passport_number", "type": "string" },
+						{ "name": "person_work_address", "type": "string" },
+						{ "name": "person_home_address", "type": "string" },
+						{ "name": "person_visa_start_date", "type": "date" },
+						{ "name": "person_visa_expire_date", "type": "date" },
+						{ "name": "person_job_title", "type": "string" },
+						{ "name": "person_job_description", "type": "string" },
+						{ "name": "person_activites", "type": "string" },
+						{ "name": "organization_name", "type": "string" },
+						{ "name": "organization_chief_name", "type": "string" },
+						{ "name": "organization_chief_position", "type": "string" },
+						{ "name": "workplace_name", "type": "string" }
 					]
 				}
 			},
 			[
 				"fcf.activities"
 			],
-			"/fcf_activities/renderreport/activities",
-			[
-				{
-					"title": "Start Date",
-					"fieldName": "startDate",
-					"type": "date"
-				},
-				{
-					"title": "End Date",
-					"fieldName": "endDate",
-					"type": "date"
-				},
-				{
-					"title": "Member Name",
-					"fieldName": "memberName",
-					"type": "string"
+			"/fcf_activities/renderreport/staffs");
+
+		ProcessReport.addDataSource(
+			{
+				"name": "FCF Activity",
+				"schema": {
+					"fields": [
+						{ "name": "person_id", "type": "number" },
+						{ "name": "activity_name", "type": "string" },
+						{ "name": "order", "type": "number" },
+						{ "name": "startDate", "type": "date" },
+						{ "name": "endDate", "type": "date" }
+					]
 				}
-			]);
+			},
+			[
+				"fcf.activities"
+			],
+			"/fcf_activities/renderreport/activities");
 	}
 
 };
@@ -307,18 +264,18 @@ function FCFCommonApprovalHandler(options) {
     var def = Model.findOne(id);
 
     // populate all the necessary fields
-    pops.forEach(function (key) {
+    pops.forEach(function(key) {
         def.populate(key);
     });
 
-    def.then(function (model) {
+    def.then(function(model) {
 
         if (model) {
 			// AD.log('... found it');
             // set status to 'approved'
             model.status = 'approved';
             model.save()
-				.then(function (updatedModel) {
+				.then(function(updatedModel) {
 					// AD.log('... updatedActivity:', updatedActivity);
 					// Now send this off to be translated:
 					FCFActivities.translations[transType](updatedModel);
@@ -345,17 +302,17 @@ function FCFCommonTranslationHandler(options) {
 	// get the indicated activity
     Model.findOne(id)
 		.populate('translations')
-		.then(function (model) {
+		.then(function(model) {
 			// AD.log('... activity:', activity);
 			var allDone = true;
 
 			// update the provided translation:
-			model.translations.forEach(function (trans) {
+			model.translations.forEach(function(trans) {
 				// AD.log('    ... trans:', trans);
 
 				// update current one if it is the one given.
 				if (trans.language_code == language_code) {
-					_.forOwn(fields, function (value, key) {
+					_.forOwn(fields, function(value, key) {
 						// AD.log('    ... trans key:'+key+'  value:'+value);
 						trans[key] = value;
 					});
@@ -381,7 +338,7 @@ function FCFCommonTranslationHandler(options) {
 			}
 
 		})
-		.catch(function (err) {
+		.catch(function(err) {
 			ADCore.error.log('FCFActivities: Can\'t lookup Model from provided reference:', { error: err, options: options, note: 'this is a catch, so it might be catching another error from somewhere else!' });
 		})
 }
@@ -395,7 +352,7 @@ function modelAttributes(options) {
     var attributes = Model.attributes;
 
     var fields = [];
-    _.forOwn(attributes, function (value, key) {
+    _.forOwn(attributes, function(value, key) {
         if (value.type) {
 
             if ((options.type == 'all') || (value.type == options.type)) {
@@ -417,7 +374,7 @@ function modelCollections(options) {
     var attributes = Model.attributes;
 
     var fields = [];
-    _.forOwn(attributes, function (value, key) {
+    _.forOwn(attributes, function(value, key) {
         if (value.collection) {
             fields.push(key);
         }
@@ -445,7 +402,7 @@ function modelMultilingualFields(options) {
         ignoreFields.push(Model.attributes.translations.via);
 
 
-        _.forOwn(attributes, function (value, key) {
+        _.forOwn(attributes, function(value, key) {
 
             if (ignoreFields.indexOf(key) == -1) {
                 fields.push(key);
@@ -467,7 +424,7 @@ function modelTransModel(options) {
         return sails.models[transKey];
     }
 	console.log('....  ??? no translations:', Model);
-    
+
     // if we get here then this model doesn't have a translation Model:
     return null;
 };
