@@ -68,7 +68,7 @@ module.exports = {
 				 _.remove(persons, function(p) {
 					return !p.taggedInImages || p.taggedInImages.length < 1;
 				});
-console.log(persons);
+
 				next();
 			},
 
