@@ -49,6 +49,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(memberNameFilter)
+					.populate('taggedInImages')
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
@@ -60,6 +61,15 @@ module.exports = {
 						persons = p;
 						next();
 					});
+			},
+
+			function (next) {
+				// Remove persons who does not have any activities
+				 _.remove(persons, function(p) {
+					return !p.taggedInImages || p.taggedInImages.length < 1;
+				});
+console.log(persons);
+				next();
 			},
 
 			function(next) {
