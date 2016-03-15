@@ -1161,7 +1161,7 @@ var PostApprovalRequest = function (options) {
 
                 "form":{
                     "data":image,
-                    "view":"opstools/FCFActivities/views/FCFActivities/imageApproval.ejs",
+                    "view":"/opstools/FCFActivities/views/FCFActivities/imageApproval.ejs",
                     "viewData":{
                     	"taggedPeople":listTeammatesTagged,
                     	"language_code":languageCode
@@ -1170,7 +1170,7 @@ var PostApprovalRequest = function (options) {
 
 
                 "relatedInfo":{
-                    "view":"opstools/FCFActivities/views/FCFActivities/imageApprovalRelated.ejs",
+                    "view":"/opstools/FCFActivities/views/FCFActivities/imageApprovalRelated.ejs",
                     "viewData":{
                         "teamID":activity.team,
                         "activity": activity,
