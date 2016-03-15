@@ -84,6 +84,11 @@ module.exports = {
 						(p.NameMiddleThai ? p.NameMiddleThai + ' ' : '') +
 						(p.NameLastThai ? p.NameLastThai + ' ' : '');
 
+					reportData.person_name_en = (p.NameTitleEng ? p.NameTitleEng + ' ' : '') +
+						(p.NameFirstEng ? p.NameFirstEng + ' ' : '') +
+						(p.NameMiddleEng ? p.NameMiddleEng + ' ' : '') +
+						(p.NameLastEng ? p.NameLastEng + ' ' : '');
+
 					reportData.person_age = p.DateBirth ? getAge(p.DateBirth) : 'N/A (Age)';
 					reportData.person_nationality = p.PlaceOfBirth ? p.PlaceOfBirth : 'N/A (Nationality)';
 					reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A (PP Number)';
@@ -235,13 +240,26 @@ module.exports = {
 						results.push({
 							'person_id': p.IDPerson,
 							'activity_id': img.activity,
-							'activity_name': '',
 							'activity_image_file_name': img.image
 						});
 					});
 				});
 
-				next();
+				var activityIds = _.map(results, function(r) {
+					return r.activity_id;
+				});
+
+				// Find activity name
+				FCFActivity.find({ id: _.uniq(activityIds) })
+					.populate('translations', { language_code: langCode })
+					.then(function(activities) {
+
+						results.forEach(function(r) {
+							r.activity_name = _.find(activities, { 'id': r.activity_id }).translations[0].activity_name;
+						});
+
+						next();
+					});
 			}
 		], function(err, r) {
 
