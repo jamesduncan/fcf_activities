@@ -212,6 +212,7 @@ module.exports = function(cb) {
 						{ "name": "person_age", "type": "number" },
 						{ "name": "person_nationality", "type": "string" },
 						{ "name": "person_passport_number", "type": "string" },
+						{ "name": "person_work_number", "type": "string" },
 						{ "name": "person_work_address", "type": "string" },
 						{ "name": "person_home_address", "type": "string" },
 						{ "name": "person_visa_start_date", "type": "date" },
@@ -222,7 +223,8 @@ module.exports = function(cb) {
 						{ "name": "organization_name", "type": "string" },
 						{ "name": "organization_chief_name", "type": "string" },
 						{ "name": "organization_chief_position", "type": "string" },
-						{ "name": "workplace_name", "type": "string" }
+						{ "name": "workplace_name", "type": "string" },
+						{ "name": "project_description", "type": "string" }
 					]
 				}
 			},
@@ -248,6 +250,23 @@ module.exports = function(cb) {
 				"fcf.activities"
 			],
 			"/fcf_activities/renderreport/activities");
+
+		ProcessReport.addDataSource(
+			{
+				"name": "FCF Image Activity",
+				"schema": {
+					"fields": [
+						{ "name": "person_id", "type": "number" },
+						{ "name": "activity_id", "type": "number" },
+						{ "name": "activity_name", "type": "string" },
+						{ "name": "activity_image_file_name", "type": "string" }
+					]
+				}
+			},
+			[
+				"fcf.activities"
+			],
+			"/fcf_activities/renderreport/acitivity_images");
 	}
 
 };

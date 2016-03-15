@@ -63,9 +63,9 @@ module.exports = {
 					});
 			},
 
-			function (next) {
+			function(next) {
 				// Remove persons who does not have any activities
-				 _.remove(persons, function(p) {
+				_.remove(persons, function(p) {
 					return !p.taggedInImages || p.taggedInImages.length < 1;
 				});
 
@@ -84,22 +84,25 @@ module.exports = {
 						(p.NameMiddleThai ? p.NameMiddleThai + ' ' : '') +
 						(p.NameLastThai ? p.NameLastThai + ' ' : '');
 
-					reportData.person_age = p.DateBirth ? getAge(p.DateBirth) : 'N/A';
-					reportData.person_nationality = p.PlaceOfBirth ? p.PlaceOfBirth : 'N/A';
-					reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A';
-					reportData.person_work_address = p.WorkAddress ? p.WorkAddress : 'N/A';
-					reportData.person_home_address = p.PhysicalAddress ? p.PhysicalAddress : 'N/A';
+					reportData.person_age = p.DateBirth ? getAge(p.DateBirth) : 'N/A (Age)';
+					reportData.person_nationality = p.PlaceOfBirth ? p.PlaceOfBirth : 'N/A (Nationality)';
+					reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A (PP Number)';
+					reportData.person_work_number = p.WPNumber ? p.WPNumber : 'N/A (Work Number)';
+					reportData.person_work_address = p.WorkAddress ? p.WorkAddress : 'N/A (Work address)';
+					reportData.person_home_address = p.PhysicalAddress ? p.PhysicalAddress : 'N/A (Home Address)';
 
-					reportData.person_visa_start_date = 'TODO - Visa start date';
-					reportData.person_visa_expire_date = p.VisaDateExpire ? p.VisaDateExpire : 'N/A';
+					reportData.person_visa_start_date = 'N/A (Visa start date)';
+					reportData.person_visa_expire_date = p.VisaDateExpire ? p.VisaDateExpire : 'N/A (Visa expire date)';
 
-					reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A';
-					reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A';
+					reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A (Job title)';
+					reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A (Job description)';
 
-					reportData.organization_name = 'TODO - Organization name';
-					reportData.organization_chief_name = 'TODO - Chief name';
-					reportData.organization_chief_position = 'TODO - Chief position';
-					reportData.workplace_name = 'TODO - Workplace name';
+					reportData.organization_name = 'N/A (Organization name)';
+					reportData.organization_chief_name = 'N/A (Chief name)';
+					reportData.organization_chief_position = 'N/A (Chief position)';
+					reportData.workplace_name = 'N/A (Workplace name)';
+
+					reportData.project_description = 'N/A (Project description)';
 
 					return reportData;
 				});
@@ -194,6 +197,63 @@ module.exports = {
 				ADCore.comm.success(res, results);
 			}
 		});
+	},
 
+	// /fcf_activities/renderreport/acitivity_images
+	acitivity_images: function(req, res) {
+		AD.log('<green>::: renderreport.acitivity_images() :::</green>');
+
+		// what is the current language_code of the User
+		// var langCode = ADCore.user.current(req).getLanguageCode();
+		var langCode = 'th'; // TODO
+
+		var personFilter = { status: 'Active (In Country)' }, // TODO : Filter status
+			persons = [],
+			results = [];
+
+		async.series([
+			function(next) {
+
+				// Find person object
+				FCFPerson.find(personFilter, { fields: ['IDPerson'] })
+					.populate('taggedInImages')
+					.fail(function(err) {
+						AD.log(err);
+						next(err);
+					})
+					.then(function(p) {
+						if (p.length < 1)
+							next('Could not found any person.');
+
+						persons = p;
+						next();
+					});
+			},
+			function(next) {
+				persons.forEach(function(p) {
+					p.taggedInImages.forEach(function(img) {
+						results.push({
+							'person_id': p.IDPerson,
+							'activity_id': img.activity,
+							'activity_name': '',
+							'activity_image_file_name': img.image
+						});
+					});
+				});
+
+				next();
+			}
+		], function(err, r) {
+
+			if (err) {
+
+				ADCore.comm.error(res, err, 500);
+			} else {
+
+				AD.log('<green>::: end renderreport.acitivity_images() :::</green>');
+				ADCore.comm.success(res, results);
+			}
+		});
 	}
+
 };
