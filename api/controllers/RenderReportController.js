@@ -265,7 +265,7 @@ module.exports = {
 			},
 
 			function(next) {
-				var groupedImages = _.groupBy(images, 'activity_id');
+				var groupedImages = _.groupBy(_.uniq(images), 'activity_id');
 
 				for (var actId in groupedImages) {
 					var img = groupedImages[actId];
