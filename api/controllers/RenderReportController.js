@@ -264,8 +264,10 @@ module.exports = {
 					});
 			},
 
-			function(next) {
-				var groupedImages = _.groupBy(_.uniq(images), 'activity_id');
+			function(next) {				
+				var groupedImages = _.groupBy(_.uniq(images), function(img) {
+					return img.activity_id + '&' + img.person_id; 
+				});
 
 				for (var actId in groupedImages) {
 					var img = groupedImages[actId];
