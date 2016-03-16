@@ -209,6 +209,7 @@ module.exports = function(cb) {
 					"fields": [
 						{ "name": "person_id", "type": "number" },
 						{ "name": "person_name", "type": "string" },
+						{ "name": "person_name_en", "type": "string" },
 						{ "name": "person_age", "type": "number" },
 						{ "name": "person_nationality", "type": "string" },
 						{ "name": "person_passport_number", "type": "string" },
@@ -259,7 +260,8 @@ module.exports = function(cb) {
 						{ "name": "person_id", "type": "number" },
 						{ "name": "activity_id", "type": "number" },
 						{ "name": "activity_name", "type": "string" },
-						{ "name": "activity_image_file_name", "type": "string" }
+						{ "name": "activity_image_file_name_left_column", "type": "string" },
+						{ "name": "activity_image_file_name_right_column", "type": "string" }
 					]
 				}
 			},

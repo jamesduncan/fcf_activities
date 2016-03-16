@@ -41,6 +41,7 @@ module.exports = {
 		}
 
 		var persons = [];
+		var images = [];
 		var results = [];
 
 		async.series([
@@ -214,6 +215,7 @@ module.exports = {
 
 		var personFilter = { status: 'Active (In Country)' }, // TODO : Filter status
 			persons = [],
+			images = [],
 			results = [];
 
 		async.series([
@@ -237,7 +239,7 @@ module.exports = {
 			function(next) {
 				persons.forEach(function(p) {
 					p.taggedInImages.forEach(function(img) {
-						results.push({
+						images.push({
 							'person_id': p.IDPerson,
 							'activity_id': img.activity,
 							'activity_image_file_name': img.image
@@ -245,7 +247,7 @@ module.exports = {
 					});
 				});
 
-				var activityIds = _.map(results, function(r) {
+				var activityIds = _.map(images, function(r) {
 					return r.activity_id;
 				});
 
@@ -254,12 +256,31 @@ module.exports = {
 					.populate('translations', { language_code: langCode })
 					.then(function(activities) {
 
-						results.forEach(function(r) {
+						images.forEach(function(r) {
 							r.activity_name = _.find(activities, { 'id': r.activity_id }).translations[0].activity_name;
 						});
 
 						next();
 					});
+			},
+
+			function(next) {
+				var groupedImages = _.groupBy(images, 'activity_id');
+
+				for (var actId in groupedImages) {
+					var img = groupedImages[actId];
+					for (var i = 0; i < img.length; i += 2) {
+						results.push({
+							'person_id': img[i].person_id,
+							'activity_id': img[i].activity_id,
+							'activity_name': img[i].activity_name,
+							'activity_image_file_name_left_column': img[i].activity_image_file_name,
+							'activity_image_file_name_right_column': img[i + 1] ? img[i + 1].activity_image_file_name : null
+						});
+					}
+				}
+
+				next();
 			}
 		], function(err, r) {
 
