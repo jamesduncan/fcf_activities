@@ -1,23 +1,24 @@
 
 steal(
-// List your Controller's dependencies here:
+	// List your Controller's dependencies here:
 	'opstools/FCFActivities/controllers/Portal.js',
 	'opstools/FCFActivities/controllers/AddChooseMinistry.js',
 	'opstools/FCFActivities/controllers/AddChooseActivity.js',
 	'opstools/FCFActivities/controllers/ActivityReport.js',
 	'opstools/FCFActivities/controllers/ConfirmStep.js',
 	'opstools/FCFActivities/views/FCFActivities/FCFActivities.ejs',
-	function () {
-		System.import('appdev').then(function () {
+	function() {
+		System.import('appdev').then(function() {
             AD.ui.loading.resources(7);
 			steal.import(
+				'site/labels/opstool-FCFActivities',
 				'dropzone',
 				'dropzone.css',
 				'selectivity',
 				'selectivity.css',
 				'appdev/ad',
 				'appdev/control/control',
-				'OpsPortal/classes/OpsTool').then(function () {
+				'OpsPortal/classes/OpsTool').then(function() {
 
 					AD.ui.loading.completed(7);
 
@@ -57,7 +58,7 @@ steal(
 					AD.Control.OpsTool.extend('FCFActivities', {
 
 
-						init: function (element, options) {
+						init: function(element, options) {
 							var self = this;
 
 							// this is what gets published when this tool should resize:
@@ -93,7 +94,7 @@ steal(
 							// this.on('opsportal.tool.show', function(data){
 							//     console.log('FCFActivities told to show.');
 							// })
-            
+
 							// for Testing:
 							// this.showPortal('Report');
 							// var team = {
@@ -115,7 +116,7 @@ steal(
 
 							// on a tool.show event for this tool ... consider this a reset 
 							// to the Portal screen.
-							AD.comm.hub.subscribe('opsportal.tool.show', function (key, data) {
+							AD.comm.hub.subscribe('opsportal.tool.show', function(key, data) {
 
 								if (data.tool == 'FCFActivities') {
 									self.showPortal('Portal');
@@ -123,16 +124,16 @@ steal(
 							})
 
 
-							AD.comm.hub.subscribe('fcf.activity.new', function () {
+							AD.comm.hub.subscribe('fcf.activity.new', function() {
 								self.newActivity();
 							})
 
-							AD.comm.hub.subscribe(NOTIFICATION_RESIZE, function (key, data) {
+							AD.comm.hub.subscribe(NOTIFICATION_RESIZE, function(key, data) {
 
 								var height = data.height;   // the available height in our displayable area.
 
 								self.resizeActivePortal(height);
-                
+
 
 								//// TODO: mark the other portals as needing a resize!
 							})
@@ -140,10 +141,10 @@ steal(
 
 							// gather which person the user is & pass off to Controllers
 							AD.comm.service.get({ url: '/fcf_activities/activityreport/whoami' })
-								.fail(function (err) {
+								.fail(function(err) {
 									console.error('!!!! FCFActivities: error getting /whoami', err);
 								})
-								.then(function (data) {
+								.then(function(data) {
 
 									if (data) {
 
@@ -163,7 +164,7 @@ steal(
 
 
 
-						initDOM: function () {
+						initDOM: function() {
 
 							this.element.html(can.view(this.options.templateDOM, {}));
 
@@ -172,14 +173,14 @@ steal(
 
 
 
-						initEvents: function () {
+						initEvents: function() {
 
 							var self = this;
-            
+
 
 							// The Choose Ministry Controller will publish a NEXT
 							// event when finished.
-							this.portals.Add1.element.on(this.portals.Add1.CONST.NEXT, function () {
+							this.portals.Add1.element.on(this.portals.Add1.CONST.NEXT, function() {
 
 								var model = self.portals.Add1.value();
 								console.log(' ... Team Selected: ' + model.getID());
@@ -195,7 +196,7 @@ steal(
 							//// Choose Activity Controller
 							// The Choose Activity Controller will publish a NEXT
 							// event when finished.
-							this.portals.Add2.element.on(this.portals.Add2.CONST.NEXT, function () {
+							this.portals.Add2.element.on(this.portals.Add2.CONST.NEXT, function() {
 
 								var model = self.portals.Add2.value();
 								console.log(' ... Activity Selected: ' + model.getID());
@@ -203,7 +204,7 @@ steal(
 								self.showPortal('Report');
 							})
 							// if they press [Previous] then go back
-							this.portals.Add2.element.on(this.portals.Add2.CONST.PREV, function () {
+							this.portals.Add2.element.on(this.portals.Add2.CONST.PREV, function() {
 								self.showPortal('Add1');
 							})
 
@@ -211,12 +212,12 @@ steal(
 							//// The Activity Report Controller
 
 							// if they press [Finish] then go back
-							this.portals.Report.element.on(this.portals.Report.CONST.FINISH, function () {
+							this.portals.Report.element.on(this.portals.Report.CONST.FINISH, function() {
 								self.showPortal('Portal');
 							})
 
 							// if they press [Previous] then go back
-							this.portals.Report.element.on(this.portals.Report.CONST.PREV, function () {
+							this.portals.Report.element.on(this.portals.Report.CONST.PREV, function() {
 								self.showPortal('Add2');
 							})
 
@@ -232,7 +233,7 @@ steal(
 
 
 
-						initPortals: function () {
+						initPortals: function() {
 							this.portals = {};
 
 
@@ -262,13 +263,13 @@ steal(
 
 
 
-						newActivity: function () {
+						newActivity: function() {
 
 							this.showPortal('Add1');
 						},
 
 
-						resizeActivePortal: function (height) {
+						resizeActivePortal: function(height) {
 
 							// height is the total available to our OpsTool
 
@@ -290,7 +291,7 @@ steal(
 						},
 
 
-						showPortal: function (key) {
+						showPortal: function(key) {
 
 							for (var k in this.portals) {
 
@@ -311,7 +312,7 @@ steal(
 
 
 
-						'.ad-item-add click': function ($el, ev) {
+						'.ad-item-add click': function($el, ev) {
 
 							ev.preventDefault();
 						}
