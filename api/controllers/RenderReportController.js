@@ -172,11 +172,13 @@ module.exports = {
 							.then(function(a) {
 								p = _.map(a, function(act, index) {
 									return {
-										'order': index + 1,
+										'hash_key': p.IDPerson + '_' + act.translations[0].id,
+										'person_id': p.IDPerson,
+										'activity_id': act.translations[0].id,
 										'activity_name': act.translations[0].activity_name,
 										'startDate': act.date_start,
 										'endDate': act.date_end,
-										'person_id': p.IDPerson
+										'order': index + 1
 									}
 								});
 								callback(null, p);
@@ -264,9 +266,9 @@ module.exports = {
 					});
 			},
 
-			function(next) {				
+			function(next) {
 				var groupedImages = _.groupBy(_.uniq(images), function(img) {
-					return img.activity_id + '&' + img.person_id; 
+					return img.activity_id + '&' + img.person_id;
 				});
 
 				for (var actId in groupedImages) {

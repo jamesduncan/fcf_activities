@@ -9,6 +9,7 @@
  */
 var path = require('path');
 var AD = require('ad-utils');
+var async = require('async');
 module.exports = function(cb) {
 
     AD.module.permissions(path.join(__dirname, '..', 'setup', 'permissions'), cb);
@@ -202,73 +203,101 @@ module.exports = function(cb) {
 
 	// Add fcf activity data source to the report tool
 	if (ProcessReport) {
-		ProcessReport.addDataSource(
-			{
-				"name": "FCF Staff",
-				"schema": {
-					"fields": [
-						{ "name": "person_id", "type": "number" },
-						{ "name": "person_name", "type": "string" },
-						{ "name": "person_name_en", "type": "string" },
-						{ "name": "person_age", "type": "number" },
-						{ "name": "person_nationality", "type": "string" },
-						{ "name": "person_passport_number", "type": "string" },
-						{ "name": "person_work_number", "type": "string" },
-						{ "name": "person_work_address", "type": "string" },
-						{ "name": "person_home_address", "type": "string" },
-						{ "name": "person_visa_start_date", "type": "date" },
-						{ "name": "person_visa_expire_date", "type": "date" },
-						{ "name": "person_job_title", "type": "string" },
-						{ "name": "person_job_description", "type": "string" },
-						{ "name": "person_activites", "type": "string" },
-						{ "name": "organization_name", "type": "string" },
-						{ "name": "organization_chief_name", "type": "string" },
-						{ "name": "organization_chief_position", "type": "string" },
-						{ "name": "workplace_name", "type": "string" },
-						{ "name": "project_description", "type": "string" }
-					]
-				}
-			},
-			[
-				"fcf.activities"
-			],
-			"/fcf_activities/renderreport/staffs");
+		var staffDataSource = {};
+		var activityDataSource = {};
 
-		ProcessReport.addDataSource(
-			{
-				"name": "FCF Activity",
-				"schema": {
-					"fields": [
-						{ "name": "person_id", "type": "number" },
-						{ "name": "activity_name", "type": "string" },
-						{ "name": "order", "type": "number" },
-						{ "name": "startDate", "type": "date" },
-						{ "name": "endDate", "type": "date" }
-					]
-				}
-			},
-			[
-				"fcf.activities"
-			],
-			"/fcf_activities/renderreport/activities");
+		async.series([
+			function(next) {
+				ProcessReport.addDataSource(
+					{
+						"name": "FCF Staff",
+						"schema": {
+							"fields": [
+								{ "name": "person_id", "type": "number" },
+								{ "name": "person_name", "type": "string" },
+								{ "name": "person_name_en", "type": "string" },
+								{ "name": "person_age", "type": "number" },
+								{ "name": "person_nationality", "type": "string" },
+								{ "name": "person_passport_number", "type": "string" },
+								{ "name": "person_work_number", "type": "string" },
+								{ "name": "person_work_address", "type": "string" },
+								{ "name": "person_home_address", "type": "string" },
+								{ "name": "person_visa_start_date", "type": "date" },
+								{ "name": "person_visa_expire_date", "type": "date" },
+								{ "name": "person_job_title", "type": "string" },
+								{ "name": "person_job_description", "type": "string" },
+								{ "name": "person_activites", "type": "string" },
+								{ "name": "organization_name", "type": "string" },
+								{ "name": "organization_chief_name", "type": "string" },
+								{ "name": "organization_chief_position", "type": "string" },
+								{ "name": "workplace_name", "type": "string" },
+								{ "name": "project_description", "type": "string" }
+							]
+						}
+					},
+					["fcf.activities"], "/fcf_activities/renderreport/staffs").then(function(result) {
+						staffDataSource = result;
 
-		ProcessReport.addDataSource(
-			{
-				"name": "FCF Image Activity",
-				"schema": {
-					"fields": [
-						{ "name": "person_id", "type": "number" },
-						{ "name": "activity_id", "type": "number" },
-						{ "name": "activity_name", "type": "string" },
-						{ "name": "activity_image_file_name_left_column", "type": "string" },
-						{ "name": "activity_image_file_name_right_column", "type": "string" }
-					]
-				}
+						next();
+					});
 			},
-			[
-				"fcf.activities"
-			],
-			"/fcf_activities/renderreport/acitivity_images");
+			function(next) {
+				ProcessReport.addDataSource(
+					{
+						"name": "FCF Activities",
+						"schema": {
+							"fields": [
+								{ "name": "hash_key", "type": "string" },
+								{ "name": "person_id", "type": "number" },
+								{ "name": "activity_id", "type": "number" },
+								{ "name": "activity_name", "type": "string" },
+								{ "name": "order", "type": "number" },
+								{ "name": "startDate", "type": "date" },
+								{ "name": "endDate", "type": "date" }
+							]
+						}
+					},
+					["fcf.activities"], "/fcf_activities/renderreport/activities").then(function(result) {
+						activityDataSource = result;
+
+						next();
+					});
+			},
+			function(next) {
+				ProcessReport.addDataSource(
+					{
+						"name": "FCF Activity Images",
+						"schema": {
+							"fields": [
+								{ "name": "person_id", "type": "number" },
+								{ "name": "activity_id", "type": "number" },
+								{ "name": "activity_name", "type": "string" },
+								{ "name": "activity_image_file_name_left_column", "type": "string" },
+								{ "name": "activity_image_file_name_right_column", "type": "string" }
+							]
+						}
+					},
+					["fcf.activities"], "/fcf_activities/renderreport/acitivity_images").then(function() { next(); });
+			},
+			function(next) {
+				var staffActivities = {
+					"type": "inner",
+					"leftKey": "person_id",
+					"rightKey": "person_id"
+				};
+				staffActivities['left'] = staffDataSource[0].id.toString();
+				staffActivities['right'] = activityDataSource[0].id.toString();
+
+				ProcessReport.addDataSource(
+					{
+						"name": "FCF Staff and Activities",
+						"join": staffActivities
+					},
+					["fcf.activities"], "/fcf_activities/renderreport/staffs"
+				).then(function() { next(); });
+			},
+		]);
+
 	}
 
 };
