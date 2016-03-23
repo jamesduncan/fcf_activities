@@ -262,7 +262,7 @@ body {
 
 /*Scroll Bar on page 3*/		
 #lc-activity {
-	max-height:680px; 
+/*	max-height:680px;  // Allow widget to scale to height. */  
 	overflow-y:scroll !important;
 
 }
@@ -285,7 +285,11 @@ body {
 	background-color: #b35422;
 }
 
-#upload-scroll {max-height:530px; overflow-y:scroll !important;}
+#upload-scroll {
+	/*max-height:530px; */
+	overflow-y:scroll !important;
+}
+
 #confirm-step-scroll {max-height:500px; overflow-y:scroll !important }
 
 .imgleft col-md-5 img, .imgleft .col-md-4 img {width:100%}

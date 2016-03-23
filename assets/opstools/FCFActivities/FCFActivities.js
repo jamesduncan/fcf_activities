@@ -1,18 +1,15 @@
 steal(
-        // List your Page's dependencies here:
-// 'can/control/route'
-// ).then(
-		'appdev',
-        function() {
+	// List your Page's dependencies here:
+	// 'can/control/route'
+	// ).then(
+	'opstools/FCFActivities/FCFActivities.css',
+	'opstools/FCFActivities/opsportal-theme-fcf.css',
+	'opstools/FCFActivities/controllers/FCFActivities.js',
+	function() {
+		System.import('appdev').then(function() {
             AD.ui.loading.resources(3);
-        },
-        '//opstools/FCFActivities/controllers/FCFActivities.js',
-        '//opstools/FCFActivities/FCFActivities.css',
-        '//opstools/FCFActivities/opsportal-theme-fcf.css',
-        '/site/labels/opstool-FCFActivities.js'
-).then(function(){
-
-	AD.ui.loading.completed(3);
-	// can.route("#!control/:type");
-	// can.route.ready();
-});
+			AD.ui.loading.completed(3);
+		});
+		// can.route("#!control/:type");
+		// can.route.ready();
+	});

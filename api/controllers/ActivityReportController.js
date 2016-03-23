@@ -882,7 +882,7 @@ console.log('... found objectives:', list);
 
                     "form":{
                         "data":activity,
-                        "view":"//opstools/FCFActivities/views/FCFActivities/activityApproval.ejs",
+                        "view":"/opstools/FCFActivities/views/FCFActivities/activityApproval.ejs",
                         "viewData":{
                             "objectives":objectives,
                             "language_code":language_code
@@ -891,7 +891,7 @@ console.log('... found objectives:', list);
 
 
                     "relatedInfo":{
-                        "view":"//opstools/FCFActivities/views/FCFActivities/activityApprovalRelated.ejs",
+                        "view":"/opstools/FCFActivities/views/FCFActivities/activityApprovalRelated.ejs",
                         "viewData":{
                             "user":{
                                 "displayName":creator.displayName(),
