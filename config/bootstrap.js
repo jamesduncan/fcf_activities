@@ -202,7 +202,7 @@ module.exports = function(cb) {
 
 
 	// Add fcf activity data source to the report tool
-	if (ProcessReport) {
+	if (typeof ProcessReport != 'undefined') {
 		var staffDataSource = {};
 		var activityDataSource = {};
 
