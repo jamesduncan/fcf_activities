@@ -301,9 +301,31 @@ module.exports = {
 				newImage.save()
 				.then(function(data){
 
-					AD.log('... newImage.save() : data:', data);
-					finalData = data.toClient(languageCode);
-					next();
+					if (typeof data == 'undefined') {
+
+						ADCore.error.log('ActivityImageController: newImage.save(): returned data was undefined.', { newImage: newImage })
+
+						// to prevent losing this transaction, 
+						FCFActivityImages.findOne({id:newImage.id})
+						.populate('translations')
+						.populate('uploadedBy')
+						.populate('taggedPeople')
+						.then(function(image){
+							if (image.translate) { image.translate(languageCode); }
+							finalData = image.toClient(languageCode);
+							next();
+							return null;
+						})
+						.catch(function(err){
+							next(err);
+						})
+						
+					} else {
+
+						AD.log('... newImage.save() : data:', data);
+						finalData = data.toClient(languageCode);
+						next();
+					}
 
 				})
 				.catch(function(err){
