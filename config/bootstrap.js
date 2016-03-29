@@ -202,7 +202,7 @@ module.exports = function(cb) {
 
 
 	// Add fcf activity data source to the report tool
-	if (ProcessReport) {
+	if (typeof ProcessReport !== 'undefined') {
 		var staffDataSource = {};
 		var activityDataSource = {};
 		var activtyImageDataSource = {};
@@ -237,7 +237,7 @@ module.exports = function(cb) {
 						}
 					},
 					["fcf.activities"], "/fcf_activities/renderreport/staffs").then(function(result) {
-						staffDataSource = result;
+						staffDataSource = result instanceof Array ? result[0] : result;
 
 						next();
 					});
@@ -258,7 +258,7 @@ module.exports = function(cb) {
 						}
 					},
 					["fcf.activities"], "/fcf_activities/renderreport/activities").then(function(result) {
-						activityDataSource = result;
+						activityDataSource = result instanceof Array ? result[0] : result;
 
 						next();
 					});
@@ -280,7 +280,7 @@ module.exports = function(cb) {
 						}
 					},
 					["fcf.activities"], "/fcf_activities/renderreport/acitivity_images").then(function(result) {
-						activtyImageDataSource = result;
+						activtyImageDataSource = result instanceof Array ? result[0] : result;
 						next();
 					});
 			},
@@ -290,8 +290,8 @@ module.exports = function(cb) {
 					"leftKey": "person_id",
 					"rightKey": "person_id"
 				};
-				staffActivities['left'] = staffDataSource[0].id.toString();
-				staffActivities['right'] = activityDataSource[0].id.toString();
+				staffActivities['left'] = staffDataSource.id.toString();
+				staffActivities['right'] = activityDataSource.id.toString();
 
 				ProcessReport.addDataSource(
 					{
@@ -307,8 +307,8 @@ module.exports = function(cb) {
 					"leftKey": "person_id",
 					"rightKey": "person_id"
 				};
-				staffActivityImages['left'] = staffDataSource[0].id.toString();
-				staffActivityImages['right'] = activtyImageDataSource[0].id.toString();
+				staffActivityImages['left'] = staffDataSource.id.toString();
+				staffActivityImages['right'] = activtyImageDataSource.id.toString();
 
 				ProcessReport.addDataSource(
 					{
