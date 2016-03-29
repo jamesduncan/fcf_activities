@@ -202,9 +202,10 @@ module.exports = function(cb) {
 
 
 	// Add fcf activity data source to the report tool
-	if (typeof ProcessReport != 'undefined') {
+	if (ProcessReport) {
 		var staffDataSource = {};
 		var activityDataSource = {};
+		var activtyImageDataSource = {};
 
 		async.series([
 			function(next) {
@@ -247,13 +248,12 @@ module.exports = function(cb) {
 						"name": "FCF Activities",
 						"schema": {
 							"fields": [
-								{ "name": "hash_key", "type": "string" },
 								{ "name": "person_id", "type": "number" },
 								{ "name": "activity_id", "type": "number" },
 								{ "name": "activity_name", "type": "string" },
 								{ "name": "order", "type": "number" },
-								{ "name": "startDate", "type": "date" },
-								{ "name": "endDate", "type": "date" }
+								{ "name": "startDate", "type": "date", "dateFormat":"YYYY-MM-DDTHH:mm:ss.msZ"},
+								{ "name": "endDate", "type": "date", "dateFormat":"YYYY-MM-DDTHH:mm:ss.msZ"}
 							]
 						}
 					},
@@ -272,6 +272,8 @@ module.exports = function(cb) {
 								{ "name": "person_id", "type": "number" },
 								{ "name": "activity_id", "type": "number" },
 								{ "name": "activity_name", "type": "string" },
+								{ "name": "activity_start_date", "type": "date", "dateFormat":"YYYY-MM-DDTHH:mm:ss.msZ"},
+								{ "name": "activity_end_date", "type": "date", "dateFormat":"YYYY-MM-DDTHH:mm:ss.msZ"},
 								{ "name": "activity_image_file_name_left_column", "type": "string" },
 								{ "name": "activity_image_file_name_right_column", "type": "string" }
 							]
@@ -292,6 +294,27 @@ module.exports = function(cb) {
 					{
 						"name": "FCF Staff and Activities",
 						"join": staffActivities
+					},
+					["fcf.activities"], "/fcf_activities/renderreport/staffs"
+				).then(function(result) { 
+					activtyImageDataSource = result;
+					
+					next();
+				});
+			},
+			function(next) {
+				var staffActivityImages = {
+					"type": "inner",
+					"leftKey": "person_id",
+					"rightKey": "person_id"
+				};
+				staffActivityImages['left'] = staffDataSource[0].id.toString();
+				staffActivityImages['right'] = activtyImageDataSource[0].id.toString();
+
+				ProcessReport.addDataSource(
+					{
+						"name": "FCF Staff and Activity images",
+						"join": staffActivityImages
 					},
 					["fcf.activities"], "/fcf_activities/renderreport/staffs"
 				).then(function() { next(); });

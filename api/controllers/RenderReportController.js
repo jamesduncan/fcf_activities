@@ -172,7 +172,6 @@ module.exports = {
 							.then(function(a) {
 								p = _.map(a, function(act, index) {
 									return {
-										'hash_key': p.IDPerson + '_' + act.translations[0].id,
 										'person_id': p.IDPerson,
 										'activity_id': act.translations[0].id,
 										'activity_name': act.translations[0].activity_name,
@@ -259,7 +258,10 @@ module.exports = {
 					.then(function(activities) {
 
 						images.forEach(function(r) {
-							r.activity_name = _.find(activities, { 'id': r.activity_id }).translations[0].activity_name;
+							var act = _.find(activities, { 'id': r.activity_id });
+							r.activity_name = act.translations[0].activity_name;
+							r.activity_start_date = act.date_start;
+							r.acitivity_end_date = act.date_end;
 						});
 
 						next();
@@ -278,6 +280,8 @@ module.exports = {
 							'person_id': img[i].person_id,
 							'activity_id': img[i].activity_id,
 							'activity_name': img[i].activity_name,
+							'activity_start_date': img[i].activity_start_date,
+							'acitivity_end_date': img[i].acitivity_end_date,
 							'activity_image_file_name_left_column': img[i].activity_image_file_name,
 							'activity_image_file_name_right_column': img[i + 1] ? img[i + 1].activity_image_file_name : null
 						});
