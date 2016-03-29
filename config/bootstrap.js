@@ -252,8 +252,8 @@ module.exports = function(cb) {
 								{ "name": "activity_id", "type": "number" },
 								{ "name": "activity_name", "type": "string" },
 								{ "name": "order", "type": "number" },
-								{ "name": "startDate", "type": "date", "dateFormat":"YYYY-MM-DDTHH:mm:ss.msZ"},
-								{ "name": "endDate", "type": "date", "dateFormat":"YYYY-MM-DDTHH:mm:ss.msZ"}
+								{ "name": "startDate", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" },
+								{ "name": "endDate", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" }
 							]
 						}
 					},
@@ -272,14 +272,17 @@ module.exports = function(cb) {
 								{ "name": "person_id", "type": "number" },
 								{ "name": "activity_id", "type": "number" },
 								{ "name": "activity_name", "type": "string" },
-								{ "name": "activity_start_date", "type": "date", "dateFormat":"YYYY-MM-DDTHH:mm:ss.msZ"},
-								{ "name": "activity_end_date", "type": "date", "dateFormat":"YYYY-MM-DDTHH:mm:ss.msZ"},
+								{ "name": "activity_start_date", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" },
+								{ "name": "activity_end_date", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" },
 								{ "name": "activity_image_file_name_left_column", "type": "string" },
 								{ "name": "activity_image_file_name_right_column", "type": "string" }
 							]
 						}
 					},
-					["fcf.activities"], "/fcf_activities/renderreport/acitivity_images").then(function() { next(); });
+					["fcf.activities"], "/fcf_activities/renderreport/acitivity_images").then(function(result) {
+						activtyImageDataSource = result;
+						next();
+					});
 			},
 			function(next) {
 				var staffActivities = {
@@ -296,11 +299,7 @@ module.exports = function(cb) {
 						"join": staffActivities
 					},
 					["fcf.activities"], "/fcf_activities/renderreport/staffs"
-				).then(function(result) { 
-					activtyImageDataSource = result;
-					
-					next();
-				});
+				).then(function() { next(); });
 			},
 			function(next) {
 				var staffActivityImages = {
