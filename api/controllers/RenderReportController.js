@@ -103,12 +103,12 @@ module.exports = {
 					reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A (Job title)';
 					reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A (Job description)';
 
+					reportData.project_title = p.Project;
+
 					reportData.organization_name = 'N/A (Organization name)';
 					reportData.organization_chief_name = 'N/A (Chief name)';
 					reportData.organization_chief_position = 'N/A (Chief position)';
 					reportData.workplace_name = 'N/A (Workplace name)';
-
-					reportData.project_description = 'N/A (Project description)';
 
 					return reportData;
 				});
@@ -234,13 +234,16 @@ module.exports = {
 							next('Could not found any person.');
 
 						persons = p;
+
 						next();
 					});
 			},
 			function(next) {
+				// Find image caption
 				persons.forEach(function(p) {
 					p.taggedInImages.forEach(function(img) {
 						images.push({
+							'image_id': img.id,
 							'person_id': p.IDPerson,
 							'activity_id': img.activity,
 							'activity_image_file_name': img.image
@@ -248,6 +251,22 @@ module.exports = {
 					});
 				});
 
+				var imageIds = _.map(images, function(r) {
+					return r.image_id;
+				});
+
+				FCFActivityImages.find({ id: _.uniq(imageIds) })
+					.populate('translations', { language_code: langCode })
+					.then(function(resultImages) {
+						resultImages.forEach(function(img) {
+							var image = _.find(images, { 'image_id': img.id });
+							image.caption = img.translations[0] ? img.translations[0].caption : '';
+						});
+
+						next();
+					});
+			},
+			function(next) {
 				var activityIds = _.map(images, function(r) {
 					return r.activity_id;
 				});
@@ -260,6 +279,7 @@ module.exports = {
 						images.forEach(function(r) {
 							var act = _.find(activities, { 'id': r.activity_id });
 							r.activity_name = act.translations[0].activity_name;
+							r.activity_description = act.translations[0].activity_description;
 							r.activity_start_date = act.date_start;
 							r.acitivity_end_date = act.date_end;
 						});
@@ -276,15 +296,25 @@ module.exports = {
 				for (var actId in groupedImages) {
 					var img = groupedImages[actId];
 					for (var i = 0; i < img.length; i += 2) {
-						results.push({
+
+						var result = {
 							'person_id': img[i].person_id,
 							'activity_id': img[i].activity_id,
 							'activity_name': img[i].activity_name,
+							'activity_description': img[i].activity_description,
 							'activity_start_date': img[i].activity_start_date,
 							'acitivity_end_date': img[i].acitivity_end_date,
 							'activity_image_file_name_left_column': img[i].activity_image_file_name,
-							'activity_image_file_name_right_column': img[i + 1] ? img[i + 1].activity_image_file_name : null
-						});
+							'activity_image_caption_left_column': img[i].caption
+						};
+
+						var right_column_img = img[i + 1];
+						if (typeof right_column_img !== 'undefined') {
+							result.activity_image_file_name_right_column = right_column_img.activity_image_file_name;
+							result.activity_image_caption_right_column = right_column_img.caption;
+						}
+
+						results.push(result);
 					}
 				}
 
