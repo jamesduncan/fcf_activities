@@ -103,12 +103,12 @@ module.exports = {
 					reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A (Job title)';
 					reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A (Job description)';
 
+					reportData.project_title = p.Project;
+
 					reportData.organization_name = 'N/A (Organization name)';
 					reportData.organization_chief_name = 'N/A (Chief name)';
 					reportData.organization_chief_position = 'N/A (Chief position)';
 					reportData.workplace_name = 'N/A (Workplace name)';
-
-					reportData.project_description = 'N/A (Project description)';
 
 					return reportData;
 				});

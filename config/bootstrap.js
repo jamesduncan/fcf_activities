@@ -232,7 +232,7 @@ module.exports = function(cb) {
 								{ "name": "organization_chief_name", "type": "string" },
 								{ "name": "organization_chief_position", "type": "string" },
 								{ "name": "workplace_name", "type": "string" },
-								{ "name": "project_description", "type": "string" }
+								{ "name": "project_title", "type": "string" }
 							]
 						}
 					},
