@@ -296,8 +296,8 @@ module.exports = {
 				for (var actId in groupedImages) {
 					var img = groupedImages[actId];
 					for (var i = 0; i < img.length; i += 2) {
-// console.log(img[i]);
-						results.push({
+
+						var result = {
 							'person_id': img[i].person_id,
 							'activity_id': img[i].activity_id,
 							'activity_name': img[i].activity_name,
@@ -305,10 +305,16 @@ module.exports = {
 							'activity_start_date': img[i].activity_start_date,
 							'acitivity_end_date': img[i].acitivity_end_date,
 							'activity_image_file_name_left_column': img[i].activity_image_file_name,
-							'activity_image_caption_left_column': img[i].caption,
-							'activity_image_file_name_right_column': img[i + 1] ? img[i + 1].activity_image_file_name : null,
-							'activity_image_caption_right_column': img[i + 1] ? img[i + 1].caption : null
-						});
+							'activity_image_caption_left_column': img[i].caption
+						};
+
+						var right_column_img = img[i + 1];
+						if (typeof right_column_img !== 'undefined') {
+							result.activity_image_file_name_right_column = right_column_img.activity_image_file_name;
+							result.activity_image_caption_right_column = right_column_img.caption;
+						}
+
+						results.push(result);
 					}
 				}
 
