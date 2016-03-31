@@ -272,10 +272,13 @@ module.exports = function(cb) {
 								{ "name": "person_id", "type": "number" },
 								{ "name": "activity_id", "type": "number" },
 								{ "name": "activity_name", "type": "string" },
+								{ "name": "activity_description", "type": "string" },
 								{ "name": "activity_start_date", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" },
 								{ "name": "activity_end_date", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" },
 								{ "name": "activity_image_file_name_left_column", "type": "string" },
-								{ "name": "activity_image_file_name_right_column", "type": "string" }
+								{ "name": "activity_image_caption_left_column", "type": "string" },
+								{ "name": "activity_image_file_name_right_column", "type": "string" },
+								{ "name": "activity_image_caption_right_column", "type": "string" }
 							]
 						}
 					},
