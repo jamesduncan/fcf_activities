@@ -732,7 +732,7 @@ AD.log('... received error!:', err);
             // step 1: translate this activity
             function(next){
 
-                FCFActivity.findOne(id)
+                FCFActivity.findOne({id:id})
                 .populate('objectives')
                 .exec(function(err, modelActivity){
 
@@ -744,22 +744,32 @@ AD.log('... received error!:', err);
                         next(myErr);
                     } else {
 // console.log('... translating');
-                        activity = modelActivity;
-                    
+// console.log('... modelActivity:', modelActivity);
 
-                        // note: .translate() flattens the values to the base object
-                        activity.translate(language_code)
-                        .fail(function(err){
-// console.log('... .translate() error:', err );
+                        if (modelActivity) {
 
-                            var myErr = new Error('Error translating activity.');
-                            myErr.error = err;
+                            activity = modelActivity;
+                        
+                            // note: .translate() flattens the values to the base object
+                            activity.translate(language_code)
+                            .fail(function(err){
+    // console.log('... .translate() error:', err );
+
+                                var myErr = new Error('Error translating activity.');
+                                myErr.error = err;
+                                next(myErr);
+                            })
+                            .then(function(){
+    // console.log('... Activity.afterCreate(): translated:', activity);
+                                next();
+                            })
+
+                        } else {
+// console.log('... modelActivity undefined!!!  id:'+id);
+
+                            var myErr = new Error('Error looking up Activity to approve: id:'+id );
                             next(myErr);
-                        })
-                        .then(function(){
-// console.log('... Activity.afterCreate(): translated:', activity);
-                            next();
-                        })
+                        }
 
                     }
                 })
@@ -790,7 +800,7 @@ console.log('... found guid:', guid);
             // step : get actual person object from creator id:
             function(next) {
 
-                FCFPerson.findOne(activity.createdBy)
+                FCFPerson.findOne({ IDPerson:activity.createdBy})
                 .exec(function(err, person){
 
                     if (err) {

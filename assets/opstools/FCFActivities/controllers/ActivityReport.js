@@ -489,7 +489,7 @@ steal(
 
 											self.clearForm();
 
-											self.postApproval(data);
+											// self.postApproval(data);
 
 											self.refreshPeopleTaggedInActivities(valuesObj.activity);
 											self.refreshPeopleTaggedInImages(data);
