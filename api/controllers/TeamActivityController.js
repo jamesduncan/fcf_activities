@@ -121,7 +121,10 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
 
         var data = {};
         data.activity_name = req.param('activity_name');
+data.activity_name_govt = req.param('activity_name_govt');
+
         data.activity_description = req.param('activity_description');
+data.activity_description_govt = req.param('activity_description_govt');
         data.date_start = req.param('date_start');
         data.date_end = req.param('date_end');
         data.team = req.param('team');
