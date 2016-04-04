@@ -349,7 +349,7 @@ module.exports = {
                         activity.default_image = newImage.image;
                         activity.save()
                         .then(function(data) {
-                            AD.log('... activity.default_image = '+data.default_image);
+                            AD.log('... activity.default_image = '+activity.default_image);
                             finalData.default_image = finalData.image; // --> should already be converted to proper path
                             next();
                         })

@@ -97,6 +97,9 @@ steal(
 							this.dom = {};                  // collects our references to the DOM objects
 							this.obj = {};                  // collections of objects that are not DOM references (Dropzone)
 
+
+							this.status_uploadInProgress = false;
+
 							this.element.hide();
 
 							this.initDOM();
@@ -232,8 +235,12 @@ steal(
 						buttonEnable: function (key) {
 
 							if (this.dom.buttons[key]) {
-								this.dom.buttons[key].removeAttr('disabled');
-								this.dom.buttons[key].removeClass('disabled');
+
+								if (!((key == 'save')&&(this.status_uploadInProgress))) {
+
+									this.dom.buttons[key].removeAttr('disabled');
+									this.dom.buttons[key].removeClass('disabled');
+								}
 							} else {
 								console.error('button [' + key + '] not recognized!');
 							}
@@ -482,7 +489,7 @@ steal(
 
 											self.clearForm();
 
-											self.postApproval();
+											// self.postApproval(data);
 
 											self.refreshPeopleTaggedInActivities(valuesObj.activity);
 											self.refreshPeopleTaggedInImages(data);
@@ -774,6 +781,7 @@ steal(
 										_this.dom.inputImage.val(response.data.name);
 
 										// make sure our [save] & [cancel] buttons are enabled now:
+										_this.status_uploadInProgress = false;
 										_this.buttonEnable('save');
 										_this.buttonEnable('cancel');
 
@@ -785,6 +793,10 @@ steal(
 
 										// make sure any existing image is hidden:
 										dzImage.prop('src', '').hide();
+
+
+										// show our message section again:
+										_this.dom.dropzone.find('.dz-message').show();
 
 										//// TODO: catch a CSRF error, and then reset our header with a new CSRF token.
 										////   error = "CSRF mismatch"
@@ -812,7 +824,10 @@ steal(
 
 									_this.obj.dropzone.on('sending', function () {
 
+										_this.dom.dropzone.find('.dz-message').hide();
+
 										// when a file is being uploaded, disable the buttons:
+										_this.status_uploadInProgress = true;
 										_this.buttonDisable('save');
 										_this.buttonDisable('cancel');
 
