@@ -12,7 +12,9 @@ System.import('appdev').then(function () {
 			describe: function () {
 				return {
 					"activity_name": "string",
+					"activity_name_govt" : "string",
 					"activity_description": "string",
+					"activity_description_govt" : "string",
 					"date_start": "date",
 					"date_end": "date"
 				};
