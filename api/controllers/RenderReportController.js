@@ -28,7 +28,8 @@ module.exports = {
 		AD.log('<green>::: renderreport.staffs() :::</green>');
 
 		// Set member name filter
-		var memberNameFilter = { status: 'Active (In Country)' }; // TODO : Filter status
+		// var memberNameFilter = { status: 'Active (In Country)' }; // TODO : Filter status
+		var memberNameFilter = {};
 		var memberName = req.param('memberName');
 		if (memberName) {
 			memberNameFilter = {
@@ -304,7 +305,7 @@ module.exports = {
 							'activity_description': img[i].activity_description,
 							'activity_start_date': img[i].activity_start_date,
 							'acitivity_end_date': img[i].acitivity_end_date,
-							'activity_image_file_name_left_column': img[i].activity_image_file_name,
+							'activity_image_file_name_left_column': img[i].activity_image_file_name ? img[i].activity_image_file_name : 'blank.jpg',
 							'activity_image_caption_left_column': img[i].caption
 						};
 
@@ -312,6 +313,9 @@ module.exports = {
 						if (typeof right_column_img !== 'undefined') {
 							result.activity_image_file_name_right_column = right_column_img.activity_image_file_name;
 							result.activity_image_caption_right_column = right_column_img.caption;
+						}
+						else {
+							result.activity_image_file_name_right_column = 'blank.jpg';
 						}
 
 						results.push(result);
