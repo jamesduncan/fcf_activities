@@ -698,12 +698,14 @@ module.exports= {
 
                 object:activity,
                 // objectFieldRef: 'activity_name',     // (string) field to check for sourceLange
-                fieldNames:['activity_name', 'activity_description' ],
+                fieldNames:['activity_name', 'activity_name_govt','activity_description', 'activity_description_govt' ],
 //// TODO: just pull fieldNames from Multilingual.model.util.getTransFields(activity);
 ////       and put that in the FCFActivities.translations.base() section.
                 fieldsToLabelKeys : {
                     'activity_name' : 'fcf.assignment.Choose.ActivityName',
-                    'activity_description' : 'fcf.assignment.Choose.Description'
+                    'activity_description' : 'fcf.assignment.Choose.Description',
+                    'activity_name_govt' : 'fcf.assignment.Choose.ActivityName_govt',
+                    'activity_description_govt' : 'fcf.assignment.Choose.Description_govt'
                 }
             };
 
@@ -770,11 +772,12 @@ module.exports= {
 
                 object:image,
                 // objectFieldRef: 'activity_name',     // (string) field to check for sourceLange
-                fieldNames:['caption' ],
+                fieldNames:['caption', 'caption_govt' ],
 //// TODO: just pull fieldNames from Multilingual.model.util.getTransFields(activity);
 ////       and put that in the FCFActivities.translations.base() section.
                 fieldsToLabelKeys : {
-                    'caption' : 'fcf.imageapproval.caption'
+                    'caption' : 'fcf.imageapproval.caption',
+                    'caption_govt' : 'fcf.imageapproval.caption_govt'
                 }
             };
 
