@@ -21,7 +21,9 @@ System.import('appdev').then(function () {
 			},
 			validations: {
 				"activity_name": ['notEmpty'],
+				"activity_name_govt": [],
 				"activity_description": ['notEmpty'],
+				"activity_description_govt": [],
 				"date_start": ['notEmpty', 'date:{"format":"mm/dd/yyyy"}'],
 				"date_end": ['date:{"format":"mm/dd/yyyy"}']
 			},
