@@ -175,6 +175,7 @@ module.exports = {
 										'person_id': p.IDPerson,
 										'activity_id': act.translations[0].id,
 										'activity_name': act.translations[0].activity_name,
+										'activity_name_govt': act.translations[0].activity_name_govt,
 										'startDate': act.date_start,
 										'endDate': act.date_end,
 										'order': index + 1
@@ -261,6 +262,7 @@ module.exports = {
 						resultImages.forEach(function(img) {
 							var image = _.find(images, { 'image_id': img.id });
 							image.caption = img.translations[0] ? img.translations[0].caption : '';
+							image.caption_govt = img.translations[0] ? img.translations[0].caption_govt : '';
 						});
 
 						next();
@@ -279,7 +281,9 @@ module.exports = {
 						images.forEach(function(r) {
 							var act = _.find(activities, { 'id': r.activity_id });
 							r.activity_name = act.translations[0].activity_name;
+							r.activity_name_govt = act.translations[0].activity_name_govt;
 							r.activity_description = act.translations[0].activity_description;
+							r.activity_description_govt = act.translations[0].activity_description_govt;
 							r.activity_start_date = act.date_start;
 							r.acitivity_end_date = act.date_end;
 						});
@@ -301,17 +305,21 @@ module.exports = {
 							'person_id': img[i].person_id,
 							'activity_id': img[i].activity_id,
 							'activity_name': img[i].activity_name,
+							'activity_name_govt': img[i].activity_name_govt,
 							'activity_description': img[i].activity_description,
+							'activity_description_govt': img[i].activity_description_govt,
 							'activity_start_date': img[i].activity_start_date,
 							'acitivity_end_date': img[i].acitivity_end_date,
 							'activity_image_file_name_left_column': img[i].activity_image_file_name,
-							'activity_image_caption_left_column': img[i].caption
+							'activity_image_caption_left_column': img[i].caption,
+							'activity_image_caption_govt_left_column': img[i].caption_govt
 						};
 
 						var right_column_img = img[i + 1];
 						if (typeof right_column_img !== 'undefined') {
 							result.activity_image_file_name_right_column = right_column_img.activity_image_file_name;
 							result.activity_image_caption_right_column = right_column_img.caption;
+							result.activity_image_caption_govt_right_column = right_column_img.caption_govt;
 						}
 
 						results.push(result);
