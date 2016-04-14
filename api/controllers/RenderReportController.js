@@ -51,6 +51,7 @@ module.exports = {
 				// Find person object
 				FCFPerson.find(memberNameFilter)
 					.populate('taggedInImages')
+					.populate('address')
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
@@ -95,7 +96,26 @@ module.exports = {
 					reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A (PP Number)';
 					reportData.person_work_number = p.WPNumber ? p.WPNumber : 'N/A (Work Number)';
 					reportData.person_work_address = p.WorkAddress ? p.WorkAddress : 'N/A (Work address)';
-					reportData.person_home_address = p.PhysicalAddress ? p.PhysicalAddress : 'N/A (Home Address)';
+					var home_address = '';
+					if (p.address && p.address.length > 0) {
+						var address = p.address[0];
+						
+						if (address.flgIsLocalAddress.toLowerCase() === 'true') {
+							if (address.Address1Thai)
+								home_address = address.Address1Thai;
+							else if (address.Address2Thai)
+								home_address = address.Address2Thai;
+						}
+						else {
+							if (address.Address1)
+								home_address = address.Address1;
+							else if (address.Address2)
+								home_address = address.Address2;
+						}
+
+						home_address = home_address + ' ' + address.AmpCity + ' ' + address.ProvState;
+					}
+					reportData.person_home_address = home_address;
 
 					reportData.person_visa_start_date = 'N/A (Visa start date)';
 					reportData.person_visa_expire_date = p.VisaDateExpire ? p.VisaDateExpire : 'N/A (Visa expire date)';
