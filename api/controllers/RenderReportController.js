@@ -99,8 +99,8 @@ module.exports = {
 					var home_address = '';
 					if (p.address && p.address.length > 0) {
 						var address = p.address[0];
-						
-						if (address.flgIsLocalAddress.toLowerCase() === 'true') {
+
+						if (address.flgIsLocalAddress.toLowerCase() === 'true' || address.flgIsLocalAddress == 1) {
 							if (address.Address1Thai)
 								home_address = address.Address1Thai;
 							else if (address.Address2Thai)
@@ -165,7 +165,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(personFilter, { fields: ['IDPerson'] })
-					.populate('taggedInImages')
+					.populate('taggedInImages', { status: 'approved' })
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
@@ -245,7 +245,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(personFilter, { fields: ['IDPerson'] })
-					.populate('taggedInImages')
+					.populate('taggedInImages', { status: 'approved' })
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
