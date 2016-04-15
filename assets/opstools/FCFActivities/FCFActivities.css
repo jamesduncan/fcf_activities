@@ -1,4 +1,11 @@
+.input-group .form-control {
+	margin-bottom: -6px
+}
 
+.fixed-table-body {
+    overflow: auto;
+    height: 200px;
+}
 
 .fcf-list-rowH4 {
     margin-top: 4px;
