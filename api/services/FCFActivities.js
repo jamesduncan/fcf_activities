@@ -374,7 +374,7 @@ module.exports= {
 
                     if (sourceLang == null) {
                         var myError = new Error('Error determining which translation was the source.');
-                        ADCore.error.log('Error determining which translation was the source.', { err: myError, translations: options.object.translations });
+                        ADCore.error.log('Error determining which translation was the source.', { err: myError, translations: options.object.translations, object:options.object });
                         done(myError);
                     } else {
 // AD.log('... sourceLang:'+ sourceLang);
@@ -721,8 +721,8 @@ module.exports= {
 
 
         image:function(image) {
-// AD.log('... FCFActivities.translations.activity()');
-
+// AD.log('... FCFActivities.translations.image()');
+// AD.log('... image:', image);
 
             // options.actionKey    : permissions action.key
             // options.userID       : GUID of action creator
