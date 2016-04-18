@@ -1,5 +1,14 @@
 
 
+.input-group .form-control {
+	margin-bottom: -6px
+}
+
+.fixed-table-body {
+    overflow: auto;
+    height: 160px;
+}
+
 .fcf-list-rowH4 {
     margin-top: 4px;
 }
@@ -68,7 +77,7 @@
 
 .dropzone .fcf-activity-icon-picture {
     background-color: transparent;
-    background-image: url("/images/icon_picture_activity.jpg");
+    background-image: url("/images/fcf_activities/icon_picture_activity.jpg");
     background-position: center top;
     background-repeat: no-repeat;
     background-size: auto 100px;

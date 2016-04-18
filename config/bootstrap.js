@@ -49,20 +49,22 @@ module.exports = function(cb) {
 							model: activity,
 							data: updatedValues
 						})
-							.fail(function(err) {
+						.fail(function(err) {
 
-							})
-							.done(function(updatedActivity) {
+						})
+						.done(function(updatedActivity) {
 
-								FCFCommonApprovalHandler({
-									Model: FCFActivity,
-									id: data.reference.id,
-									pops: ["objectives", "translations"],
-									transType: "activity",
-									// sourceLang: updatedValues.language_code || Multilingual.languages.default()
-								});
+							FCFCommonApprovalHandler({
+								Model: FCFActivity,
+								id: data.reference.id,
+								pops: ["objectives", "translations"],
+								transType: "activity",
+								// sourceLang: updatedValues.language_code || Multilingual.languages.default()
+							});
 
-							})
+						})
+
+						return null;
 
 
 					})
@@ -113,19 +115,21 @@ module.exports = function(cb) {
 							model: image,
 							data: updatedValues
 						})
-							.fail(function(err) {
+						.fail(function(err) {
 
-							})
-							.done(function(updatedActivity) {
+						})
+						.done(function(updatedActivity) {
 
-								FCFCommonApprovalHandler({
-									Model: FCFActivityImages,
-									id: data.reference.id,
-									pops: ["uploadedBy", "translations"],
-									transType: "image"
-								});
+							FCFCommonApprovalHandler({
+								Model: FCFActivityImages,
+								id: data.reference.id,
+								pops: ["uploadedBy", "translations"],
+								transType: "image"
+							});
 
-							})
+						});
+
+						return null;
 
 					})
 
@@ -357,14 +361,18 @@ function FCFCommonApprovalHandler(options) {
 					// AD.log('... updatedActivity:', updatedActivity);
 					// Now send this off to be translated:
 					FCFActivities.translations[transType](updatedModel);
+					return null;
 
 				})
+
         } else {
 
 			// should let someone know about this error!
             ADCore.error.log('Error looking up FCFActivity:', { id: data.reference.id });
 
         }
+
+        return null;
     })
 }
 
@@ -414,6 +422,8 @@ function FCFCommonTranslationHandler(options) {
 				model.status = 'ready';  // 'translated' : if there is going to be another step.
 				model.save();
 			}
+
+			return null;
 
 		})
 		.catch(function(err) {

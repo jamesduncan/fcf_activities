@@ -28,7 +28,8 @@ module.exports = {
 		AD.log('<green>::: renderreport.staffs() :::</green>');
 
 		// Set member name filter
-		var memberNameFilter = { status: 'Active (In Country)' }; // TODO : Filter status
+		// var memberNameFilter = { status: 'Active (In Country)' }; // TODO : Filter status
+		var memberNameFilter = {};
 		var memberName = req.param('memberName');
 		if (memberName) {
 			memberNameFilter = {
@@ -340,6 +341,9 @@ module.exports = {
 							result.activity_image_file_name_right_column = right_column_img.activity_image_file_name;
 							result.activity_image_caption_right_column = right_column_img.caption;
 							result.activity_image_caption_govt_right_column = right_column_img.caption_govt;
+						}
+						else {
+							result.activity_image_file_name_right_column = 'blank.jpg';
 						}
 
 						results.push(result);
