@@ -193,6 +193,12 @@ msgstr "New Image"
 
 #. path: opstool-FCFActivities
 #. code: en
+#. key: fcf.activity.activity
+msgid "Activity"
+msgstr "Activity"
+
+#. path: opstool-FCFActivities
+#. code: en
 #. key: fcf.activityapproval.updatedImage
 msgid "Updated Image"
 msgstr "Updated Image"
