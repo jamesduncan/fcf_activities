@@ -184,6 +184,9 @@ module.exports = {
                 return;
             }
         })
+		
+		if (req.param('caption_govt'))
+			values['caption_govt'] = req.param('caption_govt');
 
         var newImage = null;
         var finalData = null;
@@ -657,7 +660,8 @@ module.exports = {
 
                     // now save any caption change:
                     var newCaption = req.param('caption');
-                    if (newCaption == currImage.caption) {
+					var newCaptionGovt = req.param('caption_govt');
+                    if (newCaption == currImage.caption && newCaptionGovt == currImage.caption_govt) {
 
                         // no change, so done!
                         next();
@@ -667,6 +671,9 @@ module.exports = {
                         .then(function( trans ){
                             trans.caption = newCaption;
                             finalData.caption = newCaption;
+
+                            trans.caption_govt = newCaptionGovt;
+                            finalData.caption_govt = newCaptionGovt;
 
                             trans.save()
                             .then(function(){

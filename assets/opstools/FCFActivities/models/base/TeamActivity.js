@@ -12,14 +12,18 @@ System.import('appdev').then(function () {
 			describe: function () {
 				return {
 					"activity_name": "string",
+					"activity_name_govt" : "string",
 					"activity_description": "string",
+					"activity_description_govt" : "string",
 					"date_start": "date",
 					"date_end": "date"
 				};
 			},
 			validations: {
 				"activity_name": ['notEmpty'],
+				"activity_name_govt": [],
 				"activity_description": ['notEmpty'],
+				"activity_description_govt": [],
 				"date_start": ['notEmpty', 'date:{"format":"mm/dd/yyyy"}'],
 				"date_end": ['date:{"format":"mm/dd/yyyy"}']
 			},

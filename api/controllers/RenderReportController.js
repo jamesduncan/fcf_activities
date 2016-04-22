@@ -52,6 +52,7 @@ module.exports = {
 				// Find person object
 				FCFPerson.find(memberNameFilter)
 					.populate('taggedInImages')
+					.populate('address')
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
@@ -96,7 +97,26 @@ module.exports = {
 					reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A (PP Number)';
 					reportData.person_work_number = p.WPNumber ? p.WPNumber : 'N/A (Work Number)';
 					reportData.person_work_address = p.WorkAddress ? p.WorkAddress : 'N/A (Work address)';
-					reportData.person_home_address = p.PhysicalAddress ? p.PhysicalAddress : 'N/A (Home Address)';
+					var home_address = '';
+					if (p.address && p.address.length > 0) {
+						var address = p.address[0];
+
+						if (address.flgIsLocalAddress.toLowerCase() === 'true' || address.flgIsLocalAddress == 1) {
+							if (address.Address1Thai)
+								home_address = address.Address1Thai;
+							else if (address.Address2Thai)
+								home_address = address.Address2Thai;
+						}
+						else {
+							if (address.Address1)
+								home_address = address.Address1;
+							else if (address.Address2)
+								home_address = address.Address2;
+						}
+
+						home_address = home_address + ' ' + address.AmpCity + ' ' + address.ProvState;
+					}
+					reportData.person_home_address = home_address;
 
 					reportData.person_visa_start_date = 'N/A (Visa start date)';
 					reportData.person_visa_expire_date = p.VisaDateExpire ? p.VisaDateExpire : 'N/A (Visa expire date)';
@@ -146,7 +166,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(personFilter, { fields: ['IDPerson'] })
-					.populate('taggedInImages')
+					.populate('taggedInImages', { status: 'approved' })
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
@@ -176,6 +196,7 @@ module.exports = {
 										'person_id': p.IDPerson,
 										'activity_id': act.translations[0].id,
 										'activity_name': act.translations[0].activity_name,
+										'activity_name_govt': act.translations[0].activity_name_govt,
 										'startDate': act.date_start,
 										'endDate': act.date_end,
 										'order': index + 1
@@ -225,7 +246,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(personFilter, { fields: ['IDPerson'] })
-					.populate('taggedInImages')
+					.populate('taggedInImages', { status: 'approved' })
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
@@ -262,6 +283,7 @@ module.exports = {
 						resultImages.forEach(function(img) {
 							var image = _.find(images, { 'image_id': img.id });
 							image.caption = img.translations[0] ? img.translations[0].caption : '';
+							image.caption_govt = img.translations[0] ? img.translations[0].caption_govt : '';
 						});
 
 						next();
@@ -280,7 +302,9 @@ module.exports = {
 						images.forEach(function(r) {
 							var act = _.find(activities, { 'id': r.activity_id });
 							r.activity_name = act.translations[0].activity_name;
+							r.activity_name_govt = act.translations[0].activity_name_govt;
 							r.activity_description = act.translations[0].activity_description;
+							r.activity_description_govt = act.translations[0].activity_description_govt;
 							r.activity_start_date = act.date_start;
 							r.acitivity_end_date = act.date_end;
 						});
@@ -302,17 +326,21 @@ module.exports = {
 							'person_id': img[i].person_id,
 							'activity_id': img[i].activity_id,
 							'activity_name': img[i].activity_name,
+							'activity_name_govt': img[i].activity_name_govt,
 							'activity_description': img[i].activity_description,
+							'activity_description_govt': img[i].activity_description_govt,
 							'activity_start_date': img[i].activity_start_date,
 							'acitivity_end_date': img[i].acitivity_end_date,
-							'activity_image_file_name_left_column': img[i].activity_image_file_name ? img[i].activity_image_file_name : 'blank.jpg',
-							'activity_image_caption_left_column': img[i].caption
+							'activity_image_file_name_left_column': img[i].activity_image_file_name,
+							'activity_image_caption_left_column': img[i].caption,
+							'activity_image_caption_govt_left_column': img[i].caption_govt
 						};
 
 						var right_column_img = img[i + 1];
 						if (typeof right_column_img !== 'undefined') {
 							result.activity_image_file_name_right_column = right_column_img.activity_image_file_name;
 							result.activity_image_caption_right_column = right_column_img.caption;
+							result.activity_image_caption_govt_right_column = right_column_img.caption_govt;
 						}
 						else {
 							result.activity_image_file_name_right_column = 'blank.jpg';

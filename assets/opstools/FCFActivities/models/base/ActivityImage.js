@@ -14,6 +14,7 @@ System.import('appdev').then(function () {
 				return {
 					"image": "string",
 					"caption": "string",
+					"caption_govt": "string",
 					"date": "date",
 					"uploadedBy": "string",
 					"tags": "string"

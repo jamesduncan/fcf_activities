@@ -53,7 +53,7 @@ steal(
 
 							// this.dataSource = this.options.dataSource; // AD.models.Projects;
 
-							this.element.hide();
+							// this.element.hide(); // Show ministry in first page
 
 							this.initDOM();
 

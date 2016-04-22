@@ -32,7 +32,7 @@ module.exports = function(cb) {
 
             var updatedValues = JSON.parse(data.data);
             if (updatedValues) {
-                FCFActivity.findOne(data.reference.id)
+                FCFActivity.findOne({id:data.reference.id})
 					.populate('objectives')
 					.populate('translations')
 					.then(function(activity) {
@@ -106,7 +106,7 @@ module.exports = function(cb) {
 
             var updatedValues = JSON.parse(data.data);
             if (updatedValues) {
-                FCFActivityImages.findOne(data.reference.id)
+                FCFActivityImages.findOne({id:data.reference.id})
 					.populate('translations')
 					.populate('taggedPeople')
 					.then(function(image) {
@@ -255,6 +255,7 @@ module.exports = function(cb) {
 								{ "name": "person_id", "type": "number" },
 								{ "name": "activity_id", "type": "number" },
 								{ "name": "activity_name", "type": "string" },
+								{ "name": "activity_name_govt", "type": "string" },
 								{ "name": "order", "type": "number" },
 								{ "name": "startDate", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" },
 								{ "name": "endDate", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" }
@@ -276,13 +277,15 @@ module.exports = function(cb) {
 								{ "name": "person_id", "type": "number" },
 								{ "name": "activity_id", "type": "number" },
 								{ "name": "activity_name", "type": "string" },
+								{ "name": "activity_name_govt", "type": "string" },
 								{ "name": "activity_description", "type": "string" },
+								{ "name": "activity_description_govt", "type": "string" },
 								{ "name": "activity_start_date", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" },
 								{ "name": "activity_end_date", "type": "date", "dateFormat": "YYYY-MM-DDTHH:mm:ss.msZ" },
 								{ "name": "activity_image_file_name_left_column", "type": "string" },
-								{ "name": "activity_image_caption_left_column", "type": "string" },
+								{ "name": "activity_image_caption_govt_left_column", "type": "string" },
 								{ "name": "activity_image_file_name_right_column", "type": "string" },
-								{ "name": "activity_image_caption_right_column", "type": "string" }
+								{ "name": "activity_image_caption_govt_right_column", "type": "string" }
 							]
 						}
 					},
@@ -335,12 +338,13 @@ module.exports = function(cb) {
 function FCFCommonApprovalHandler(options) {
     var Model = options.Model;
     var id = options.id;
-    var pops = options.populations || [];
+    var pops = options.pops || [];
     var transType = options.transType;
 
+// console.log('FCFCommonapprovalhandler: options:', options);
 
     // find the model
-    var def = Model.findOne(id);
+    var def = Model.findOne({ id:id });
 
     // populate all the necessary fields
     pops.forEach(function(key) {
@@ -350,14 +354,30 @@ function FCFCommonApprovalHandler(options) {
     def.then(function(model) {
 
         if (model) {
+
+			// #hack:  Sails v0.12 changes
+			// removes existing populations from a model upon .save()
+			var oldValues = {};
+			pops.forEach(function(key){
+				oldValues[key] = model[key];
+			})
+
 			// AD.log('... found it');
             // set status to 'approved'
             model.status = 'approved';
             model.save()
 				.then(function(updatedModel) {
-					// AD.log('... updatedActivity:', updatedActivity);
+
+
+					// Sails v0.12 update changed behavior of .save()
+					// it now no longer keeps populations.
+					// do another lookup:
+					for (var v in oldValues) {
+						model[v] = oldValues[v];
+					}
+// AD.log('... model after .save():', model);
 					// Now send this off to be translated:
-					FCFActivities.translations[transType](updatedModel);
+					FCFActivities.translations[transType](model);
 					return null;
 
 				})
@@ -383,7 +403,7 @@ function FCFCommonTranslationHandler(options) {
     var fieldName = options.fieldName;
 
 	// get the indicated activity
-    Model.findOne(id)
+    Model.findOne({id:id})
 		.populate('translations')
 		.then(function(model) {
 			// AD.log('... activity:', activity);

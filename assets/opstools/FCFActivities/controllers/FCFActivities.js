@@ -119,7 +119,8 @@ steal(
 							AD.comm.hub.subscribe('opsportal.tool.show', function(key, data) {
 
 								if (data.tool == 'FCFActivities') {
-									self.showPortal('Portal');
+									// self.showPortal('Portal');
+									self.showPortal('Add1');
 								}
 							})
 
@@ -213,7 +214,8 @@ steal(
 
 							// if they press [Finish] then go back
 							this.portals.Report.element.on(this.portals.Report.CONST.FINISH, function() {
-								self.showPortal('Portal');
+								// self.showPortal('Portal');
+								self.showPortal('Add1');
 							})
 
 							// if they press [Previous] then go back

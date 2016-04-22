@@ -193,6 +193,12 @@ msgstr "รูปภาพใหม่"
 
 #. path: opstool-FCFActivities
 #. code: th
+#. key: fcf.activity.activity
+msgid "Activity"
+msgstr "กิจกรรม"
+
+#. path: opstool-FCFActivities
+#. code: th
 #. key: fcf.activityapproval.updatedImage
 msgid "Updated Image"
 msgstr "รูปภาพที่ทำการอัพเดทแล้ว (ปรับให้เป็นปัจจุบัน)"

@@ -9,7 +9,8 @@
 <div id="fcf-activity-portal" class="container">
 	<div class="clearfix">
 		<div class="col-md-12 column">
-			<nav class="navbar navbar-default" role="navigation">
+			<div class="fcf-activity-new jumbotron well" style="cursor: pointer; font-size: 30px; text-align:center;">Start Here</div>
+			<!--<nav class="navbar navbar-default" role="navigation">
 				<div class="navbar-header">
 					 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#"><span app-label-key="fcf.assignment.Activities" >Activities:</span></a>
 				</div>
@@ -19,18 +20,18 @@
 					<ul class="nav navbar-nav navbar-right">
 						<li>
               <button style="padding:14px 12px"class="btn custombtn fcf-activity-new" href="#" role="button" ><span app-label-key="fcf.assignment.newUpdateActivity" >New/Update Activity</span></button>
-							<!-- <a href="#fcf-activities/AddActivity1" class="fcf-activity-new">New/Update Activity</a> -->
+							 <a href="#fcf-activities/AddActivity1" class="fcf-activity-new">New/Update Activity</a> 
 						</li>
 						
 					</ul>
 				</div>
 				
-			</nav>
-			<div class="jumbotron well">
+			</nav>-->
+			<!--<div class="jumbotron well">
 				<h1>
 					<span app-label-key="fcf.assignment.Activities" >Activities</span>
 				</h1>
-			</div>
+			</div>-->
 
 		</div>
 	</div>
@@ -255,6 +256,7 @@
                                 <label for="activity_name"><span app-label-key="fcf.assignment.Choose.ActivityName">Activity Name</span></label>
                                 <p><span app-label-key="fcf.assignment.addAssignment.Choose.ActivityNameDesc" >Please use a name everyone associated with the activity will organize</span></p>
                                 <input type="text" class="form-control" placeholder="Activity Name" app-label-key="fcf.assignment.Choose.ActivityName" name="activity_name" id="activity_name" required >
+                                <input type="text" class="form-control" placeholder="Activity Name (Govt)" app-label-key="fcf.assignment.Choose.ActivityName" name="activity_name_govt" id="activity_name_alt" >
                               </div>
                            
                               <!---->
@@ -298,6 +300,7 @@
                                       <label><span app-label-key="fcf.assignment.Choose.Description">Description</span></label>
                                       <p><span app-label-key="fcf.assignment.Choose.DescriptionDesc" >Please describe this activity using the team objective as guideline </span></p>
                                       <textarea type="textarea" class="form-control" placeholder="Description" id="activityDescription" app-label-key="fcf.assignment.Choose.Description" name="activity_description"></textarea>
+                                      <textarea type="textarea" class="form-control" placeholder="Description (Govt)" id="activityDescriptionGovt" app-label-key="fcf.assignment.Choose.Description" name="activity_description_govt"></textarea>
                                   </div>
                               </div>
                               <!---->
@@ -617,6 +620,7 @@ taggedPeople.forEach(function(personID){
                                                 <div class="form-group col-md-6   nomargin">
 
                                                   <input type="text" class="form-control" id="image-caption"  placeholder='caption' name="caption" app-label-key="fcf.activity.image.form.caption" />
+                                                  <input type="text" class="form-control" id="image-caption-govt"  placeholder='caption (govt)' name="caption_govt" app-label-key="fcf.activity.image.form.caption_govt" />
 
                                                 </div>
                                                 <div class="form-group col-md-6   nomargin">

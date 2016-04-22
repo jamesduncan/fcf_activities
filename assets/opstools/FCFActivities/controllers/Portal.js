@@ -29,6 +29,8 @@ steal(
 
 						this.dataSource = this.options.dataSource; // AD.models.Projects;
 
+						this.element.hide(); // Hide portal page
+
 						this.initDOM();
 
 					},

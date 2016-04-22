@@ -374,7 +374,7 @@ module.exports= {
 
                     if (sourceLang == null) {
                         var myError = new Error('Error determining which translation was the source.');
-                        ADCore.error.log('Error determining which translation was the source.', { err: myError, translations: options.object.translations });
+                        ADCore.error.log('Error determining which translation was the source.', { err: myError, translations: options.object.translations, object:options.object });
                         done(myError);
                     } else {
 // AD.log('... sourceLang:'+ sourceLang);
@@ -455,6 +455,7 @@ module.exports= {
 // AD.log('... request.labels:', request.labels);
                                 done();
                             }
+                            return null;
                         })
                         // .catch(function(err){
 
@@ -698,12 +699,14 @@ module.exports= {
 
                 object:activity,
                 // objectFieldRef: 'activity_name',     // (string) field to check for sourceLange
-                fieldNames:['activity_name', 'activity_description' ],
+                fieldNames:['activity_name', 'activity_name_govt','activity_description', 'activity_description_govt' ],
 //// TODO: just pull fieldNames from Multilingual.model.util.getTransFields(activity);
 ////       and put that in the FCFActivities.translations.base() section.
                 fieldsToLabelKeys : {
                     'activity_name' : 'fcf.assignment.Choose.ActivityName',
-                    'activity_description' : 'fcf.assignment.Choose.Description'
+                    'activity_description' : 'fcf.assignment.Choose.Description',
+                    'activity_name_govt' : 'fcf.assignment.Choose.ActivityName_govt',
+                    'activity_description_govt' : 'fcf.assignment.Choose.Description_govt'
                 }
             };
 
@@ -719,8 +722,8 @@ module.exports= {
 
 
         image:function(image) {
-// AD.log('... FCFActivities.translations.activity()');
-
+// AD.log('... FCFActivities.translations.image()');
+// AD.log('... image:', image);
 
             // options.actionKey    : permissions action.key
             // options.userID       : GUID of action creator
@@ -770,11 +773,12 @@ module.exports= {
 
                 object:image,
                 // objectFieldRef: 'activity_name',     // (string) field to check for sourceLange
-                fieldNames:['caption' ],
+                fieldNames:['caption', 'caption_govt' ],
 //// TODO: just pull fieldNames from Multilingual.model.util.getTransFields(activity);
 ////       and put that in the FCFActivities.translations.base() section.
                 fieldsToLabelKeys : {
-                    'caption' : 'fcf.imageapproval.caption'
+                    'caption' : 'fcf.imageapproval.caption',
+                    'caption_govt' : 'fcf.imageapproval.caption_govt'
                 }
             };
 
