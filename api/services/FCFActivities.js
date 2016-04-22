@@ -455,6 +455,7 @@ module.exports= {
 // AD.log('... request.labels:', request.labels);
                                 done();
                             }
+                            return null;
                         })
                         // .catch(function(err){
 
