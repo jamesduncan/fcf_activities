@@ -59,6 +59,7 @@ module.exports = function(cb) {
 								id: data.reference.id,
 								pops: ["objectives", "translations"],
 								transType: "activity",
+								menu: data.menu
 								// sourceLang: updatedValues.language_code || Multilingual.languages.default()
 							});
 
@@ -76,7 +77,8 @@ module.exports = function(cb) {
                     Model: FCFActivity,
                     id: data.reference.id,
                     pops: ["objectives", "translations"],
-                    transType: "activity"
+                    transType: "activity",
+					menu: data.menu
                 });
             }
 
@@ -124,7 +126,8 @@ module.exports = function(cb) {
 								Model: FCFActivityImages,
 								id: data.reference.id,
 								pops: ["uploadedBy", "translations"],
-								transType: "image"
+								transType: "image",
+								menu: data.menu
 							});
 
 						});
@@ -141,7 +144,8 @@ module.exports = function(cb) {
                     Model: FCFActivityImages,
                     id: data.reference.id,
                     pops: ["uploadedBy", "translations"],
-                    transType: "image"
+                    transType: "image",
+					menu: data.menu
                 });
             }
 
@@ -375,6 +379,9 @@ function FCFCommonApprovalHandler(options) {
 					for (var v in oldValues) {
 						model[v] = oldValues[v];
 					}
+
+					// Add menu info
+					model.menu = options.menu;
 // AD.log('... model after .save():', model);
 					// Now send this off to be translated:
 					FCFActivities.translations[transType](model);

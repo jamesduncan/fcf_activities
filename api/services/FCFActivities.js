@@ -118,6 +118,7 @@ module.exports= {
             // options.callback  : the callback object definition
             // options.permission : the permission object definition
 
+            // options.permission : the permission object definition
 
             var dfd = AD.sal.Deferred();
 
@@ -319,6 +320,7 @@ module.exports= {
             // options.fieldNames   : (array) of field names to translate
             // options.fieldsToLabelKeys: (json) obj hash 'fieldName' : 'multilingual label key'
 
+            // options.menu         : (json) object for displaying menu info
 
             var dfd = AD.sal.Deferred();
 
@@ -526,7 +528,9 @@ module.exports= {
                             "context": "opstool-FCFActivities"
                         },
                         "fromLanguage": allLanguages[options.fromLanguage],
-                        // "toLanguage": allLanguages[options.toLanguage]
+                        'itemName': options.menu.itemName,
+                        "createdBy": options.menu.createdBy,
+                        "date": options.menu.date
                     },
                     "form": {
                         "data": {
@@ -677,6 +681,8 @@ module.exports= {
             // options.fieldNames   : (array) of field names to translate
             // options.fieldsToLabelKeys: (json) obj hash 'fieldName' : 'multilingual label key'
 
+            // options.menu         : (json) object for displaying menu info
+
             var request = {
                 actionKey : 'fcf.activities.translate',
                 callback : 'fcf.activities.translated',
@@ -707,7 +713,8 @@ module.exports= {
                     'activity_description' : 'fcf.assignment.Choose.Description',
                     'activity_name_govt' : 'fcf.assignment.Choose.ActivityName_govt',
                     'activity_description_govt' : 'fcf.assignment.Choose.Description_govt'
-                }
+                },
+                menu : activity.menu
             };
 
             // make sure person is an .id value, not an object:
@@ -751,6 +758,8 @@ module.exports= {
             // options.fieldNames   : (array) of field names to translate
             // options.fieldsToLabelKeys: (json) obj hash 'fieldName' : 'multilingual label key'
 
+            // options.menu         : (json) object for displaying menu info
+
             var request = {
                 actionKey : 'fcf.activities.translate',
                 callback : 'fcf.activities.image.translated',
@@ -779,7 +788,8 @@ module.exports= {
                 fieldsToLabelKeys : {
                     'caption' : 'fcf.imageapproval.caption',
                     'caption_govt' : 'fcf.imageapproval.caption_govt'
-                }
+                },
+                menu : image.menu
             };
 
             // make sure person is an .id value, not an object:
