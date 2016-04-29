@@ -75,7 +75,7 @@ msgstr "กลุ่ม:"
 #. code: th
 #. key: fcf.activityapproval.createdOn
 msgid "Created On: <%= createdAt %>"
-msgstr "[th]Created On: <%= createdAt %>"
+msgstr "ก่อตั้งเมื่อ <%= createdAt %>"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -99,7 +99,7 @@ msgstr "ชื่อกิจกรรม"
 #. code: th
 #. key: fcf.assignment.addAssignment.Choose.ActivityNameDesc
 msgid "Please use a name everyone associated with the activity will organize"
-msgstr "[th]Description here."
+msgstr "ให้ใช้ชื่อกิจกรรมที่เมื่อระบุแล้วทุกคนเข้าใจ"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -171,7 +171,7 @@ msgstr "ผู้ที่อยู่ในรูปภาพ"
 #. code: th
 #. key: fcf.imageapproval.teams
 msgid "Team(s):"
-msgstr "[th]Team(s):"
+msgstr "ทีม"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -190,12 +190,6 @@ msgstr "สำหรับกิจกรรม:"
 #. key: fcf.activityapproval.newImage
 msgid "New Image"
 msgstr "รูปภาพใหม่"
-
-#. path: opstool-FCFActivities
-#. code: th
-#. key: fcf.activity.activity
-msgid "Activity"
-msgstr "กิจกรรม"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -219,185 +213,185 @@ msgstr "ขั้นตอนที่ 2 ใน 3"
 #. code: th
 #. key: fcf.assignment.Choose.Instructions
 msgid "Instructions"
-msgstr "Instructions"
+msgstr "คำแนะนำ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Activity.Team
 msgid "Team:"
-msgstr "[th]Team:"
+msgstr "ทีม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Activity.Desc1
 msgid "Choose one of the following activities associated with this team."
-msgstr "[th]Choose one of the following activities associated with this team."
+msgstr "เลือกหนึ่งในกิจกรรมดังกล่าวที่เกี่ยวข้องกับทีมนี้"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Choose.Activity.Desc2
 msgid "If you do not see an activity in the list then click the add activity button."
-msgstr "[th]If you do not see an activity in the list then click the add activity button."
+msgstr "ถ้าคุณไม่เห็นกิจกรรมในรายการให้กดที่ปุ่มกิจกรรม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.Add
 msgid "Add Activity"
-msgstr "[th]Add Activity"
+msgstr "เพิ่มกิจกรรม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Activity
 msgid "Activity Name"
-msgstr "Activity Name"
+msgstr "ชื่อกิจกรรม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.SubmittedBy
 msgid "Submitted by"
-msgstr "[th]Submitted by"
+msgstr "ผู้ส่ง"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.ApprovedBy
 msgid "Approved by"
-msgstr "[th]Approved by"
+msgstr "อนุมัติโดย"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Prev
 msgid "Previous"
-msgstr "[th]Previous"
+msgstr "ก่อนหน้า"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.addAssignment.Title
 msgid "Add a New Activity"
-msgstr "[th]Add a New Activity"
+msgstr "เพิ่มกิจกรรมใหม่"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Cancel
 msgid "Cancel"
-msgstr "[th]Cancel"
+msgstr "ยกเลิก"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Add
 msgid "Add"
-msgstr "[th]Add"
+msgstr "เพิ่ม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.add.report.step
 msgid "Step 3 of 3"
-msgstr "[th]Step 3 of 3"
+msgstr "ขั้นตอนที่ 3 ใน 3"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.report.AllActivities
 msgid "All Activities for"
-msgstr "[th]All Activities for"
+msgstr "ทุกกิจกรรมเพื่อ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.add.report.PeopleInPhoto
 msgid "People in this photo:"
-msgstr "[th]People in this photo:"
+msgstr "ผู้ที่อยู่ในภาพนี้"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.add.report.DragImageHere
 msgid "Drag image here"
-msgstr "[th]Drag image here"
+msgstr "ลากภาพมาที่นี่"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.add.report.or
 msgid "- or -"
-msgstr "[th]- or -"
+msgstr "- หรือ -"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.add.report.ClickToOpenFileBrowser
 msgid "Click to open the file browser"
-msgstr "[th]Click to open the file browser"
+msgstr "กดเพื่อเปิดแฟ้ม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.image.form.caption
 msgid "caption"
-msgstr "[th]"
+msgstr "คำบรรยาย"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.activity.image.form.tags
 msgid "tags"
-msgstr "[th]"
+msgstr "ป้ายกำกับ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.imageform.Delete
 msgid "Delete"
-msgstr "[th]Delete"
+msgstr "ลบ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.imageform.Cancel
 msgid "Cancel"
-msgstr "Cancel"
+msgstr "ยกเลิก"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.imageform.SaveImage
 msgid "Save Image"
-msgstr "[th]Save Image"
+msgstr "บันทึกภาพ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.Activities
 msgid "Activities:"
-msgstr "[th]Activities:"
+msgstr "กิจกรรม"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.newUpdateActivity
 msgid "New/Update Activity"
-msgstr "[th]New/Update Activity"
+msgstr "ใหม่/ทำกิจกรรมให้เป็นปัจจุบัน"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.searchForTeam
 msgid "search"
-msgstr "[th]"
+msgstr "ค้นหา"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.MinistryTeam
 msgid "Ministry Team"
-msgstr "[th]Ministry Team"
+msgstr "ทีมพันธกิจ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.projectOwner
 msgid "Project/Owner"
-msgstr "[th]Project/Owner"
+msgstr "กิจกรรม/เจ้าของ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.report.currentActivityReport
 msgid "Current Activity Report"
-msgstr "[th]Current Activity Report"
+msgstr "รายงานกิจกรรมล่าสุด"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.assignment.finish
 msgid "Finish"
-msgstr "[th]Finish"
+msgstr "เสร็จ"
 
 #. path: opstool-FCFActivities
 #. code: th
 #. key: fcf.toolActivityReporting
 msgid "Dashboard"
-msgstr "[th] Dashboard"
+msgstr "หน้าควบคุมระบบ"
 
