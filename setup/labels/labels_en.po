@@ -97,6 +97,12 @@ msgstr "Activity Name"
 
 #. path: opstool-FCFActivities
 #. code: en
+#. key: fcf.assignment.Choose.ActivityNameGovt
+msgid "Activity Name (Govt)"
+msgstr "Activity Name (Govt)"
+
+#. path: opstool-FCFActivities
+#. code: en
 #. key: fcf.assignment.addAssignment.Choose.ActivityNameDesc
 msgid "Please use a name everyone associated with the activity will organize"
 msgstr "Please use a name everyone associated with the activity will organize"
@@ -130,6 +136,12 @@ msgstr "Every activity must meet at least one objective. Please choose all that 
 #. key: fcf.assignment.Choose.Description
 msgid "Description"
 msgstr "Description"
+
+#. path: opstool-FCFActivities
+#. code: en
+#. key: fcf.assignment.Choose.DescriptionGovt
+msgid "Description (Govt)"
+msgstr "Description (Govt)"
 
 #. path: opstool-FCFActivities
 #. code: en
@@ -400,4 +412,10 @@ msgstr "Finish"
 #. key: fcf.toolActivityReporting
 msgid "Dashboard"
 msgstr "Dashboard"
+
+#. path: opstool-FCFActivities
+#. code: en
+#. key: fcf.activity.image.form.date
+msgid "date of photo"
+msgstr "date of photo"
 
