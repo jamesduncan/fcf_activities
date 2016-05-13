@@ -463,7 +463,8 @@ steal(
 
 										var model = new Model(data);
 
-										self.listActivities.push(model);
+										// issue #47: most recent first
+										self.listActivities.unshift(model);
 
 										self.Filter.selectRow(model);              // set which data row should be selected
 										self.Filter.load(self.listActivities);  // load the new set of data
