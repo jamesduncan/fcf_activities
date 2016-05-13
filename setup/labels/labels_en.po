@@ -104,8 +104,8 @@ msgstr "Activity Name (Govt)"
 #. path: opstool-FCFActivities
 #. code: en
 #. key: fcf.assignment.addAssignment.Choose.ActivityNameDesc
-msgid "Please use a name everyone associated with the activity will organize"
-msgstr "Please use a name everyone associated with the activity will organize"
+msgid "Please use a name everyone associated with the activity will recognize"
+msgstr "Please use a name everyone associated with the activity will recognize"
 
 #. path: opstool-FCFActivities
 #. code: en
