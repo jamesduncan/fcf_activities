@@ -752,6 +752,7 @@ steal(
 									url: '/fcf_activities/activityimageupload',
 									paramName: 'imageFile',      // param name on server
 									maxFilesize: 100,            // in MB
+									maxFiles: 1,				 // issue #45: only 1 file
 									uploadMultiple: false,      // upload >1 file per request?
 									acceptedFiles: '.jpg, .jpeg, .psd, .gif, .png, .pdf',
 									headers: { "X-CSRF-Token": token },
