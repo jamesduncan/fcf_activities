@@ -413,3 +413,9 @@ msgstr "หน้าควบคุมระบบ"
 msgid "date of photo"
 msgstr "[th]date of photo"
 
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.help
+msgid "Help"
+msgstr "[th]Help"
+

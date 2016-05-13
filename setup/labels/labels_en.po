@@ -419,3 +419,9 @@ msgstr "Dashboard"
 msgid "date of photo"
 msgstr "date of photo"
 
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.help
+msgid "Help"
+msgstr "Help"
+
