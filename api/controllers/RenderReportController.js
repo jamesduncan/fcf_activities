@@ -101,19 +101,22 @@ module.exports = {
 					if (p.address && p.address.length > 0) {
 						var address = p.address[0];
 
-						if (address.flgIsLocalAddress.toLowerCase() === 'true' || address.flgIsLocalAddress == 1) {
-							if (address.Address1Thai)
-								home_address = address.Address1Thai;
-							else if (address.Address2Thai)
-								home_address = address.Address2Thai;
-						}
-						else {
-							if (address.Address1)
-								home_address = address.Address1;
-							else if (address.Address2)
-								home_address = address.Address2;
-						}
+						if (address) {
+							if (address.flgIsLocalAddress && (address.flgIsLocalAddress.toLowerCase() === 'true' || address.flgIsLocalAddress == 1)) {
+								if (address.Address1Thai)
+									home_address = address.Address1Thai;
+								else if (address.Address2Thai)
+									home_address = address.Address2Thai;
+							}
+							else {
+								if (address.Address1)
+									home_address = address.Address1;
+								else if (address.Address2)
+									home_address = address.Address2;
+							}
 
+							home_address = home_address + ' ' + address.AmpCity + ' ' + address.ProvState;
+						}
 						home_address = home_address + ' ' + address.AmpCity + ' ' + address.ProvState;
 					}
 					reportData.person_home_address = home_address;
