@@ -61,7 +61,8 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
             // 1) finding all activities with given team id
             function(next) {
 
-                FCFActivity.find({team:minId})
+                // issue: #47 : sort by most recent
+                FCFActivity.find({team:minId, sort:'date_start DESC'})
                 .populate('translations')
                 .populate('createdBy')
                 .populate('approvedBy')

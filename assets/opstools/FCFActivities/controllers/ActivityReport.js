@@ -141,18 +141,21 @@ steal(
 						//     labelMain:'No',
 						//     cbSecond:opts.cbSecond
 						// })
-
+						var lblTitle = AD.lang.label.getLabel('fcf.confirm.DeleteConfirm') || '* Delete Confirm'; 
+						var lblMessage = AD.lang.label.getLabel('fcf.confirm.DeleteConfirmMessage') || '* Are you sure you want to delete this image?';
+						var lblYes     = AD.lang.label.getLabel('fcf.confirm.yes') || '* yes';
+						var lblNo     = AD.lang.label.getLabel('fcf.confirm.no') || '* no';
 						bootbox.dialog({
-							title: 'Delete Confirm',
-							message: 'Are you sure you want to delete this image?',
+							title: lblTitle,
+							message: lblMessage,
 							buttons: {
 								yes: {
-									label: "yes",
+									label: lblYes,
 									className: "btn-primary",
 									callback: opts.cbSecond
 								},
 								no: {
-									label: "no",
+									label: lblNo,
 									className: "btn-primary"
 								}
 							}
@@ -162,12 +165,15 @@ steal(
 
 
 					alertDeleteInvalid: function() {
+						var lblTitle = AD.lang.label.getLabel('fcf.confirm.DeleteNotAllowed') || '* Delete Not Allowed'; 
+						var lblMessage = AD.lang.label.getLabel('fcf.confirm.DeleteNotAllowedMessage') || '* This image has other people tagged in it.  In order to delete it, you need to notify your ministry leader.';
+						var lblOK     = AD.lang.label.getLabel('fcf.confirm.ok') || '* OK';
 						bootbox.dialog({
-							message: 'This image has other people tagged in it.  In order to delete it, you need to notify your ministry leader.',
-							title: 'Delete Not Allowed',
+							message: lblMessage,
+							title: lblTitle,
 							buttons: {
 								main: {
-									label: 'OK',
+									label: lblOK,
 									className: "btn-primary",
 									callback: function() { }
 								}
@@ -178,17 +184,17 @@ steal(
 
 					alertUnsavedChanges: function(opts) {
 
-						var title = opts.title || "Unsaved Changes";
-						var message = opts.message || "You have made changes that are not saved.  What should I do?";
+						var title = opts.title || AD.lang.label.getLabel('fcf.confirm.UnsavedChanges') || "* Unsaved Changes";
+						var message = opts.message || AD.lang.label.getLabel('fcf.confirm.UnsavedChangesMessage') || "* You have made changes that are not saved.  What should I do?";
 						// var labelSecondary = opts.labelSecondary || "Cancel";
 						// var labelMain = opts.labelMain || "Save";
 
 						// var fnSecondary = opts.cbSecond || function() { };
 						// var fnMain = opts.cbMain || function () {};
 
-						var labelDont = opts.labelDont || "Don't Save";
-						var labelCancel = opts.labelCancel || "Cancel";
-						var labelSave = opts.labelSave || "Save";
+						var labelDont = opts.labelDont || AD.lang.label.getLabel('fcf.confirm.dontSave') || "* Don't Save";
+						var labelCancel = opts.labelCancel || AD.lang.label.getLabel('fcf.confirm.cancel') || "* Cancel";
+						var labelSave = opts.labelSave || AD.lang.label.getLabel('fcf.confirm.save') || "* Save";
 
 						var fnDont = opts.cbDont || function() { };
 						var fnCancel = opts.cbCancel || function() { };
@@ -746,6 +752,7 @@ steal(
 									url: '/fcf_activities/activityimageupload',
 									paramName: 'imageFile',      // param name on server
 									maxFilesize: 100,            // in MB
+									maxFiles: 1,				 // issue #45: only 1 file
 									uploadMultiple: false,      // upload >1 file per request?
 									acceptedFiles: '.jpg, .jpeg, .psd, .gif, .png, .pdf',
 									headers: { "X-CSRF-Token": token },
@@ -869,15 +876,15 @@ steal(
 
 
 						var labelKey = this.dom.inputTags.prop('app-label-key') || 'fcf.activity.image.form.tags';
-						var label = AD.lang.label.getLabel(labelKey);
-						if (!label) {
+						self.labelPeopleInPhoto = AD.lang.label.getLabel(labelKey);
+						if (!self.labelPeopleInPhoto) {
 							console.warn('labelKey:' + labelKey + ' :: no label returned.');
-							label = '*people in photo';
+							self.labelPeopleInPhoto = '*people in photo';
 						}
 						this.dom.inputTags.selectivity({
 							items: [{ id: 0, text: 'no items loaded' }],
 							multiple: true,
-							placeholder: label
+							placeholder: self.labelPeopleInPhoto
 						});
 						this.dom.inputTags.on('change', function(obj, a, b) {
 							self.personSelected(obj);
@@ -949,6 +956,10 @@ steal(
 								var data = [];
 								var list = res.data || res;
 
+
+								// update our list of teammates to this set of people
+								self.listTeammates = new can.List(list);
+
 								//// Update the Tag Selector
 
 								// convert returned list into [ {id:IDPerson, text:'PersonName'}]
@@ -961,16 +972,16 @@ steal(
 								})
 
 								// initialize the selectivity tag selector with converted list
+								var label = 
 								self.dom.inputTags.selectivity({
 									items: data,
 									multiple: true,
-									placeholder: 'people in photo'
+									placeholder: self.labelPeopleInPhoto
 								});
 
 
 
-								// update our list of teammates to this set of people
-								self.listTeammates = new can.List(list);
+								
 
 								self.dom.peopleObjects.children().remove();
 								self.dom.peopleObjects.append(can.view('FCFActivities_ActivityReport_PersonList', { people: self.listTeammates }));

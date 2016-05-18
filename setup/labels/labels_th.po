@@ -15,7 +15,7 @@ msgstr ""
 #. code: th
 #. key: fcf.assignment.Team
 msgid "Team"
-msgstr "[th]Team"
+msgstr "ทีม"
 
 #. path: opstool-FCFActivities
 #. code: th
@@ -391,7 +391,106 @@ msgstr "เสร็จ"
 
 #. path: opstool-FCFActivities
 #. code: th
-#. key: fcf.toolActivityReporting
-msgid "Dashboard"
-msgstr "หน้าควบคุมระบบ"
+#. key: fcf.assignment.Choose.ActivityNameGovt
+msgid "Activity Name (Govt)"
+msgstr "ชื่อกิจกรรม (Govt)"
+
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.DescriptionGovt
+msgid "Description (Govt)"
+msgstr "บรรยาย (Govt)"
+
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.image.form.date
+msgid "date of photo"
+msgstr "วันที่ถ่ายภาพ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.DeleteConfirm
+msgid "Delete Confirm"
+msgstr "ยืนยันการลบ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.DeleteConfirmMessage
+msgid "Are you sure you want to delete this image?"
+msgstr "คุณแน่ใจแล้้วใช่ไหม ว่าจะลบรูปนี้"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.yes
+msgid "yes"
+msgstr "ใช่"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.no
+msgid "no"
+msgstr "[th]no"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.DeleteNotAllowed
+msgid "Delete Not Allowed"
+msgstr "ไม่อนุญาตให้ลบ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.DeleteNotAllowedMessage
+msgid "This image has other people tagged in it.  In order to delete it, you need to notify your ministry leader."
+msgstr "มีผู้อื่นถูกติดป้ายในรูปภาพนี้ ในการที่จะลบภาพนี้ต้องติดต่อหัวหน้าโครงการ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.ok
+msgid "OK"
+msgstr "โอเค"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.UnsavedChanges
+msgid "Unsaved Changes"
+msgstr "การเปลี่ยนแปลงที่ไม่ได้ถูกบันทึก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.UnsavedChangesMessage
+msgid "You have made changes that are not saved.  What should I do?"
+msgstr "คุณได้ทำการเปลี่ยนแปลงซึ่งไม่มีการบันทึก ฉันควรจะทำอย่างไร"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.dontSave
+msgid "Don't Save"
+msgstr "ไม่บันทึก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.cancel
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.save
+msgid "Save"
+msgstr "บันทึก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.searchForActivity
+msgid "Search for Activity"
+msgstr "ค้นหากิจกรรม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.help
+msgid "Help"
+msgstr "[th]Help"
+
 
