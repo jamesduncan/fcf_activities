@@ -3,7 +3,7 @@
 /* =Colors - Global */
 body { 
 	font-family: 'proxima-nova','Helvetica Neue',Helvetica,Arial,sans-serif;
-	background-color: #3c766a ; 
+	background-color: #3c766a !important; 
 	color: #333333;
 }
 
@@ -12,16 +12,35 @@ body {
 .light-bg {background:#fff}
 
 a, a:hover, a:visited { 
-	color: #333333; 
+	color: #1F6B8D; 
 }
 
-h1, h2, h3, h4, h5 { color: #EF9216; }
+h1, h2, h3, h4, h5 { color: #433DB3; }
+
+/* override only for activity approval screen */
+#apprv-activity h4 span {
+	color: #BBD3D7;
+}
+
+#apprv-activity .col-lg-3 {
+	margin-left: -8px;
+}
 
 .overflow-h { overflow:hidden }
 
 /* =Colors - Bootstrap Overrides */
 .modal-content { 
 	background-color: #f0f0f0; 
+}
+
+.table-hover>tbody {
+	background-color: #FFF;
+}
+
+.table-hover>tbody>tr:hover {
+   color: #000;
+	background-color: #C7F0F7;
+	cursor: pointer;
 }
 
 .tooltip-inner { background-color: #333333; }
@@ -40,7 +59,7 @@ h1, h2, h3, h4, h5 { color: #EF9216; }
 }
 
 .op-masthead { 
-	background-color: #404040 
+	background-color: #1f6b8d 
 }
 
 .op-masthead a, .op-masthead icon i { 
@@ -105,6 +124,57 @@ h1, h2, h3, h4, h5 { color: #EF9216; }
 
 .op-block-masthead h3 { color: #666666 !important; }
 
+li[role="presentation"] a { background-color: #fff !important; }
+
+/* =Colors - Webix Overrides */
+.webix_ss_header { height: 36px !important; }
+.webix_ss_header td { background-color:  #1f6b8d !important; }
+.webix_hcell { height: 35px !important; line-height:35px !important; }
+.webix_dtable  { height: auto !important; margin-bottom: 10px; }
+.webix_inp_top_label { 
+	color:  #1f6b8d !important; 
+	margin-bottom: 3px;
+    font-weight: bold;
+}
+
+/* =Colors - RBAC Overrides */
+.panel-default>.panel-heading { background-color:  #1f6b8d !important; }
+#search1, #search2 { padding: 9px 0 7px; }
+.img-thumbnail { vertical-align:middle !important; }
+div[view_id="formRole"] { 
+	background: #bbd3d7 !important; 
+	margin: 10px 0 20px 0;
+	border-radius: 20px;
+	box-shadow: 0 5px 5px #2D4B59;
+}
+#roletab .tab-content { 
+	background: #bbd3d7 !important; 
+	border-radius: 0 0 20px 20px;
+	box-shadow: 0 5px 5px #2D4B59;
+}
+
+.rbac-user-roleScopeEdit .app-label,
+.rbac-user-roleScope .app-label {
+	margin: 20px 0 15px;
+}
+
+tr[section="header"] td {margin-top: 10px;margin-bottom:10px;}
+.rbac-user-roleScopeEdit .app-label, 
+.rbac-user-roleScope .app-label{
+	color: #fff; 
+}
+
+/* =Colors - OpsPortal Overrides */
+.op-table th { 
+	padding: 0 !important;
+	background: #1F6B8D !important;
+	color: #fff !important;
+}
+
+.op-list li {
+	border-radius: 20px 0 20px 20px;
+}
+
 /* =Button Styles */
 .op-btn { margin: 0 5px; opacity:.75;-webkit-transition:opacity .3s ease-out;-moz-transition:opacity .3s ease-out;-o-transition:opacity .3s ease-out;transition:opacity .3s ease-out; }
 .op-btn:hover, .hris-btn:focus { opacity: 1; }
@@ -144,9 +214,13 @@ h1, h2, h3, h4, h5 { color: #EF9216; }
 	background: #fff; 
 }
 
+.selectedRow {
+	background-color: #53A3B1;
+	color: #FFF;
+}
+
 
 /*GLOBAL STYLES*/
-
 
 .typeahead, .tt-query, .tt-hint {
     border: 1px solid #ccc;
@@ -280,9 +354,11 @@ ul {padding:0;margin:0}
 
 .orange {color:#ef6316;}
 
-.blue {color:#1971a3;}
+.blue {color:#433DB3;}
 
 .bgfont {font-size:14px;}
+
+.font16 {font-size:16px;}
 
 .font25 {font-size:20px;}
 
@@ -410,7 +486,7 @@ ul {padding:0;margin:0}
 }
 
 .op-widget {
-    background-color: #1f6b8d;
+    background-color: #3C766A;
     border-right: none; 
 }
 
@@ -453,6 +529,7 @@ ul {padding:0;margin:0}
 .opsportal-content-area {
     background-color: #1F6B8D;    
     border-radius: 20px 0px 20px 20px;
+	margin-top: 10px;
 }
 
 .opsportal-content-area > p {
@@ -462,4 +539,8 @@ ul {padding:0;margin:0}
 
 .op-block-border > .op-container {
     padding: 10px;
+}
+
+#opsportal-description .op-container {
+	padding-left: 0;
 }

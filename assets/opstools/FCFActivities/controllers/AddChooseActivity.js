@@ -114,7 +114,7 @@ steal(
 								tagBootstrapTable: '.fcf-activity-list',
 								scrollToSelect: true,
 
-								cssSelected: 'orange',
+								cssSelected: 'selectedRow',
 
 								// filterTable:true,
 

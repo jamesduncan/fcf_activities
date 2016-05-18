@@ -103,7 +103,7 @@ steal(
 								scrollToSelect: true,
 
 								modelID: 'IDMinistry',     // our data values use IDMinistry for their unique ID
-								cssSelected: 'orange',
+								cssSelected: 'selectedRow',
 
 								// filterTable:true,
 

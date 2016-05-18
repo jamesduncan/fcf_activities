@@ -142,7 +142,7 @@ body {
 .menulink a:focus{color:#be5400;}
 
 #content, .inner-add-activity, .innner-content {
-	margin-bottom:20px;
+	/*margin-bottom:20px;
 	padding-bottom:20px;
 	background-color: #bbd3d7;
 	-webkit-border-radius: 20px;
@@ -153,7 +153,7 @@ body {
 	border-top-right-radius: 0;
 	-webkit-box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);
 	-moz-box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);
-	box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);		
+	box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);		*/
 }
 
 #content { overflow:hidden;}
