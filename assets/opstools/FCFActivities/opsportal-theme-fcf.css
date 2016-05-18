@@ -128,7 +128,7 @@ li[role="presentation"] a { background-color: #fff !important; }
 
 /* =Colors - Webix Overrides */
 .webix_ss_header { height: 36px !important; }
-.webix_ss_header td { background-color:  #1f6b8d !important; }
+.webix_ss_header td { background-color:  #1f6b8d !important; color: #eaeaea !important }
 .webix_hcell { height: 35px !important; line-height:35px !important; }
 .webix_dtable  { height: auto !important; margin-bottom: 10px; }
 .webix_inp_top_label { 
@@ -136,6 +136,17 @@ li[role="presentation"] a { background-color: #fff !important; }
 	margin-bottom: 3px;
     font-weight: bold;
 }
+
+#crud1FCFActivity .webix_inp_top_label { 
+	color:  #fff !important; 
+}
+
+.webix_column>div.webix_cell_select, 
+.webix_column>div.webix_column_select, 
+.webix_column>div.webix_row_select {
+	background: #53A3B1 !important;
+}
+
 
 /* =Colors - RBAC Overrides */
 .panel-default>.panel-heading { background-color:  #1f6b8d !important; }
