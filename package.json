@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/appdevdesigns/fcf_activities",
   "dependencies": {
-    "ad-utils": "git://github.com/appdevdesigns/ad-utils"
+    "ad-utils": "git://github.com/appdevdesigns/ad-utils",
+    "lodash": "^4.13.1"
   },
   "devDependencies": {
     "chai": "^1.10.0",

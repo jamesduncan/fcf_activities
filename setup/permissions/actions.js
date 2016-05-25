@@ -31,8 +31,7 @@ module.exports = {
         { 
             action_key:'adroit.activity.upload', 
             action_description:'Allow the user to upload an activity.' 
-        },
-
+        }
     ]
 
 };
