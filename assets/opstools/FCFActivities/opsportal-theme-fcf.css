@@ -15,13 +15,14 @@ a, a:hover, a:visited {
 	color: #1F6B8D; 
 }
 
-h1, h2, h3, h4, h5 { color: #433DB3; }
+h1, h2, h3, h4, h5 { color: #FFF !important;}
 
-/* override only for activity approval screen */
-#apprv-activity h4 span {
-	color: #BBD3D7;
+.light-blue-wrap h4,
+.pa-approvalForm-relatedTemplate h3,
+.pa-approvalForm-relatedTemplate h5 {
+	color: #433DB3 !important;
 }
-
+/* override only for activity approval screen */
 #apprv-activity .col-lg-3 {
 	margin-left: -8px;
 }
@@ -132,13 +133,9 @@ li[role="presentation"] a { background-color: #fff !important; }
 .webix_hcell { height: 35px !important; line-height:35px !important; }
 .webix_dtable  { height: auto !important; margin-bottom: 10px; }
 .webix_inp_top_label { 
-	color:  #1f6b8d !important; 
+	color:  #FFF !important; 
 	margin-bottom: 3px;
     font-weight: bold;
-}
-
-#crud1FCFActivity .webix_inp_top_label { 
-	color:  #fff !important; 
 }
 
 .webix_column>div.webix_cell_select, 
@@ -213,6 +210,9 @@ tr[section="header"] td {margin-top: 10px;margin-bottom:10px;}
 	border-radius: 4px;
 }
 
+.op-widget-footer {
+	width: auto !important;
+}
 /* Table styles */
 .op-table { 
 	border-color: #FCF8E3; 
@@ -502,7 +502,7 @@ ul {padding:0;margin:0}
 }
 
 .op-widget h3, .op-widget p {
-    color: #bbd3d7 !important;
+    color: #FFF !important;
 }
 
 .op-block h1, .op-block h2, .op-block h3, .op-block h4, .op-block h5 { 
@@ -533,6 +533,14 @@ ul {padding:0;margin:0}
     border-radius: 20px 0px 20px 20px;
 }
 
+.tr-translate-body {
+    background: #bbd3d7 !important;
+    border-radius: 20px 0px 20px 20px;
+}
+.tr-translate-body .op-widget-body {
+	background: transparent;
+}
+
 #op-list-menu {
     background-color: #444 !important;
 }
@@ -554,4 +562,8 @@ ul {padding:0;margin:0}
 
 #opsportal-description .op-container {
 	padding-left: 0;
+}
+
+.rp-instructionsPanel p {
+	color: #eee !important;
 }
