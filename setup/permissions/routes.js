@@ -29,7 +29,6 @@
  */
 module.exports = {
 
-
     // 'get /route/one' : [ 'action.key.1', ['action.key.2', 'action.key.3']],
-     
+
 };

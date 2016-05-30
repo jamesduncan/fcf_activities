@@ -88,7 +88,7 @@ module.exports = {
                 listTeams.forEach(function(team){
                     var obj = {};
                     obj.IDMinistry = team.IDMinistry;
-                    obj.MinistryDisplayName = team.MinistryDisplayName;
+                    obj.MinistryDisplayName = team.MinistryDisplayName || team.NameMinistryEng;
                     obj.ProjectOwner = '';
                     // if (team.ProjectOwner) {
                     //     obj.ProjectOwner = team.ProjectOwner.displayName();

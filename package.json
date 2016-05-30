@@ -1,6 +1,6 @@
 {
   "name": "fcf_activities",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "(plugin) This plugin allows users to submit activity photos for their Visa requirements.",
   "main": "module.js",
   "directories": {
@@ -23,10 +23,12 @@
   "homepage": "https://github.com/appdevdesigns/fcf_activities",
   "dependencies": {
     "ad-utils": "git://github.com/appdevdesigns/ad-utils",
-    "lodash": "^3.10.1"
+    "lodash": "^4.13.1"
   },
   "devDependencies": {
     "chai": "^1.10.0",
-    "mocha": "^2.1.0"
+    "mocha": "^2.1.0",
+    "mocha-phantomjs": "^3.5.2",
+    "phantomjs": "^1.9.13"
   }
 }
