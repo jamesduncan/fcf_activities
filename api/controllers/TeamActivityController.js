@@ -61,7 +61,8 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
             // 1) finding all activities with given team id
             function(next) {
 
-                FCFActivity.find({team:minId})
+                // issue: #47 : sort by most recent
+                FCFActivity.find({team:minId, sort:'date_start DESC'})
                 .populate('translations')
                 .populate('createdBy')
                 .populate('approvedBy')
@@ -121,7 +122,10 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
 
         var data = {};
         data.activity_name = req.param('activity_name');
+data.activity_name_govt = req.param('activity_name_govt');
+
         data.activity_description = req.param('activity_description');
+data.activity_description_govt = req.param('activity_description_govt');
         data.date_start = req.param('date_start');
         data.date_end = req.param('date_end');
         data.team = req.param('team');
@@ -140,6 +144,7 @@ AD.log('hashTeamUpdates:', hashTeamUpdates);
         }
 
         var langCode = ADCore.user.current(req).getLanguageCode();
+        data.language_code = data.language_code || langCode;
 
 
         var newActivity = null;

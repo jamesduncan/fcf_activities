@@ -1,5 +1,14 @@
 
 
+.input-group .form-control {
+	margin-bottom: -6px
+}
+
+.fixed-table-body {
+    overflow: auto;
+    height: 160px;
+}
+
 .fcf-list-rowH4 {
     margin-top: 4px;
 }
@@ -68,7 +77,7 @@
 
 .dropzone .fcf-activity-icon-picture {
     background-color: transparent;
-    background-image: url("/images/icon_picture_activity.jpg");
+    background-image: url("/images/fcf_activities/icon_picture_activity.jpg");
     background-position: center top;
     background-repeat: no-repeat;
     background-size: auto 100px;
@@ -82,55 +91,6 @@
 
 
 
-
-.typeahead, .tt-query, .tt-hint {
-    border: 2px solid #ccc;
-    border-radius: 8px;
-/*    font-size: 24px;     */
-/*    height: 30px;        */
-    line-height: 30px;
-    outline: medium none;
-/*    padding: 8px 12px;   */
-    width: 396px;
-}
-.typeahead {
-    background-color: #fff;
-}
-.typeahead:focus {
-    border: 2px solid #0097cf;
-}
-.tt-query {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-}
-.tt-hint {
-    color: #999;
-}
-.tt-dropdown-menu {
-    background-color: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    margin-top: 12px;
-    padding: 8px 0;
-    width: 422px;
-}
-.tt-suggestion {
-    font-size: 18px;
-    line-height: 24px;
-    padding: 3px 20px;
-}
-.tt-suggestion.tt-cursor {
-    background-color: #0097cf;
-    color: #fff;
-}
-.tt-suggestion p {
-    margin: 0;
-}
-.gist {
-    font-size: 14px;
-}
-
-
 body {
 	margin: 0;
 	padding: 0;
@@ -142,9 +102,7 @@ body {
 
 .align-right { text-align: right; }
 
-.floatleft { float:left;}
-
-#wrap {
+.blue-wrap {
 	background-color:#1f6b8d;
 	padding: 10px 15px;
 	-webkit-border-radius: 20px;
@@ -184,7 +142,7 @@ body {
 .menulink a:focus{color:#be5400;}
 
 #content, .inner-add-activity, .innner-content {
-	margin-bottom:20px;
+	/*margin-bottom:20px;
 	padding-bottom:20px;
 	background-color: #bbd3d7;
 	-webkit-border-radius: 20px;
@@ -195,144 +153,39 @@ body {
 	border-top-right-radius: 0;
 	-webkit-box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);
 	-moz-box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);
-	box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);		
+	box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);		*/
 }
 
 #content { overflow:hidden;}
 
-.nomargin {margin:0;}
-	
-.margintop20 { margin-top: 20px;}
-
-.margintop10 { margin-top: 10px;}
-
-.margintop15 { margin-top: 10px; }
-
-.marginbot10 { margin-bottom: 10px;}
-
-.marginbot5 { margin-bottom: 5px;}
-
-.marginbot15 { margin-bottom: 15px !important;}
-
-.marginrght10 { margin-right: 10px;}
-
-.marginrght15 { margin-right: 15px;}
-
-.btnactions { float: right; }
-
-.padrigt1{padding-right:1px !important;}
-
-.padrigt5 {padding-right:5px !important}
-
-.nopadding { padding-left: 0px !important;padding-right:0px !important }
-
-.nopadright {padding-right:0px !important;}
-
-.nopadleft {padding-left:0px !important;}
-
-.aligncenter { text-align:center}
-
-#actionsbtn { height:34px;clear:both; }
-
-.table { background-color:#f2f2f2; }
-
-.orange {color:#ef6316;}
-
-.blue {color:#1971a3;}
-
-.bgfont {font-size:14px;}
-
-.font25 {font-size:20px;}
-	
-.custombtn {
-	background-color:#40aff6;
-	color:#fff;
-	padding: 6px 25px !important;
-	-webkit-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
-	-moz-box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
-	box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.3);
-	text-shadow: 2px 1px 1px rgba(150, 150, 150, 1);	
-}
-
-.custombtn:hover, .custombtn:focus {
-	color:#f1f1f1 !important;
-}
-
-.bck a{color:#e56623;text-decoration:underline}
-
-/*Modal*/
-
-.modal-add-activity {
-	background-color:#1f6b8d !important;
-	padding: 10px 15px !important;
-	-webkit-border-radius: 20px !important;
-	-webkit-border-top-right-radius: 0 !important;
-	-moz-border-radius: 20px !important;
-	-moz-border-radius-topright: 0 !important;
-	border-radius: 20px !important;
-	border-top-right-radius: 0 !important;
-	-webkit-box-shadow: 10px 10px 11px 1px rgba(0,0,0,0.3) !important;
-	-moz-box-shadow: 10px 10px 11px 1px rgba(0,0,0,0.3) !important;
-	box-shadow: 10px 10px 11px 1px rgba(0,0,0,0.3) !important;
-	}
-
-.modal-header { border-bottom:none !important; }	
-.modal-footer { border-top:none !important;}
-ul.checkbox li {list-style:none !important;}
-.modalhead { color:#fff; font-size:15px;}
-
-
-#confirmstep .modal-body p { color:#0073b1;}
-#confirmstep .modal-body img { margin-bottom:10px;}
-
 /*Page 3 Style*/
 
+/*Styles FCF Activities Page 3*/
+
 .imgleft {
-	margin: 0 0 15px 0;
-	padding: 0 0 15px 0;
 	border-bottom:#0071be 2px solid;
 	overflow:hidden;
 	cursor:pointer;
 	}
+	
+.imgleft .row div:nth-child(3) {
+	text-align:right;
+	padding-right:0;
+}
+	
+.imgleft img{width:100%;}	
+	
+.imgleft .row{padding-top:15px;padding-bottom:10px}	
 
 .imgleft p{font-size:13px;}
 
-.imgleft .row {padding:5px 0;}
-
-.imgleft .rowselected {
-	-webkit-box-shadow: 1px 1px 16px 0px rgba(109,109,163,1);
-	-moz-box-shadow: 1px 1px 16px 0px rgba(109,109,163,1);
-	box-shadow: 1px 1px 16px 0px rgba(109,109,163,1);	
-}
+.imgleft .rowselected { background-color:#FBFBFB;}
 
 .imgleft p:first-child {
 	margin-bottom:15px;
 	font-weight:bold;
 }
 
-.imgmid {
-	margin: 0 0 15px 0;
-	padding: 0 0 15px 0;
-	border-bottom:#0071be 2px solid;
-	overflow:hidden;
-	cursor:pointer;
-	}
-
-.imgmid p{font-size:13px;}
-
-.imgmid .row {padding:5px 0;}
-
-.imgmid .rowselected {
-	-webkit-box-shadow: 1px 1px 16px 0px rgba(109,109,163,1);
-	-moz-box-shadow: 1px 1px 16px 0px rgba(109,109,163,1);
-	box-shadow: 1px 1px 16px 0px rgba(109,109,163,1);	
-}
-
-.imgmid p:first-child {
-	margin-bottom:15px;
-	font-weight:bold;
-}
-	
 .img-upload {
 	width: 100%;
 	background-color: #81b8d7;	
@@ -370,20 +223,18 @@ ul.checkbox li {list-style:none !important;}
 	box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);		
 }
 
-#uploaded-img .imgleft {border:none;}
-
 .img-upload:hover {border:#0071be dashed 5px;color:#0071be}
 
 #profile-list li {
 	font-size:12px; 
 	border:none !important;
 	float:left;
-	margin-bottom:10px;
+	margin: 0 4px 10px;
 	overflow:hidden;
-	width:50%;
+	width:48%;
 }
 
-#profile-list li img {margin-right:5px;}
+#profile-list li img {margin-right:7px;float:left}
 
 #profile-list {
 	padding-bottom:20px;
@@ -403,7 +254,7 @@ ul.checkbox li {list-style:none !important;}
 
 #profilelist-scroll ul {list-style:none; list-style-type:none;padding:0;margin:0}
 
-#profilelist-scroll ul li{float:left;}
+#profilelist-scroll ul li {margin-bottom:10px;}
 
 #profilelist-scroll div {padding-left:6px !important; padding-right:6px !important;}
 
@@ -417,9 +268,10 @@ ul.checkbox li {list-style:none !important;}
 	
 #dc .form-group input {width: 100% !important;}
 	
-/*Scroll*/		
+
+/*Scroll Bar on page 3*/		
 #lc-activity {
-	max-height:680px; 
+/*	max-height:680px;  // Allow widget to scale to height. */  
 	overflow-y:scroll !important;
 
 }
@@ -442,43 +294,33 @@ ul.checkbox li {list-style:none !important;}
 	background-color: #b35422;
 }
 
-#upload-scroll {max-height:530px; overflow-y:scroll !important;}
-#confirm-step-scroll {max-height:500px; overflow-y:scroll !important;position:relative;z-index:50;}
+#upload-scroll {
+	/*max-height:530px; */
+	overflow-y:scroll !important;
+}
+
+#confirm-step-scroll {max-height:500px; overflow-y:scroll !important }
 
 .imgleft col-md-5 img, .imgleft .col-md-4 img {width:100%}
 .imgmid col-md-5 img, .imgmid .col-md-4 img {width:100%}
 
 @media (min-width: 1200px) {
-/*	.container {width: 1298px !important;}  /// <-- this prevented the OPsPortal from filling the whole screen width.  */
 	
 }
 
 @media (max-width: 578px) {
 	.menulink a {font-size:19px;}
 }
-/*
-@media (max-width: 990px) {
-	div.imgleft div.row div.col-sm-3  img, .imgleft .row .col-xs-4 img{ width:100%;}
 
-}
-*/
 
 /*Overlap the CSS opsportal here*/
-
-.opsportal-stage-container {background-color:transparent !important; padding-bottom:20px;}
-
-
 
 #fcf-activity-image-upload {
 	padding-top: 0px; 
 	padding-bottom: 0px; 
+	padding: 0px;
 	height:150px; /*Fixed Width for the Container of DropZone*/
 /*	width:331px; Fixed Height for the Container of DropZone*/
-	overflow:auto;
-}
-
-#fcf-activity-image-uploaded {
-	/*width:100%;*/
 }
 
 
@@ -489,15 +331,4 @@ ul.checkbox li {list-style:none !important;}
 /* update the selectivity z-index to be under the date picker */
 .selectivity-backdrop {
 	z-index:9 !important;
-}
-
-/* bootbox button colors */
-.bootbox .btn {
- background-color:#383B3D;
-
-}
-
-.bootbox .btn:hover {
- background-color:#858686;
-
 }

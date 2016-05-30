@@ -6,6 +6,88 @@
  */
 
 var AD = require('ad-utils');
+var fs = require('fs');
+var path = require('path');
+
+
+var _allAvatars = [];
+var _avatarHash = {};
+
+function allAvatars (cb) {
+    if (_allAvatars.length == 0) {
+        fs.readdir(FCFCore.paths.images.avatars(''), function(err, avatars){
+
+            if (err) {
+                cb(err);
+            } else {
+                _allAvatars = avatars;
+
+                // turn this into a hash:  
+                //  ID    :  Name
+                // '0001' : '0001.jpg'
+                for (var i = avatars.length - 1; i >= 0; i--) {
+                    var parts = avatars[i].split('.');
+                    _avatarHash[parts[0]] = avatars[i];
+                };
+
+                cb(null, _allAvatars);
+            }
+
+        });
+    } else {
+        cb(null, _allAvatars);
+    }
+} 
+
+
+function addAvatar(listPeople, cb) {
+
+    allAvatars(function(err, avatars) {
+
+        if (err) {
+            cb(err);
+            return;
+        }
+
+
+        // now for each listPerson:
+        for (var i = listPeople.length - 1; i >= 0; i--) {
+            var person = listPeople[i];
+            var id = person.getID();
+
+            // encode the id into a hashID: 0999, 0099, 0009 
+            var hashID = '' + id;    // '9'
+            var attempt = 1;
+            while (attempt <= 4) {
+                if (!_avatarHash[hashID]) {
+                    hashID = '0'+hashID;  // 09, 009
+                    attempt++;
+                } else {
+                    // found a match so:
+                    attempt = 5;  // stop the loop
+                }
+            }
+
+            if (_avatarHash[hashID]) {
+
+                var foundName = _avatarHash[hashID];
+                person.avatar = FCFCore.paths.images.avatars(foundName);
+
+                // remove the path before 'assets'
+                person.avatar = person.avatar.split('assets')[1];
+
+            }
+
+
+        };
+
+        cb();
+
+    });
+}
+
+
+
 
 module.exports = {
 	
@@ -173,6 +255,7 @@ module.exports = {
 
         } else {
 
+            AD.log('<green>::: activityreport.teammembers() :::</green>');
             var peopleIDs = [];
             var listPeople = null;
 
@@ -191,7 +274,6 @@ module.exports = {
                                     peopleIDs.push(entry.IDPerson);
                                 }
                             })
-
                         }
 
                         next();
@@ -206,15 +288,15 @@ module.exports = {
                 // step 2: now look up all those people:
                 function(next) {
 
-                    AD.log('... teammembers looking up people:', peopleIDs );
+                    AD.log('... looking up people:'+ peopleIDs );
 
                     FCFPerson.find({IDPerson:peopleIDs})
                     .then(function(list){
 
-
                         list.forEach(function(person){
                             person.display_name = person.displayName(langCode);
-                            person.avatar = '/images/activities_person_avatar.jpeg';
+                            person.avatar = null; // '/images/activities_person_avatar.jpeg';
+                            AD.log('... found teammember:'+ person.display_name);                        
                         })
                         listPeople = list;
                         next();
@@ -224,11 +306,104 @@ module.exports = {
                         AD.log(err);
                         next(err);
                     })
+                },
+
+                // step 3: now verify avatar images and use those:
+                function(next) {
+
+
+                    addAvatar(listPeople, function(err) {
+                        next(err);
+                    });
+
+
+                    // // fs.readdir(FCFCore.paths.images.avatars(''), function(err, avatars){
+                    // allAvatars(function(err, avatars){
+
+                    //     if (err) {
+                    //         next(err);
+                    //     } else {
+
+                    //         // turn this into a hash:  
+                    //         //  ID    :  Name
+                    //         // '0001' : '0001.jpg'
+                    //         var hash = {};
+                    //         for (var i = avatars.length - 1; i >= 0; i--) {
+                    //             var parts = avatars[i].split('.');
+                    //             hash[parts[0]] = avatars[i];
+                    //         };
+
+
+                    //         // now for each listPerson:
+                    //         for (var i = listPeople.length - 1; i >= 0; i--) {
+                    //             var person = listPeople[i];
+                    //             var id = person.getID();
+
+                    //             // encode the id into a hashID: 0999, 0099, 0009 
+                    //             var hashID = '' + id;    // '9'
+                    //             var attempt = 1;
+                    //             while (attempt <= 4) {
+                    //                 if (!hash[hashID]) {
+                    //                     hashID = '0'+hashID;  // 09, 009
+                    //                     attempt++;
+                    //                 } else {
+                    //                     // found a match so:
+                    //                     attempt = 5;  // stop the loop
+                    //                 }
+                    //             }
+                    //             // if (id < 1000) {
+                    //             //     hashID += '0';  // '0'
+                    //             //     if (id < 100) {
+                    //             //         hashID += '0'; // '00'
+                    //             //         if (id < 10) {
+                    //             //             hashID += '0';  // '000'
+                    //             //         }
+                    //             //     }
+                    //             // }
+                    //             // hashID += id;
+
+                    //             if (hash[hashID]) {
+
+                    //                 var foundName = hash[hashID];
+                    //                 person.avatar = FCFCore.paths.images.avatars(foundName);
+
+                    //                 // remove the path before 'assets'
+                    //                 person.avatar = person.avatar.split('assets')[1];
+
+                    //             }
+
+
+                    //         };
+
+                    //     }
+
+                    //     next();
+                    // })
+ 
+                },
+
+                // step 4: now remove all the people who didn't have an avatar
+                function(next) {
+console.log('... compile finalList:');
+                    var finalList = [];
+                    listPeople.forEach(function(person){
+                        if (person.avatar != null) {
+AD.log('... person had avatar:'+ person.display_name);
+
+                            finalList.push(person)
+                        } else {
+                            AD.log('... removing member that did not have avatar: '+ person.display_name);
+                        }
+                    });
+
+                    listPeople = finalList;
+                    next();
                 }
 
             ], function(err, results){
 
                 if (err) {
+AD.log('... received error!:', err);
                     ADCore.comm.error(res, err);
                 } else {
                     ADCore.comm.success(res, listPeople );
@@ -253,17 +428,20 @@ module.exports = {
         })
         .then(function(data){
 
+            var simplePerson = null;
+
             if (!data) {
                 AD.log.error('... did not match a person');
             } else {
                 AD.log('... found');
+
+                simplePerson = {
+                    IDPerson:data.IDPerson,
+                    display_name: data.displayName()
+                }
             }
 
-            var simplePerson = {
-                IDPerson:data.IDPerson,
-                display_name: data.displayName()
-            }
-
+            
             ADCore.comm.success(res, simplePerson );
         })
 
@@ -510,6 +688,267 @@ module.exports = {
 
             return dfd
         }
+
+    },
+
+
+    // /fcf_activities/activityreport/approve/:id
+    approveActivity:function(req, res) {
+
+        //// Originally we wanted this in FCFActivities.afterCreate(), but 
+        //// moved it here.
+        ////
+        //// PROBLEM with .afterCreate()
+        ////  with a multilingual table (like FCFActivities) the .afterCreate() 
+        ////  will be called before any of the related translation entries are 
+        ////  created so that is too soon.
+
+        ////  but we need to .translate() the value here, so that the 
+        ////  multilingual fields get included in the data being sent to the 
+        ////  ProcessApproval tool.
+
+        AD.log('<green>approve activity:</green>');
+
+        // get the id of the activity to approve:
+        var id = req.param('id');
+        if (!id) {
+            var err = new Error('param[id] required');
+            AD.log.error(err)
+            ADCore.comm.error(res,err);
+            return;
+        }
+
+
+        var activity = null;
+        var language_code = ADCore.user.current(req).getLanguageCode();
+        var creatorGUID = null;
+        var objectives = null;
+        var creator = null;
+        var ministryTeams = null;
+
+        async.series([
+
+
+            // step 1: translate this activity
+            function(next){
+
+                FCFActivity.findOne({id:id})
+                .populate('objectives')
+                .exec(function(err, modelActivity){
+
+                    if (err) {
+// console.log('... .findOne() error:', err);
+
+                        var myErr = new Error('Error loading Activity:');
+                        myErr.error = err;
+                        next(myErr);
+                    } else {
+// console.log('... translating');
+// console.log('... modelActivity:', modelActivity);
+
+                        if (modelActivity) {
+
+                            activity = modelActivity;
+                        
+                            // note: .translate() flattens the values to the base object
+                            activity.translate(language_code)
+                            .fail(function(err){
+    // console.log('... .translate() error:', err );
+
+                                var myErr = new Error('Error translating activity.');
+                                myErr.error = err;
+                                next(myErr);
+                            })
+                            .then(function(){
+    // console.log('... Activity.afterCreate(): translated:', activity);
+                                next();
+                            })
+
+                        } else {
+// console.log('... modelActivity undefined!!!  id:'+id);
+
+                            var myErr = new Error('Error looking up Activity to approve: id:'+id );
+                            next(myErr);
+                        }
+
+                    }
+                })
+
+
+            },
+
+
+            // step 2: translate the creator id into site GUID:
+            function(next){
+
+                GUID2Person.find({ person:activity.createdBy})
+                .exec(function(err, guid){
+                    if (err) {
+                        var myErr = new Error('Error looking up guid');
+                        myErr.error = err;
+
+                        next(myErr);
+
+                    } else {
+console.log('... found guid:', guid);
+                        creatorGUID = guid[0].guid;
+                        next();
+                    }
+                });
+            },
+
+            // step : get actual person object from creator id:
+            function(next) {
+
+                FCFPerson.findOne({ IDPerson:activity.createdBy})
+                .exec(function(err, person){
+
+                    if (err) {
+                        var myErr = new Error('Error looking up activity creator');
+                        myErr.error = err;
+                        next(myErr);
+                    } else {
+console.log('... found creator:', person);
+                        creator = person;
+
+
+                        // add an avatar to this person:
+                        addAvatar([creator], function(err){
+console.log('... creator with avatar:', creator);
+
+                            next(err);
+                        })
+
+                    }
+                })
+            },
+
+
+            // step : look up ministry teams:
+            function(next) {
+
+                creator.ministryTeams()
+                .fail(function(err){
+                    var myErr = new Error('Error looking up ministry teams:');
+                    myErr.error = err;
+                    next(myErr);
+                })
+                .then(function(teams) {
+                    ministryTeams = teams;
+                    next();
+                })
+            },
+
+
+            // step : pull all related objectives for this entry:
+            function(next){
+
+                FCFObjective.find({ IDMinistry: activity.team })
+                .exec(function(err, list){
+
+                    if (err) {
+                        var myErr = new Error('Error looking up objectives');
+                        myErr.error = err;
+
+                        next(myErr);
+
+                    } else {
+console.log('... found objectives:', list);
+                        objectives = list;
+                        next();
+                    }
+                });
+
+            },
+
+
+            // step : compile the Approval packet:
+            function(next){
+
+                // clean up Dates:
+
+                var createdAt = AD.util.moment(activity.createdAt).format('LL');
+                activity.date_start = AD.util.moment(activity.date_start).format('LL');
+                if (activity.date_end != null){
+                    activity.date_end =  AD.util.moment(activity.date_end).format('LL');
+                } else {
+                    activity.date_end = '';
+                }
+
+                var request = {
+
+
+                    "menu":{
+                        "icon":"fa-calendar",
+                        "action": {
+                          "key":"fcf.activityapproval.newActivity",
+                          "context":"opstool-FCFActivities"
+                        },
+                        "instanceRef":"activity_name",
+                        "createdBy":creator.displayName(),
+                        "date":createdAt
+                    },
+
+
+                    "form":{
+                        "data":activity,
+                        "view":"/opstools/FCFActivities/views/FCFActivities/activityApproval.ejs",
+                        "viewData":{
+                            "objectives":objectives,
+                            "language_code":language_code
+                        }
+                    },
+
+
+                    "relatedInfo":{
+                        "view":"/opstools/FCFActivities/views/FCFActivities/activityApprovalRelated.ejs",
+                        "viewData":{
+                            "user":{
+                                "displayName":creator.displayName(),
+                                "avatar":creator.avatar,
+                                "teams":ministryTeams
+                            },
+                            "teamID":activity.team,
+                            "createdAt":createdAt
+                        }
+                    },
+
+
+                    "callback":{
+                        message:"fcf.activities.activity",
+                        reference: { id: activity.id }
+                    },
+
+
+                    "permission":{
+                        actionKey:'fcf.activities.approve',
+                        userID: creatorGUID
+                    }
+
+                };
+
+                ADCore.queue.publish('opsportal.approval.create', request);
+
+AD.log('... Published Request:', request);
+                next();
+
+
+            }
+
+
+        ], function(err, results){
+
+            if (err) {
+                ADCore.error.log('FCF: ActivityReportController.approveActivity(): Error', {
+                    error:err,
+                    activity:activity
+                });
+                ADCore.comm.error(res,err);
+            } else {
+                AD.log('<green>approval sent!</green> ');
+                ADCore.comm.success(res, {});
+            }
+        });
 
     }
 

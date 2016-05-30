@@ -30,6 +30,7 @@ module.exports = {
 
   'get /fcf_activities/teamobjectives':'fcf_activities/TeamObjectiveController.find',
   'get /fcfactivities/activityreport/activities':'fcf_activities/ActivityReportController.activities',
+  'get /fcf_activities/activityreport/approve/:id':'fcf_activities/ActivityReportController.approveActivity',
 
   // Access to Activity Image Resource 
   'get /fcf_activities/activityimage':'fcf_activities/ActivityImageController.find',

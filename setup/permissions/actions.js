@@ -31,6 +31,14 @@ module.exports = {
         { 
             action_key:'fcf.activities', 
             action_description:'Allows the user to submit activity photos.' 
+        },
+        {
+        	action_key:'fcf.activities.approve',
+        	action_description:'Allows the user to approve an activity.'
+        },
+        {
+        	action_key:'fcf.activity.images.approve',
+        	action_description:'Allows the user to approve an images submitted to an activity.'
         }
     ]
 

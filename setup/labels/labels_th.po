@@ -1,0 +1,496 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8"
+"Content-Transfer-Encoding: 8bit"
+
+#. #########################################
+#. Labels for context: opstool-FCFActivities
+#. Source language: en
+#. Target language: th
+#. #########################################
+
+
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Team
+msgid "Team"
+msgstr "ทีม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Project
+msgid "Owner"
+msgstr "เจ้าของ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Team
+msgid "Choose Your Team"
+msgstr "เลือกกลุ่ม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Team.Instructions
+msgid "Please select which Team to which you would like add an Activity. Either double-click on the name of the team or type in the name in the Search box."
+msgstr "กรุณาเลือกกลุ่มที่คุณต้องการจะเพิ่มกิจกรรม โดยกดที่ชื่อของกลุ่มสองครั้งติดกันหรือพิมพ์ชื่อกลุ่มเข้าไปที่กล่องค้นหา"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Team.Desc
+msgid "What Ministry Team is this activity associated with?"
+msgstr "กิจกรรมนี้เกี่ยวข้องกับกลุ่มพันธกิจใด"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Team.step1
+msgid "Step 1 of 3"
+msgstr "ขั้นตอนที่ 1 ถึง 3"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Next
+msgid "Next"
+msgstr "ต่อไป"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Previous
+msgid "Previous"
+msgstr "ก่อนหน้านี้"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activityapproval.submittedBy
+msgid "Submitted By:"
+msgstr "ผู้ส่ง"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activityapproval.teams
+msgid "Team(s):"
+msgstr "กลุ่ม:"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activityapproval.createdOn
+msgid "Created On: <%= createdAt %>"
+msgstr "ก่อตั้งเมื่อ <%= createdAt %>"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activityapproval.underTeam
+msgid "Under Team:"
+msgstr "ภายใต้กลุ่ม:"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activityapproval.underProject
+msgid "Under Project:"
+msgstr "ภายใต้โครงการ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.ActivityName
+msgid "Activity Name"
+msgstr "ชื่อกิจกรรม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.addAssignment.Choose.ActivityNameDesc
+msgid "Please use a name everyone associated with the activity will organize"
+msgstr "ให้ใช้ชื่อกิจกรรมที่เมื่อระบุแล้วทุกคนเข้าใจ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.addAssignment.Choose.startDate
+msgid "Start Date"
+msgstr "วันที่เริ่มต้น"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.addAssignment.Choose.endDate
+msgid "End Date"
+msgstr "วันที่สิ้นสุด"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.TeamObjectives
+msgid "Team Objectives"
+msgstr "วัตถุประสงค์ของกลุ่ม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.TeamObjectivesDesc
+msgid "Every activity must meet at least one objective. Please choose all that apply:"
+msgstr "ทุกกิจกรรมควรจะมีอย่างน้อยหนึ่งวัตถุประสงค์ กรุณาเลือทุกกิจกรรมที่เกี่ยวข้อง"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Description
+msgid "Description"
+msgstr "บรรยาย"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.DescriptionDesc
+msgid "Please describe this activity using the team objective as guideline"
+msgstr "กรุณาอธิบายกิจกรรมนี้โดยใช้วัตถุประสงค์ของกลุ่มเป็นแนวทาง"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activityapproval.newActivity
+msgid "New Activity"
+msgstr "กิจกรรมใหม่"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.imageapproval.image
+msgid "Image"
+msgstr "รูปภาพ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.imageapproval.caption
+msgid "Caption:"
+msgstr "คำบรรยายใต้ภาพ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.imageapproval.date
+msgid "Date:"
+msgstr "วันที่"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.imageapproval.peopleInPhoto
+msgid "People in photo:"
+msgstr "ผู้ที่อยู่ในรูปภาพ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.imageapproval.teams
+msgid "Team(s):"
+msgstr "ทีม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.imageapproval.createdOn
+msgid "Created On: <%= createdAt %>"
+msgstr "สร้างเมื่อ: <%= createdAt %>"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.imageapproval.forActivity
+msgid "For Activity:"
+msgstr "สำหรับกิจกรรม:"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activityapproval.newImage
+msgid "New Image"
+msgstr "รูปภาพใหม่"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activityapproval.updatedImage
+msgid "Updated Image"
+msgstr "รูปภาพที่ทำการอัพเดทแล้ว (ปรับให้เป็นปัจจุบัน)"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Team.InstructionsLabel
+msgid "Instructions"
+msgstr "คำแนะนำ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.add.step2
+msgid "Step 2 of 3"
+msgstr "ขั้นตอนที่ 2 ใน 3"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Instructions
+msgid "Instructions"
+msgstr "คำแนะนำ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Activity.Team
+msgid "Team:"
+msgstr "ทีม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Activity.Desc1
+msgid "Choose one of the following activities associated with this team."
+msgstr "เลือกหนึ่งในกิจกรรมดังกล่าวที่เกี่ยวข้องกับทีมนี้"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.Activity.Desc2
+msgid "If you do not see an activity in the list then click the add activity button."
+msgstr "ถ้าคุณไม่เห็นกิจกรรมในรายการให้กดที่ปุ่มกิจกรรม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.Add
+msgid "Add Activity"
+msgstr "เพิ่มกิจกรรม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Activity
+msgid "Activity Name"
+msgstr "ชื่อกิจกรรม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.SubmittedBy
+msgid "Submitted by"
+msgstr "ผู้ส่ง"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.ApprovedBy
+msgid "Approved by"
+msgstr "อนุมัติโดย"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Prev
+msgid "Previous"
+msgstr "ก่อนหน้า"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.addAssignment.Title
+msgid "Add a New Activity"
+msgstr "เพิ่มกิจกรรมใหม่"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Cancel
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Add
+msgid "Add"
+msgstr "เพิ่ม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.add.report.step
+msgid "Step 3 of 3"
+msgstr "ขั้นตอนที่ 3 ใน 3"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.report.AllActivities
+msgid "All Activities for"
+msgstr "ทุกกิจกรรมเพื่อ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.add.report.PeopleInPhoto
+msgid "People in this photo:"
+msgstr "ผู้ที่อยู่ในภาพนี้"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.add.report.DragImageHere
+msgid "Drag image here"
+msgstr "ลากภาพมาที่นี่"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.add.report.or
+msgid "- or -"
+msgstr "- หรือ -"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.add.report.ClickToOpenFileBrowser
+msgid "Click to open the file browser"
+msgstr "กดเพื่อเปิดแฟ้ม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.image.form.caption
+msgid "caption"
+msgstr "คำบรรยาย"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.image.form.tags
+msgid "tags"
+msgstr "ป้ายกำกับ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.imageform.Delete
+msgid "Delete"
+msgstr "ลบ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.imageform.Cancel
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.imageform.SaveImage
+msgid "Save Image"
+msgstr "บันทึกภาพ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Activities
+msgid "Activities:"
+msgstr "กิจกรรม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.newUpdateActivity
+msgid "New/Update Activity"
+msgstr "ใหม่/ทำกิจกรรมให้เป็นปัจจุบัน"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.searchForTeam
+msgid "search"
+msgstr "ค้นหา"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.MinistryTeam
+msgid "Ministry Team"
+msgstr "ทีมพันธกิจ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.projectOwner
+msgid "Project/Owner"
+msgstr "กิจกรรม/เจ้าของ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.report.currentActivityReport
+msgid "Current Activity Report"
+msgstr "รายงานกิจกรรมล่าสุด"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.finish
+msgid "Finish"
+msgstr "เสร็จ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.ActivityNameGovt
+msgid "Activity Name (Govt)"
+msgstr "ชื่อกิจกรรม (Govt)"
+
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.Choose.DescriptionGovt
+msgid "Description (Govt)"
+msgstr "บรรยาย (Govt)"
+
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.activity.image.form.date
+msgid "date of photo"
+msgstr "วันที่ถ่ายภาพ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.DeleteConfirm
+msgid "Delete Confirm"
+msgstr "ยืนยันการลบ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.DeleteConfirmMessage
+msgid "Are you sure you want to delete this image?"
+msgstr "คุณแน่ใจแล้้วใช่ไหม ว่าจะลบรูปนี้"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.yes
+msgid "yes"
+msgstr "ใช่"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.no
+msgid "no"
+msgstr "[th]no"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.DeleteNotAllowed
+msgid "Delete Not Allowed"
+msgstr "ไม่อนุญาตให้ลบ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.DeleteNotAllowedMessage
+msgid "This image has other people tagged in it.  In order to delete it, you need to notify your ministry leader."
+msgstr "มีผู้อื่นถูกติดป้ายในรูปภาพนี้ ในการที่จะลบภาพนี้ต้องติดต่อหัวหน้าโครงการ"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.ok
+msgid "OK"
+msgstr "โอเค"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.UnsavedChanges
+msgid "Unsaved Changes"
+msgstr "การเปลี่ยนแปลงที่ไม่ได้ถูกบันทึก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.UnsavedChangesMessage
+msgid "You have made changes that are not saved.  What should I do?"
+msgstr "คุณได้ทำการเปลี่ยนแปลงซึ่งไม่มีการบันทึก ฉันควรจะทำอย่างไร"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.dontSave
+msgid "Don't Save"
+msgstr "ไม่บันทึก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.cancel
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.confirm.save
+msgid "Save"
+msgstr "บันทึก"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.assignment.searchForActivity
+msgid "Search for Activity"
+msgstr "ค้นหากิจกรรม"
+
+#. path: opstool-FCFActivities
+#. code: th
+#. key: fcf.help
+msgid "Help"
+msgstr "[th]Help"
+
+

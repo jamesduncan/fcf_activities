@@ -93,7 +93,7 @@ module.exports = {
                     // if (team.ProjectOwner) {
                     //     obj.ProjectOwner = team.ProjectOwner.displayName();
                     // }
-AD.log(team);
+// AD.log(team);
                     if (team.IDProject) {
                         obj.ProjectOwner = team.IDProject.IDProject || team.IDProject;
                     }
