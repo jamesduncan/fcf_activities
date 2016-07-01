@@ -358,7 +358,11 @@
                                           <div class="imgleft fcf-activity-list-item" obj-embed="activity" >
                                             <div class="row op-container">
                                                 <div class="col-md-12 col-sm-12 ">
-                                                  <div class="col-md-5 col-sm-3 col-xs-4 "><img src="/images/fcf_activities/img1.jpg"></div>
+                                                  <div class="col-md-5 col-sm-3 col-xs-4" >
+                                                    <div class="img-responsive fcf-image-embed"  opimage-url="/images/fcf_activities/img1.jpg">
+                                                      <img src="/images/fcf_activities/img1.jpg">
+                                                    </div>
+                                                  </div>
                                                   <div class="col-md-5 col-sm-8 col-xs-6">
                                                     <p><span class="blue font16">[[= activity.attr("activity_name") ]]</span><br/><span class="blue fcf-activity-activity-project-name">[[= ProjectName ]]</span></p>
                                                     <p class="fcf-activity-tag-list" activityID="[[= activity.attr('id') ]]">
@@ -501,7 +505,7 @@
                                                   <div class="row">
                                                     <div class="col-md-12">
                                                       <div class="row">
-                                                        <div class="col-md-4 col-sm-3 col-xs-4  "><img src="/images/fcf_activities/img2.jpg"></div>
+                                                        <div class="col-md-4 col-sm-3 col-xs-4  fcf-image-embed" opimage-url="/images/fcf_activities/img2.jpg"><img src="/images/fcf_activities/img2.jpg"></div>
                                                         <div class="col-md-8 col-sm-9 col-xs-8">
                                                           <label class="blue">"[[= image.attr("caption") ]]"</label>
                                                           <p class="fcf-activity-image-tag-list" imageID="[[= image.attr('id') ]]"><span class="blue bgfont" app-label-key="fcf.activity.add.report.PeopleInPhoto" >People in this photo:</span><br>
@@ -627,7 +631,7 @@ taggedPeople.forEach(function(personID){
                                                   <p class="opsportal-margin-top"><a class="" title="Click to open the file browser" href="#" app-label-key="fcf.activity.add.report.ClickToOpenFileBrowser">Click to open the file browser</a></p>
                                                 </div>
                                                 <div class="preview-template" style="display: none;"></div>
-                                                <img src="" id="fcf-activity-image-uploaded" width="344" />
+                                                <div class="fcf-activity-image-uploaded"></div>
                                             </div>
                                           </div>
                                           <!--/END Big Image-->
