@@ -15,7 +15,7 @@ a, a:hover, a:visited {
 	color: #1F6B8D; 
 }
 
-h1, h2, h3, h4, h5 { color: #FFF !important;}
+h1, h2, h3, h4, h5 { color: #FFF;}
 
 .light-blue-wrap h4,
 .pa-approvalForm-relatedTemplate h3,
@@ -59,8 +59,12 @@ h1, h2, h3, h4, h5 { color: #FFF !important;}
 	background-color: #f6f6f6; 
 }
 
-.op-masthead { 
-	background-color: #1f6b8d 
+.op-masthead {
+	background-color: #1f6b8d;
+}
+
+#login .op-masthead {
+	background-color: #404040;
 }
 
 .op-masthead a, .op-masthead icon i { 
@@ -566,4 +570,86 @@ ul {padding:0;margin:0}
 
 .rp-instructionsPanel p {
 	color: #eee !important;
+}
+
+/* Override Email Notification styles */
+
+.btn-list {
+	background-color: #40aff6 !important;
+}
+
+.form-search .btn-default {
+	color: #3c766a;
+}
+
+.page-wrap {
+    background: #bbd3d7 !important;
+    border-radius: 30px 0 30px 30px;
+    box-shadow: 7px 7px 6px 1px rgba(0,0,0,0.3);
+	padding: 20px 20px 70px 20px;
+}
+
+.page-wrap h2,
+.opsportal-area-tool-EmailNotifications h3,
+.opsportal-area-tool-EmailNotifications h4,
+.recipient-list .modal-header h4,
+.bootbox .modal-header h4 {
+    color: #433DB3 !important;
+}
+
+.opsportal-area-tool-EmailNotifications label {
+	font-size: 16px;
+}
+.opsportal-area-tool-EmailNotifications strong {
+	color: #F06415;
+}
+
+.opsportal-area-tool-EmailNotifications header {
+	background: #198cd7;
+}
+
+.opsportal-area-tool-EmailNotifications .tab-inner,
+.opsportal-area-tool-EmailNotifications .panel-shadow,
+.opsportal-area-tool-EmailNotifications .inner-text-box {
+	background: #f5f5f5;
+}
+
+.opsportal-area-tool-EmailNotifications .textarea-section span {
+	background: #1f6b8d;
+}
+.en-portal-newNotification,
+.create-new-list {
+	background: #159df4 !important;
+	opacity: 0.75 !important;
+}
+
+.en-portal-newNotification:hover,
+.create-new-list:hover {
+	opacity: 1 !important;
+}
+
+.tabs-left > .nav-tabs > li > a {
+	background: #777 !important;
+	color: #fff;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs > li.active a:after,
+.tabs-left > .nav-tabs > li > a:hover {
+	background: #40aff6 !important;
+}
+
+.opsportal-area-EmailNotifications thead th .th-inner {
+	font-weight: bold;
+	color: #433db3;
+}
+
+.btn-black {
+	background-color: #159df4 !important;
+    color: #fff !important;
+	opacity: 0.75 !important;
+}
+
+.btn-black:hover {
+	opacity: 1 !important;
 }
