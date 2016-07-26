@@ -266,10 +266,10 @@ steal(
 						this.currentlyEditingImage = null;
 
 						this.dom.dropzone.find('.dz-message').show();
-// this.dom.dropzone.find('img').prop('src', '').hide();
-						if (this.obj.ImageUploaded) {
-							this.obj.ImageUploaded.clear().hide();
-						}
+						this.dom.dropzone.find('img').prop('src', '').hide();
+						// if (this.obj.ImageUploaded) {
+						// 	this.obj.ImageUploaded.clear().hide();
+						// }
 
 
 						this.dom.inputImage.val('');
@@ -374,11 +374,11 @@ steal(
 						// this.clearForm();
 
 						this.dom.dropzone.find('.dz-message').hide();
-// this.dom.dropzone.find('img').prop('src', image.image).show();
-						if (this.obj.ImageUploaded) {
-							this.obj.ImageUploaded.clear().show();
-							this.obj.ImageUploaded.loadURL(image.image);
-						}
+						this.dom.dropzone.find('img').prop('src', image.image).show();
+						// if (this.obj.ImageUploaded) {
+						// 	this.obj.ImageUploaded.clear().show();
+						// 	this.obj.ImageUploaded.loadURL(image.image);
+						// }
 
 						this.values.image = image.image;
 
@@ -448,10 +448,10 @@ steal(
 									.then(function(obj) {
 
 										obj = obj.data || obj;
-console.error('... obj:', obj);
+// console.error('... obj:', obj);
 
 										self.listImages.unshift(obj);
-										self.imageRotate();
+										// self.imageRotate();
 										self.clearForm();
 
 
@@ -654,13 +654,13 @@ console.error('... obj:', obj);
 					},
 
 
-					imageRotate:function(){
+// 					imageRotate:function(){
 
-						this.dom.listImages.find('.fcf-image-embed').each(function(indx,el){
-// console.error('... listImages', indx, el);
-							new AD.op.Image(el, {width:68});
-						});
-					},
+// 						this.dom.listImages.find('.fcf-image-embed').each(function(indx,el){
+// // console.error('... listImages', indx, el);
+// 							// new AD.op.Image(el, {width:68});
+// 						});
+// 					},
 
 
 
@@ -781,39 +781,39 @@ console.error('... obj:', obj);
 								})
 
 								// locate the image holder in the Dropzone object:
-// var dzImage = _this.dom.dropzone.find('img');
-								_this.obj.ImageUploaded = new AD.op.Image(_this.dom.dropzone.find('.fcf-activity-image-uploaded'), {width:344});
+var dzImage = _this.dom.dropzone.find('img');
+								// _this.obj.ImageUploaded = new AD.op.Image(_this.dom.dropzone.find('.fcf-activity-image-uploaded'), {width:344});
 
 
 								// once the image loads, we need to check the existing values to make sure we 
 								// correct ourselvs for any potential scrollbar:
-								// dzImage.on('load', function() {
-								// 	var height = parseInt(_this.dom.dropzone.css('height'));
-
-								// 	// if the height is > our area (then a vertical scrollbar will appear)
-								// 	if (parseInt(dzImage.css('height')) > height) {
-
-								// 		var width = parseInt(_this.dom.dropzone.css('width'));
-
-								// 		// let's reduce the width to take into account the new scroll bars that will appear
-								// 		width = width - (AD.util.uiScrollbarSize().width + 4);
-								// 		dzImage.css('width', width);
-								// 	}
-								// })
-								_this.obj.ImageUploaded.on('load', function() {
-
+								dzImage.on('load', function() {
 									var height = parseInt(_this.dom.dropzone.css('height'));
 
 									// if the height is > our area (then a vertical scrollbar will appear)
-									if (parseInt(_this.obj.ImageUploaded.image.height()) > height) {
+									if (parseInt(dzImage.css('height')) > height) {
 
 										var width = parseInt(_this.dom.dropzone.css('width'));
 
 										// let's reduce the width to take into account the new scroll bars that will appear
 										width = width - (AD.util.uiScrollbarSize().width + 4);
-										_this.obj.ImageUploaded.image.width(width);
+										dzImage.css('width', width);
 									}
 								})
+								// _this.obj.ImageUploaded.on('load', function() {
+
+								// 	var height = parseInt(_this.dom.dropzone.css('height'));
+
+								// 	// if the height is > our area (then a vertical scrollbar will appear)
+								// 	if (parseInt(_this.obj.ImageUploaded.image.height()) > height) {
+
+								// 		var width = parseInt(_this.dom.dropzone.css('width'));
+
+								// 		// let's reduce the width to take into account the new scroll bars that will appear
+								// 		width = width - (AD.util.uiScrollbarSize().width + 4);
+								// 		_this.obj.ImageUploaded.image.width(width);
+								// 	}
+								// })
 
 								_this.obj.dropzone.on('success', function(file, response) {
 
@@ -825,9 +825,9 @@ console.error('... obj:', obj);
 
 									// place the image in the display area
 									var width = parseInt(_this.dom.dropzone.css('width'));
-// dzImage.css('width', width).prop('src', response.data.path).show();
-									_this.obj.ImageUploaded.clear().show();
-									_this.obj.ImageUploaded.loadURL(response.data.path);
+dzImage.css('width', width).prop('src', response.data.path).show();
+									// _this.obj.ImageUploaded.clear().show();
+									// _this.obj.ImageUploaded.loadURL(response.data.path);
 
 
 									_this.dom.inputImage.val(response.data.name);
@@ -844,8 +844,8 @@ console.error('... obj:', obj);
 									var soIGotHere = true;
 
 									// make sure any existing image is hidden:
-// dzImage.prop('src', '').hide();
-									_this.obj.ImageUploaded.clear().hide();
+dzImage.prop('src', '').hide();
+									// _this.obj.ImageUploaded.clear().hide();
 
 									// show our message section again:
 									_this.dom.dropzone.find('.dz-message').show();
@@ -1122,10 +1122,10 @@ console.error('... obj:', obj);
 								self.dom.listActivities.find('div.fcf-activity-list-item').remove();
 								self.dom.listActivities.append(can.view('FCFActivities_ActivityReport_ActivityList', { activities: self.listActivities, ProjectName: self.selectedTeam.ProjectOwner, whoami: self.whoami }));
 
-								self.dom.listActivities.find('.fcf-image-embed').each(function(indx, el){
+								// self.dom.listActivities.find('.fcf-image-embed').each(function(indx, el){
 
-									new AD.op.Image(el, {width:68});
-								})
+								// 	new AD.op.Image(el, {width:68});
+								// })
 
 								// refresh all the activities' tagged people
 								self.refreshPeopleTaggedInActivities()
@@ -1455,7 +1455,7 @@ console.error('... obj:', obj);
 								self.listImages = list;
 								self.dom.listImages.append(can.view('FCFActivities_ActivityReport_ImageList', { images: list, teammates: self.listTeammates, whoami: self.whoami }));
 
-								self.imageRotate();
+								// self.imageRotate();
 								
 
 								self.refreshPeopleTaggedInImages();
