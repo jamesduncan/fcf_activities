@@ -23,6 +23,7 @@
   "homepage": "https://github.com/appdevdesigns/fcf_activities",
   "dependencies": {
     "ad-utils": "git://github.com/appdevdesigns/ad-utils",
+    "jimp": "^0.2.24",
     "lodash": "^4.13.1"
   },
   "devDependencies": {
