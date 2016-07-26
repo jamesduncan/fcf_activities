@@ -9,6 +9,9 @@ var path = require('path');
 var fs = require('fs');
 var lodash = require('lodash');
 
+var jimp = require('jimp');
+
+
 
 ///// TODO:
 ///// Move this into the FCFPerson Model object!
@@ -306,7 +309,7 @@ module.exports = {
 
                     if (typeof data == 'undefined') {
 
-                        ADCore.error.log('ActivityImageController: newImage.save(): returned data was undefined.', { newImage: newImage })
+// ADCore.error.log('ActivityImageController: newImage.save(): returned data was undefined.', { newImage: newImage })
 
                         // to prevent losing this transaction, 
                         FCFActivityImages.findOne({id:newImage.id})
@@ -960,14 +963,23 @@ module.exports = {
                 // the return name should be the path after assets/
                 var returnName = newFile.replace(path.join(processPath, 'assets'), '');
 
-                fs.rename(tempFile, newFile, function(err){
 
-                    if (err) {
-                        ADCore.comm.error(res, err);
-                    } else {
-                        ADCore.comm.success(res, { path:returnName, name:tempName });
-                    }
-                    
+                //// NOTE: use jimp to open and save the files.  This should perform an 
+                //// auto rotate on the image based upon any existing EXIF info.
+                jimp.read(tempFile)
+                .then(function(image){
+                    image.write(newFile, function(err){
+// console.log('... jimp image .write() complete.');
+
+                        if (err) {
+                            res.AD.error(err, 500);
+                        } else {
+                            res.AD.success({ path:returnName, name:tempName });
+                        }
+                    });
+                })
+                .catch(function(err){
+                    res.AD.error(err, 500);
                 });
 
             }
