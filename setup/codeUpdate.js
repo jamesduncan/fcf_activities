@@ -43,6 +43,7 @@ AD.test.sails.lift({
 
             var ministries = []; // [82, 13, 43, 70, 71, 72];
             var numDone = 0;
+            var hasExited = false;
 
             FCFMinistry.find()
             .exec(function(err, list) {
@@ -57,108 +58,124 @@ AD.test.sails.lift({
                     } else {
 
 
-                        list.forEach(function(ministry) {
+                        function checkAllMinistries( list, cb) {
+                            if ( list.length == 0) {
+                                cb();
+                            } else {
+                                var ministry = list.shift();
+                                checkMinistry(ministry.IDMinistry, function(err){
 
-                            checkMinistry(ministry.IDMinistry, function(err){
+                                    // exit immediatly on error
+                                    if (err) {
+                                        console.log('... err while processing ministry:', ministry);
+                                        cb(err);
+                                    } else {
 
-                                // exit immediatly on error
-                                if (err) {
-                                    next(err);
-                                } else {
-
-                                    // wait for all ministries to be done before continuing on
-                                    numDone++;
-                                    if (numDone >= list.length) {
-                                        next();
+                                        checkAllMinistries(list, cb);
                                     }
-                                }
-                            })
+                                })
+                            }
+                        }
 
+                        checkAllMinistries(list, function(err){
+                            if (err) {
+                                next(err);
+                            } else {
+                                next();
+                            }
                         })
+
                     }
                 }
             })
         },
 
-        // preserve our Admin User "person"
-        function(next) {
-            console.log('Preserve Admin User "person" :');
+        // // preserve our Admin User "person"
+        // function(next) {
+        //     console.log('Preserve Admin User "person" :');
 
-            // get ric's entry:
-            FCFPerson.findOne(929)
-            .exec(function(err, ric){
+        //     // get ric's entry:
+        //     FCFPerson.findOne(929)
+        //     .exec(function(err, ric){
                 
-                var data = ric.toJSON();
-                // data.IDPerson = 10001;
-                delete data.IDPerson;
-                data.NameLastEng = "Admin";
-                data.NameFirstEng = "Admin";
+        //         var data = ric.toJSON();
+        //         // data.IDPerson = 10001;
+        //         delete data.IDPerson;
+        //         data.NameLastEng = "Admin";
+        //         data.NameFirstEng = "Admin";
 
-                FCFPerson.create(data)
-                .exec(function(err, admin){
+        //         FCFPerson.create(data)
+        //         .exec(function(err, admin){
 
-                    GUID2Person.find({ guid:'A3522A53-CBEC-48E2-BA61-80241D551676'})
-                    .exec(function(err, list){
+        //             GUID2Person.find({ guid:'A3522A53-CBEC-48E2-BA61-80241D551676'})
+        //             .exec(function(err, list){
 
-                        if (err) {
-                            next(err);
+        //                 if (err) {
+        //                     next(err);
 
-                        } else if (list[0]) {
+        //                 } else if (list[0]) {
 
-                            var guidLookup = list[0];
-                            guidLookup.person = admin.IDPerson;
-                            guidLookup.save(function(err, savedGuid){
+        //                     var guidLookup = list[0];
+        //                     guidLookup.person = admin.IDPerson;
+        //                     guidLookup.save(function(err, savedGuid){
 
-                                next(err);
-                            })
+        //                         next(err);
+        //                     })
 
-                        } else {
+        //                 } else {
 
-                            AD.log.error('... did not find guid2Person entry for Admin!  why?');
-                            next();
-                        }
-                    })
-                })
-            })
-        }, 
+        //                     AD.log.error('... did not find guid2Person entry for Admin!  why?');
+        //                     next();
+        //                 }
+        //             })
+        //         })
+        //     })
+        // }, 
 
 
         // update all Objectives to have something for their thai descriptions.
         function(next) {
 
-            var numToDo = 0;
-            var numDone = 0;
-
             FCFObjective.find()
-            .then(function(objectives) {
+            .exec(function(err, objectives){
+                if (err) {
+                    console.log('... error finding Objectives');
+                    next(err);
+                } else {
 
-                objectives.forEach(function(objective){
+                    function doAllObjectives (list, cb) {
 
-                    if ((objective.ObjectiveDescThai == null)
-                        || (objective.ObjectiveDescThai == '')){
+                        if (list.length == 0) {
+                            cb();
+                        } else {
 
-                        objective.ObjectiveDescThai = '[th]'+objective.ObjectiveDescEng;
-                        numToDo++;
-                        objective.save()
-                        .then(function(){
+                            var objective = list.shift();
 
-                            numDone++;
-                            if (numDone >= numToDo) {
-                                next();
+                            if ((objective.ObjectiveDescThai == null)
+                                || (objective.ObjectiveDescThai == '')){
+
+                                objective.ObjectiveDescThai = '[th]'+objective.ObjectiveDescEng;
+                                objective.save(function(err, rec){
+                                    if (err) {
+                                        console.log(err);
+                                        console.log(objective);
+                                        cb(err);
+                                    } else {
+                                        doAllObjectives(list,cb);
+                                    }
+                                })
+                            } else {
+                                doAllObjectives(list,cb);
                             }
-                        })
-                        .catch(function(err){
-                            next(err);
-                        })
+                        }
                     }
-                })
 
-                if (numToDo == 0) {
-                    next();
+
+                    doAllObjectives(objectives, function(err){
+                        next(err);
+                    });
+
                 }
-            })
-            .catch(function(err){
-                next(err);
             })
 
         }
@@ -192,24 +209,26 @@ function checkMinistry (id, cb) {
         // find the Project ID
         function(next) {
             FCFMinistry.findOne(id)
-            .then(function(ministry){
-                ProjectID = ministry.IDProject;
-                next();
-            })
-            .catch(function(err){
-                next(err);
+            .exec(function(err, ministry) {
+                if (err) {
+                    next(err);
+                } else {
+                    ProjectID = ministry.IDProject;
+                    next();
+                }
             })
         },
 
         // lookup all objectives for this ministry
         function(next) {
             FCFObjective.find({ IDProject: ProjectID, IDMinistry:id })
-            .then(function(objectives){
-                foundObjectives = objectives;
-                next();
-            })
-            .catch(function(err){
-                next(err);
+            .exec(function(err, objectives){
+                if (err) {
+                    next(err);
+                } else {
+                    foundObjectives = objectives;
+                    next();
+                }
             })
         },
 
@@ -220,12 +239,15 @@ function checkMinistry (id, cb) {
                 next();
             } else {
 
-                FCFObjective.find({ IDProject: ProjectID, IDMinistry:null })
+                FCFObjective.find({ IDProject: ProjectID, or : [ { IDMinistry:null }, {   IDMinistry:0  } ] })
                 .exec(function(err, objectives) {
                     if (err) {
                         next(err);
                     } else {
                         projectObjectives = objectives;
+// if (objectives.length == 0) {
+//     console.log('... no objectives for IDProject: '+ProjectID+' with IDMinistry:null');
+// }
                         next();
                     }
                 })
@@ -235,6 +257,8 @@ function checkMinistry (id, cb) {
 
         // create new entries with this ministry ID set:
         function(next) {
+            var hasExited = false;
+
             if (foundObjectives.length > 0) {
                 next();
             } else {
@@ -245,26 +269,30 @@ function checkMinistry (id, cb) {
                     next();
                 } else { 
                     
-                    var numDone = 0;
-                    projectObjectives.forEach(function(objective){
+                    function createObjective(list, cb) {
+                        if( list.length == 0) {
+                            cb();
+                        } else {
 
-                        var data = objective.toJSON();
-                        delete data.IDObjective;
-                        data.IDMinistry = id;
-                        FCFObjective.create(data)
-                        .exec(function(err, newObjective) {
+                            var objective = list.shift();
+                            var data = objective.toJSON();
+                            delete data.IDObjective;
+                            data.IDMinistry = id;
+                            FCFObjective.create(data)
+                            .exec(function(err, newObjective) {
 
-                            if (err) {
-                                next(err);
-                            } else {
-
-                                numDone++;
-                                if (numDone >= projectObjectives.length) {
-                                    next();
+                                if (err) {
+                                    console.log('... error creating objective with data:', data);
+                                    cb(err);
+                                } else {
+                                    createObjective(list, cb);
                                 }
-                            }
-                        })
+                            })
+                        }
+                    }
 
+                    createObjective(projectObjectives, function(err){
+                        next(err);
                     })
                 }
 
