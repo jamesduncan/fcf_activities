@@ -38,7 +38,7 @@ module.exports = {
         },
         {
         	action_key:'fcf.activity.images.approve',
-        	action_description:'Allows the user to approve an images submitted to an activity.'
+        	action_description:'Allows the user to approve an image submitted to an activity.'
         },
         { 
             action_key:'adroit.activity.upload', 
