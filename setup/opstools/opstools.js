@@ -7,11 +7,11 @@ module.exports = [
 
     { 
         key:'adroit.activities', 
-        permissions:'fcf.activities, adcore.developer', 
+        permissions:'fcf.activities', 
         icon:'fa-file-image-o', 
         controller:'FCFActivities',
-        label:'opp.toolActivityReporting',
-        context:'opstool-FCFActivities',
+        label:'Adroit Activity Reporting',
+        // context:'opstool-FCFActivities',
         isController:true, 
         options:{}, 
         version:'0' 
