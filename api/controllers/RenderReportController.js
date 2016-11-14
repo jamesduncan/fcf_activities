@@ -102,7 +102,11 @@ module.exports = {
 						var address = p.address[0];
 
 						if (address) {
-							if (address.flgIsLocalAddress && (address.flgIsLocalAddress.toLowerCase() === 'true' || address.flgIsLocalAddress == 1)) {
+							if (address.flgIsLocalAddress 
+									&& (address.flgIsLocalAddress == 1 
+										|| (address.flgIsLocalAddress.toLowerCase &&  address.flgIsLocalAddress.toLowerCase() === 'true' )
+									)
+								) {
 								if (address.Address1Thai)
 									home_address = address.Address1Thai;
 								else if (address.Address2Thai)
