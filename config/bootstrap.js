@@ -12,8 +12,10 @@ var AD = require('ad-utils');
 var async = require('async');
 module.exports = function(cb) {
 
-    AD.module.permissions(path.join(__dirname, '..', 'setup', 'permissions'), cb);
-    // cb(err);   // in case of an unrecoverable error
+    // handle our common bootstrap setup instructions:
+        // - verify permissions are created
+        // - verify opsportal tool definitions are defined.
+    AD.module.bootstrap(__dirname, cb);
 
 
     // create a listner for when our Activity entries are approved

@@ -261,31 +261,79 @@ module.exports = {
                 } else {
 
 
-                    // relocate the image to actual filesystem location
-                    // Naming Convention:  [Activity.id]_[Image.id]_[uuid].ext
-                    // var newName = [values.activity, '_', newImage.id, '_', values.image].join('');
+                    // 14 Nov, 2016
+                    // we now keep track of an image and a '_scaled' version.  It is the 
+                    // '_scaled' version that we use by default.  
                     // 
-                    // NOTE: .toSavedFileName() will internally update the .image to the new name
-                    //       but the instance isn't saved yet.
-                    //       This FCFCore....tempToActivity() has a chance to fail and if it does we
-                    //       don't .save() that name change.
-                    //       else we will .save() the image in the next step.
-                    var newName = newImage.toSavedFileName(values.image);
-                    FCFCore.files.images.tempToActivity(values.image, newName)
-                    .fail(function(err){
+                    // So we will have to do this step for both files:
 
-                        AD.log.error('error: can\'t move file: ['+values.image+'] -> ['+newName+']');
-                        // remove this entry!
-                        newImage.destroy();
+                    var files = [ values.image ];  
+                    var normFile = FCFCore.paths.images.scaled(values.image);
+                    if (files.indexOf(normFile) == -1) {
+
+                        // put scaled one last, since newImage.image will become the last one processed
+                        // we use _scaled most often, so that is the reference.
+                        files.push(normFile);    
+                    }
+
+                    function relocateImages(list, cb) {
+
+                        if (list.length == 0) {
+                            cb();
+                        } else {
+
+                            var oldFile = list.shift();
+                            var newFile = newImage.toSavedFileName(oldFile);
+                            FCFCore.files.images.tempToActivity(oldFile, newFile)
+                            .fail(function(err){
+
+                                AD.log.error('error: can\'t move file: ['+oldFile+'] -> ['+newFile+']');
+                                // remove this entry!
+                                newImage.destroy();
+                                cb(err);
+                                
+                            })
+                            .then(function(){
+
+                                AD.log('... temp file moved: ['+oldFile+'] -> ['+newFile+']');
+                                relocateImages(list, cb);
+
+                            })
+
+                        }
+
+                    }
+
+                    relocateImages(files, function(err){
                         next(err);
+                    });
+
+
+                    // // relocate the image to actual filesystem location
+                    // // Naming Convention:  [Activity.id]_[Image.id]_[uuid].ext
+                    // // var newName = [values.activity, '_', newImage.id, '_', values.image].join('');
+                    // // 
+                    // // NOTE: .toSavedFileName() will internally update the .image to the new name
+                    // //       but the instance isn't saved yet.
+                    // //       This FCFCore....tempToActivity() has a chance to fail and if it does we
+                    // //       don't .save() that name change.
+                    // //       else we will .save() the image in the next step.
+                    // var newName = newImage.toSavedFileName(values.image);
+                    // FCFCore.files.images.tempToActivity(values.image, newName)
+                    // .fail(function(err){
+
+                    //     AD.log.error('error: can\'t move file: ['+values.image+'] -> ['+newName+']');
+                    //     // remove this entry!
+                    //     newImage.destroy();
+                    //     next(err);
                         
-                    })
-                    .then(function(){
+                    // })
+                    // .then(function(){
 
-                        AD.log('... temp file moved: ['+values.image+'] -> ['+newName+']');
-                        next();
+                    //     AD.log('... temp file moved: ['+values.image+'] -> ['+newName+']');
+                    //     next();
 
-                    })
+                    // })
 
                 }
                 
@@ -335,6 +383,7 @@ module.exports = {
 
                 })
                 .catch(function(err){
+console.error(err);
                     AD.log.error('error: can\'t .save() chages to ActivityImage', err);
                     newImage.destroy();
                     next(err);
@@ -358,19 +407,23 @@ module.exports = {
                             AD.log('... activity.default_image = '+activity.default_image);
                             finalData.default_image = finalData.image; // --> should already be converted to proper path
                             next();
+                            return null;
                         })
                         .catch(function(err){
                             AD.log.error('error: updating activity.default_image: activity.save() failed: ', err);
                             next(err);
+                            return null;
                         })
                     } else {
                         finalData.default_image = false;  // <-- no update happened.
                         next();
                     }
+                    return null;
                 })
                 .catch(function(err){
                     AD.log.error('error: can\'t FCFActivity.findOne() id:'+newImage.activity+' ', err);
                     next(err);
+                    return null;
                 })
 
             }
@@ -960,22 +1013,55 @@ module.exports = {
                 var processPath = process.cwd();
                 var newFile = path.join(processPath, 'assets', 'data', 'fcf', 'images', 'temp', tempName);
 
+                // var sParts = tempName.split('.');
+                // sParts[0] += '_scaled';
+                // var scaledTempName = sParts.join('.');
+                // var scaledFile = path.join(processPath, 'assets', 'data', 'fcf', 'images', 'temp', scaledTempName);
+                var scaledFile = FCFCore.paths.images.scaled(newFile);
+
+
                 // the return name should be the path after assets/
                 var returnName = newFile.replace(path.join(processPath, 'assets'), '');
+                // var returnName = scaledFile.replace(path.join(processPath, 'assets'), '');
 
 
                 //// NOTE: use jimp to open and save the files.  This should perform an 
                 //// auto rotate on the image based upon any existing EXIF info.
                 jimp.read(tempFile)
                 .then(function(image){
+
+                    // this will re orient an image based upton EXIF info:
                     image.write(newFile, function(err){
 // console.log('... jimp image .write() complete.');
 
-                        if (err) {
-                            res.AD.error(err, 500);
-                        } else {
-                            res.AD.success({ path:returnName, name:tempName });
+
+                        // let's try to write out a scaled version in addition:
+                        var width = 160;
+                        var height = 120;
+
+                        // pull from config file if set:
+                        if (sails.config.fcfcore
+                            && sails.config.fcfcore.images 
+                            && sails.config.fcfcore.images.scaled) {
+
+                            width = sails.config.fcfcore.images.scaled.width || width;
+                            height = sails.config.fcfcore.images.scaled.height || height;
                         }
+
+                        image
+                        .scaleToFit( width, height )
+                        .write(scaledFile, function(err){
+                            if (err) {
+                                res.AD.error(err, 500);
+                            } else {
+                                res.AD.success({ path:returnName, name:tempName });
+                            }
+                        })
+                        // if (err) {
+                        //     res.AD.error(err, 500);
+                        // } else {
+                        //     res.AD.success({ path:returnName, name:tempName });
+                        // }
                     });
                 })
                 .catch(function(err){

@@ -374,7 +374,14 @@ steal(
 						// this.clearForm();
 
 						this.dom.dropzone.find('.dz-message').hide();
-						this.dom.dropzone.find('img').prop('src', image.image).show();
+
+						// 14 Nov 2016
+						// show the unscaled image here:
+						var unScaled = image.image;
+						if (unScaled.replace) {
+							unScaled = unScaled.replace('_scaled', '');
+						}
+						this.dom.dropzone.find('img').prop('src', unScaled).show();
 						// if (this.obj.ImageUploaded) {
 						// 	this.obj.ImageUploaded.clear().show();
 						// 	this.obj.ImageUploaded.loadURL(image.image);

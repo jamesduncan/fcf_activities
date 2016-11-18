@@ -386,15 +386,27 @@ module.exports = {
                 function(next) {
 console.log('... compile finalList:');
                     var finalList = [];
-                    listPeople.forEach(function(person){
-                        if (person.avatar != null) {
-AD.log('... person had avatar:'+ person.display_name);
+//                     listPeople.forEach(function(person){
+//                         if (person.avatar != null) {
+// AD.log('... person had avatar:'+ person.display_name);
 
-                            finalList.push(person)
-                        } else {
-                            AD.log('... removing member that did not have avatar: '+ person.display_name);
+//                             finalList.push(person)
+//                         } else {
+//                             AD.log('... removing member that did not have avatar: '+ person.display_name);
+//                         }
+//                     });
+
+
+                    // NOTE: 10 Nov 2016 : decide to add Alfred back in.
+                    listPeople.forEach(function(person){
+                        if (person.avatar == null) {
+// AD.log('... person had avatar:'+ person.display_name);
+                            person.avatar = path.join('images', 'fcf_activities', 'icon_person_avatar.jpeg');
                         }
+
+                        finalList.push(person);
                     });
+
 
                     listPeople = finalList;
                     next();
