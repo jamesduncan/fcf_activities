@@ -28,18 +28,20 @@ module.exports = {
 		AD.log('<green>::: renderreport.staffs() :::</green>');
 
 		// Set member name filter
-		// var memberNameFilter = { status: 'Active (In Country)' }; // TODO : Filter status
-		var memberNameFilter = {};
+		var memberNameFilter = { status: 'Active (In Country)' };
 		var memberName = req.param('memberName');
 		if (memberName) {
-			memberNameFilter = {
-				or: [
-					{ NameFirstThai: { contains: memberName } },
-					{ NameMiddleThai: { contains: memberName } },
-					{ NameLastThai: { contains: memberName } }
-				]
-			};
-		}
+			memberNameFilter.and = [
+				memberNameFilter,
+				{
+					or: [
+						{ NameFirstThai: { contains: memberName } },
+						{ NameMiddleThai: { contains: memberName } },
+						{ NameLastThai: { contains: memberName } }
+					]
+				}
+			];
+		};
 
 		var persons = [];
 		var images = [];
@@ -51,7 +53,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(memberNameFilter)
-					.populate('taggedInImages')
+					.populate('taggedInImages', { status: 'approved' })
 					.populate('address')
 					.fail(function(err) {
 						AD.log(err);
@@ -243,7 +245,7 @@ module.exports = {
 		// var langCode = ADCore.user.current(req).getLanguageCode();
 		var langCode = 'th'; // TODO
 
-		var personFilter = { status: 'Active (In Country)' }, // TODO : Filter status
+		var personFilter = { status: 'Active (In Country)' };
 			persons = [],
 			images = [],
 			results = [];
@@ -305,13 +307,14 @@ module.exports = {
 				FCFActivity.find({ id: _.uniq(activityIds) })
 					.populate('translations', { language_code: langCode })
 					.then(function(activities) {
-
 						images.forEach(function(r) {
 							var act = _.find(activities, { 'id': r.activity_id });
-							r.activity_name = act.translations[0].activity_name;
-							r.activity_name_govt = act.translations[0].activity_name_govt;
-							r.activity_description = act.translations[0].activity_description;
-							r.activity_description_govt = act.translations[0].activity_description_govt;
+							if (act && act.translations && act.translations[0]) {
+								r.activity_name = act.translations[0].activity_name;
+								r.activity_name_govt = act.translations[0].activity_name_govt;
+								r.activity_description = act.translations[0].activity_description;
+								r.activity_description_govt = act.translations[0].activity_description_govt;
+							}
 							r.activity_start_date = act.date_start;
 							r.acitivity_end_date = act.date_end;
 						});
@@ -344,7 +347,7 @@ module.exports = {
 						};
 
 						var right_column_img = img[i + 1];
-						if (typeof right_column_img !== 'undefined') {
+						if (right_column_img) {
 							result.activity_image_file_name_right_column = right_column_img.activity_image_file_name;
 							result.activity_image_caption_right_column = right_column_img.caption;
 							result.activity_image_caption_govt_right_column = right_column_img.caption_govt;
