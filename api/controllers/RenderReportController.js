@@ -69,15 +69,6 @@ module.exports = {
 			},
 
 			function(next) {
-				// Remove persons who does not have any activities
-				_.remove(persons, function(p) {
-					return !p.taggedInImages || p.taggedInImages.length < 1;
-				});
-
-				next();
-			},
-
-			function(next) {
 
 				// Subtract fields
 				results = _.map(persons, function(p) {
@@ -139,6 +130,16 @@ module.exports = {
 					reportData.organization_chief_name = 'N/A (Chief name)';
 					reportData.organization_chief_position = 'N/A (Chief position)';
 					reportData.workplace_name = 'N/A (Workplace name)';
+
+					reportData.number_of_approved_images = (p.taggedInImages && p.taggedInImages.length ? p.taggedInImages.length : 0);
+
+					if (reportData.number_of_approved_images > 0) {
+						var activityIds = _.map(p.taggedInImages, function(img) { return img.activity; });
+						reportData.number_of_approved_activities = _.uniq(activityIds).length;
+					}
+					else
+						reportData.number_of_approved_activities = 0;
+
 
 					return reportData;
 				});
