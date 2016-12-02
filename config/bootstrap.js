@@ -242,7 +242,9 @@ module.exports = function(cb) {
 								{ "name": "organization_chief_name", "type": "string" },
 								{ "name": "organization_chief_position", "type": "string" },
 								{ "name": "workplace_name", "type": "string" },
-								{ "name": "project_title", "type": "string" }
+								{ "name": "project_title", "type": "string" },
+								{ "name": "number_of_approved_images", "type": "number" },
+								{ "name": "number_of_approved_activities", "type": "number" }
 							]
 						}
 					},
