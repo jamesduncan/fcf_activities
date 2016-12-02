@@ -246,7 +246,7 @@ module.exports = {
 		// var langCode = ADCore.user.current(req).getLanguageCode();
 		var langCode = 'th'; // TODO
 
-		var personFilter = { codeWorkFlowPhase: 'OG' };
+		var personFilter = { codeWorkFlowPhase: 'OG' },
 			persons = [],
 			images = [],
 			results = [];
