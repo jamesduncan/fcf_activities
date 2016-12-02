@@ -28,7 +28,7 @@ module.exports = {
 		AD.log('<green>::: renderreport.staffs() :::</green>');
 
 		// Set member name filter
-		var memberNameFilter = { status: 'Active (In Country)' };
+		var memberNameFilter = { codeWorkFlowPhase: 'OG' };
 		var memberName = req.param('memberName');
 		if (memberName) {
 			memberNameFilter.and = [
@@ -167,7 +167,7 @@ module.exports = {
 		// var langCode = ADCore.user.current(req).getLanguageCode();
 		var langCode = 'th'; // TODO
 
-		var personFilter = { status: 'Active (In Country)' }, // TODO : Filter status
+		var personFilter = { codeWorkFlowPhase: 'OG' },
 			persons = [],
 			results = [];
 
@@ -246,7 +246,7 @@ module.exports = {
 		// var langCode = ADCore.user.current(req).getLanguageCode();
 		var langCode = 'th'; // TODO
 
-		var personFilter = { status: 'Active (In Country)' };
+		var personFilter = { codeWorkFlowPhase: 'OG' };
 			persons = [],
 			images = [],
 			results = [];
