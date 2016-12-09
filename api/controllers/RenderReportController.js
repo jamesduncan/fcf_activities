@@ -21,6 +21,83 @@ function getAge(birthDate) {
     return age;
 }
 
+function populateStaffInfo(persons) {
+	if (!persons) return persons;
+
+	return _.map(persons, function(p) {
+		var reportData = {};
+
+		reportData.person_id = p.IDPerson;
+		reportData.person_name = (p.NameTitleThai ? p.NameTitleThai + ' ' : '') +
+			(p.NameFirstThai ? p.NameFirstThai + ' ' : '') +
+			(p.NameMiddleThai ? p.NameMiddleThai + ' ' : '') +
+			(p.NameLastThai ? p.NameLastThai + ' ' : '');
+
+		reportData.person_name_en = (p.NameTitleEng ? p.NameTitleEng + ' ' : '') +
+			(p.NameFirstEng ? p.NameFirstEng + ' ' : '') +
+			(p.NameMiddleEng ? p.NameMiddleEng + ' ' : '') +
+			(p.NameLastEng ? p.NameLastEng + ' ' : '');
+
+		reportData.person_age = p.DateBirth ? getAge(p.DateBirth) : 'N/A (Age)';
+		reportData.person_nationality = p.PlaceOfBirth ? p.PlaceOfBirth : 'N/A (Nationality)';
+		reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A (PP Number)';
+		reportData.person_work_number = p.WPNumber ? p.WPNumber : 'N/A (Work Number)';
+		reportData.person_work_address = p.WorkAddress ? p.WorkAddress : 'N/A (Work address)';
+		var home_address = '';
+		if (p.address && p.address.length > 0) {
+			var address = p.address[0];
+
+			if (address) {
+				if (address.flgIsLocalAddress 
+						&& (address.flgIsLocalAddress == 1 
+							|| (address.flgIsLocalAddress.toLowerCase &&  address.flgIsLocalAddress.toLowerCase() === 'true' )
+						)
+					) {
+					if (address.Address1Thai)
+						home_address = address.Address1Thai;
+					else if (address.Address2Thai)
+						home_address = address.Address2Thai;
+				}
+				else {
+					if (address.Address1)
+						home_address = address.Address1;
+					else if (address.Address2)
+						home_address = address.Address2;
+				}
+
+				home_address = (home_address  || '') + ' ' + (address.AmpCity || '') + ' ' + (address.ProvState || '');
+			}
+			home_address = (home_address || '') + ' ' + (address.AmpCity || '') + ' ' + (address.ProvState || '');
+		}
+		reportData.person_home_address = home_address;
+
+		reportData.person_visa_start_date = 'N/A (Visa start date)';
+		reportData.person_visa_expire_date = p.VisaDateExpire ? p.VisaDateExpire : 'N/A (Visa expire date)';
+
+		reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A (Job title)';
+		reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A (Job description)';
+
+		reportData.project_title = p.Project;
+
+		reportData.organization_name = 'N/A (Organization name)';
+		reportData.organization_chief_name = 'N/A (Chief name)';
+		reportData.organization_chief_position = 'N/A (Chief position)';
+		reportData.workplace_name = 'N/A (Workplace name)';
+
+		reportData.number_of_approved_images = (p.taggedInImages && p.taggedInImages.length ? p.taggedInImages.length : 0);
+
+		if (reportData.number_of_approved_images > 0) {
+			var activityIds = _.map(p.taggedInImages, function(img) { return img.activity; });
+			reportData.number_of_approved_activities = _.uniq(activityIds).length;
+		}
+		else
+			reportData.number_of_approved_activities = 0;
+
+
+		return reportData;
+	});
+}
+
 module.exports = {
 
 	// /fcf_activities/renderreport/staffs
@@ -44,7 +121,6 @@ module.exports = {
 		};
 
 		var persons = [];
-		var images = [];
 		var results = [];
 
 		async.series([
@@ -69,81 +145,7 @@ module.exports = {
 			},
 
 			function(next) {
-
-				// Subtract fields
-				results = _.map(persons, function(p) {
-					var reportData = {};
-
-					reportData.person_id = p.IDPerson;
-					reportData.person_name = (p.NameTitleThai ? p.NameTitleThai + ' ' : '') +
-						(p.NameFirstThai ? p.NameFirstThai + ' ' : '') +
-						(p.NameMiddleThai ? p.NameMiddleThai + ' ' : '') +
-						(p.NameLastThai ? p.NameLastThai + ' ' : '');
-
-					reportData.person_name_en = (p.NameTitleEng ? p.NameTitleEng + ' ' : '') +
-						(p.NameFirstEng ? p.NameFirstEng + ' ' : '') +
-						(p.NameMiddleEng ? p.NameMiddleEng + ' ' : '') +
-						(p.NameLastEng ? p.NameLastEng + ' ' : '');
-
-					reportData.person_age = p.DateBirth ? getAge(p.DateBirth) : 'N/A (Age)';
-					reportData.person_nationality = p.PlaceOfBirth ? p.PlaceOfBirth : 'N/A (Nationality)';
-					reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A (PP Number)';
-					reportData.person_work_number = p.WPNumber ? p.WPNumber : 'N/A (Work Number)';
-					reportData.person_work_address = p.WorkAddress ? p.WorkAddress : 'N/A (Work address)';
-					var home_address = '';
-					if (p.address && p.address.length > 0) {
-						var address = p.address[0];
-
-						if (address) {
-							if (address.flgIsLocalAddress 
-									&& (address.flgIsLocalAddress == 1 
-										|| (address.flgIsLocalAddress.toLowerCase &&  address.flgIsLocalAddress.toLowerCase() === 'true' )
-									)
-								) {
-								if (address.Address1Thai)
-									home_address = address.Address1Thai;
-								else if (address.Address2Thai)
-									home_address = address.Address2Thai;
-							}
-							else {
-								if (address.Address1)
-									home_address = address.Address1;
-								else if (address.Address2)
-									home_address = address.Address2;
-							}
-
-							home_address = home_address + ' ' + address.AmpCity + ' ' + address.ProvState;
-						}
-						home_address = home_address + ' ' + address.AmpCity + ' ' + address.ProvState;
-					}
-					reportData.person_home_address = home_address;
-
-					reportData.person_visa_start_date = 'N/A (Visa start date)';
-					reportData.person_visa_expire_date = p.VisaDateExpire ? p.VisaDateExpire : 'N/A (Visa expire date)';
-
-					reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A (Job title)';
-					reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A (Job description)';
-
-					reportData.project_title = p.Project;
-
-					reportData.organization_name = 'N/A (Organization name)';
-					reportData.organization_chief_name = 'N/A (Chief name)';
-					reportData.organization_chief_position = 'N/A (Chief position)';
-					reportData.workplace_name = 'N/A (Workplace name)';
-
-					reportData.number_of_approved_images = (p.taggedInImages && p.taggedInImages.length ? p.taggedInImages.length : 0);
-
-					if (reportData.number_of_approved_images > 0) {
-						var activityIds = _.map(p.taggedInImages, function(img) { return img.activity; });
-						reportData.number_of_approved_activities = _.uniq(activityIds).length;
-					}
-					else
-						reportData.number_of_approved_activities = 0;
-
-
-					return reportData;
-				});
-
+				results = populateStaffInfo(persons);
 				next();
 			}
 		], function(err, r) {
@@ -154,6 +156,90 @@ module.exports = {
 			} else {
 
 				AD.log('<green>::: end renderreport.staffs() :::</green>');
+				ADCore.comm.success(res, results);
+			}
+		});
+	},
+
+	// /fcf_activities/renderreport/activestaffs
+	activestaffs: function(req, res) {
+		AD.log('<green>::: renderreport.activestaffs() :::</green>');
+
+		var userGuids = [],
+			staffIds = [],
+			persons = [],
+			results = [];
+
+		async.series([
+
+			function(next) {
+				// Get guid of active users
+				SiteUser.find({ isActive: 1 }, { select: ['guid'] })
+					.then(function(result) {
+						userGuids = _.map(result, function(r) { return r.guid; });
+
+						next();
+					});
+			},
+
+			function(next) {
+				// Get id of staffs
+				GUID2Person.find({ guid: userGuids }, { select: ['person'] })
+					.then(function(result) {
+						staffIds = _.map(result, function(r) { return r.person; });
+
+						next();
+					});
+			},
+
+			function(next) {
+				// Set member name filter
+				var memberFilter = { 
+					codeWorkFlowPhase: 'OG',
+					IDPerson: staffIds
+				};
+				var memberName = req.param('memberName');
+				if (memberName) {
+					memberFilter.and = [
+						memberFilter,
+						{
+							or: [
+								{ NameFirstThai: { contains: memberName } },
+								{ NameMiddleThai: { contains: memberName } },
+								{ NameLastThai: { contains: memberName } }
+							]
+						}
+					];
+				};
+
+				// Find person object
+				FCFPerson.find(memberFilter)
+					.populate('address')
+					.fail(function(err) {
+						AD.log(err);
+						next(err);
+					})
+					.then(function(p) {
+						if (!p || p.length < 1)
+							next('Could not found any person.');
+
+						persons = p;
+						next();
+					});
+			},
+
+			function(next) {
+				results = populateStaffInfo(persons);
+				next();
+			}
+		], function(err, r) {
+
+			if (err) {
+
+				ADCore.comm.error(res, err, 500);
+			} else {
+
+				AD.log('<green>::: end renderreport.activestaffs() :::</green>');
 				ADCore.comm.success(res, results);
 			}
 		});

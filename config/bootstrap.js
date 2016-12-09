@@ -257,6 +257,41 @@ module.exports = function(cb) {
 			function(next) {
 				ProcessReport.addDataSource(
 					{
+						"name": "FCF active users",
+						"schema": {
+							"fields": [
+								{ "name": "person_id", "type": "number" },
+								{ "name": "person_name", "type": "string" },
+								{ "name": "person_name_en", "type": "string" },
+								{ "name": "person_age", "type": "number" },
+								{ "name": "person_nationality", "type": "string" },
+								{ "name": "person_passport_number", "type": "string" },
+								{ "name": "person_work_number", "type": "string" },
+								{ "name": "person_work_address", "type": "string" },
+								{ "name": "person_home_address", "type": "string" },
+								{ "name": "person_visa_start_date", "type": "date" },
+								{ "name": "person_visa_expire_date", "type": "date" },
+								{ "name": "person_job_title", "type": "string" },
+								{ "name": "person_job_description", "type": "string" },
+								{ "name": "person_activites", "type": "string" },
+								{ "name": "organization_name", "type": "string" },
+								{ "name": "organization_chief_name", "type": "string" },
+								{ "name": "organization_chief_position", "type": "string" },
+								{ "name": "workplace_name", "type": "string" },
+								{ "name": "project_title", "type": "string" },
+								{ "name": "number_of_approved_images", "type": "number" },
+								{ "name": "number_of_approved_activities", "type": "number" }
+							]
+						}
+					},
+					["fcf.activities"], "/fcf_activities/renderreport/activestaffs").then(function(result) {
+						// activeStaffDataSource = result instanceof Array ? result[0] : result;
+						next();
+					});
+			},
+			function(next) {
+				ProcessReport.addDataSource(
+					{
 						"name": "FCF Activities",
 						"schema": {
 							"fields": [
