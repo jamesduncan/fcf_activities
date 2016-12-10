@@ -129,7 +129,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(memberNameFilter)
-					.populate('taggedInImages', { status: 'approved' })
+					.populate('taggedInImages', { status: ['approved', 'ready'] })
 					.populate('address')
 					.fail(function(err) {
 						AD.log(err);
@@ -262,7 +262,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(personFilter, { fields: ['IDPerson'] })
-					.populate('taggedInImages', { status: 'approved' })
+					.populate('taggedInImages', { status: ['approved', 'ready'] })
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
@@ -342,7 +342,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(personFilter, { fields: ['IDPerson'] })
-					.populate('taggedInImages', { status: 'approved' })
+					.populate('taggedInImages', { status: ['approved', 'ready'] })
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
