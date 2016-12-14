@@ -72,7 +72,7 @@ function populateStaffInfo(persons) {
 		reportData.person_home_address = home_address;
 
 		reportData.person_visa_start_date = 'N/A (Visa start date)';
-		reportData.person_visa_expire_date = p.VisaDateExpire ? p.VisaDateExpire : 'N/A (Visa expire date)';
+		reportData.person_visa_expire_date = p.VisaDateIssuedMostRecent ? p.VisaDateIssuedMostRecent : 'N/A (Visa date issue)';
 
 		reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A (Job title)';
 		reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A (Job description)';
