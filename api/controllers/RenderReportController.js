@@ -28,7 +28,7 @@ function populateStaffInfo(persons) {
 		var reportData = {};
 
 		reportData.person_id = p.IDPerson;
-		reportData.person_name = (p.NameTitleThai ? p.NameTitleThai + ' ' : '') +
+		reportData.person_name = (p.NameTitleThai ? p.NameTitleThai : '') +
 			(p.NameFirstThai ? p.NameFirstThai + ' ' : '') +
 			(p.NameMiddleThai ? p.NameMiddleThai + ' ' : '') +
 			(p.NameLastThai ? p.NameLastThai + ' ' : '');
