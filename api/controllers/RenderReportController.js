@@ -22,80 +22,119 @@ function getAge(birthDate) {
 }
 
 function populateStaffInfo(persons) {
-	if (!persons) return persons;
+	var dfd = AD.sal.Deferred(),
+		result = [];
 
-	return _.map(persons, function(p) {
-		var reportData = {};
+	if (!persons) {
+		dfd.resolve(result);
+		return dfd;
+	}
 
-		reportData.person_id = p.IDPerson;
-		reportData.person_name = (p.NameTitleThai ? p.NameTitleThai : '') +
-			(p.NameFirstThai ? p.NameFirstThai + ' ' : '') +
-			(p.NameMiddleThai ? p.NameMiddleThai + ' ' : '') +
-			(p.NameLastThai ? p.NameLastThai + ' ' : '');
+	var personIds = _.map(persons, function(p) { return p.IDPerson; });
 
-		reportData.person_name_en = (p.NameTitleEng ? p.NameTitleEng + ' ' : '') +
-			(p.NameFirstEng ? p.NameFirstEng + ' ' : '') +
-			(p.NameMiddleEng ? p.NameMiddleEng + ' ' : '') +
-			(p.NameLastEng ? p.NameLastEng + ' ' : '');
+	async.waterfall([
+		// Get address info
+		function(next) {
+			FCFAddress.find({ IDPerson: personIds })
+				.populate('IDTambon')
+				.populate('IDAmphur')
+				.populate('IDProvince')
+				.fail(next)
+				.then(function (addrInfo) {
+					next(null, addrInfo);
+				});
+		},
+		function(addresses, next) {
+			persons.forEach(function(p) {
+				var reportData = {};
 
-		reportData.person_age = p.DateBirth ? getAge(p.DateBirth) : 'N/A (Age)';
-		reportData.person_nationality = p.PlaceOfBirth ? p.PlaceOfBirth : 'N/A (Nationality)';
-		reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A (PP Number)';
-		reportData.person_work_number = p.WPNumber ? p.WPNumber : 'N/A (Work Number)';
-		reportData.person_work_address = p.WorkAddress ? p.WorkAddress : 'N/A (Work address)';
-		var home_address = '';
-		if (p.address && p.address.length > 0) {
-			var address = p.address[0];
+				reportData.person_id = p.IDPerson;
+				reportData.person_name = (p.NameTitleThai ? p.NameTitleThai : '') +
+					(p.NameFirstThai ? p.NameFirstThai + ' ' : '') +
+					(p.NameMiddleThai ? p.NameMiddleThai + ' ' : '') +
+					(p.NameLastThai ? p.NameLastThai + ' ' : '');
 
-			if (address) {
-				if (address.flgIsLocalAddress 
-						&& (address.flgIsLocalAddress == 1 
-							|| (address.flgIsLocalAddress.toLowerCase &&  address.flgIsLocalAddress.toLowerCase() === 'true' )
-						)
-					) {
-					if (address.Address1Thai)
-						home_address = address.Address1Thai;
-					else if (address.Address2Thai)
-						home_address = address.Address2Thai;
+				reportData.person_name_en = (p.NameTitleEng ? p.NameTitleEng + ' ' : '') +
+					(p.NameFirstEng ? p.NameFirstEng + ' ' : '') +
+					(p.NameMiddleEng ? p.NameMiddleEng + ' ' : '') +
+					(p.NameLastEng ? p.NameLastEng + ' ' : '');
+
+				reportData.person_age = p.DateBirth ? getAge(p.DateBirth) : 'N/A (Age)';
+				reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A (PP Number)';
+				reportData.person_work_number = p.WPNumber ? p.WPNumber : 'N/A (Work Number)';
+				reportData.person_work_address = p.WorkAddress ? p.WorkAddress : 'N/A (Work address)';
+
+				reportData.person_visa_start_date = 'N/A (Visa start date)';
+				reportData.person_visa_expire_date = p.VisaDateIssuedMostRecent ? p.VisaDateIssuedMostRecent : 'N/A (Visa date issue)';
+
+				reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A (Job title)';
+				reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A (Job description)';
+
+				reportData.project_title = p.Project;
+
+				reportData.organization_name = 'N/A (Organization name)';
+				reportData.organization_chief_name = 'N/A (Chief name)';
+				reportData.organization_chief_position = 'N/A (Chief position)';
+				reportData.workplace_name = 'N/A (Workplace name)';
+
+				if (p.codeNationality) {
+					if (p.codeNationality.NationalityDescThai)
+						reportData.person_nationality = p.codeNationality.NationalityDescThai;
+					else if (p.codeNationality.CountryDescThai)
+						reportData.person_nationality = p.codeNationality.CountryDescThai;
+					else
+						reportData.person_nationality = 'N/A (Nationality)';
 				}
-				else {
-					if (address.Address1)
-						home_address = address.Address1;
-					else if (address.Address2)
-						home_address = address.Address2;
+				else
+					reportData.person_nationality = 'N/A (Nationality)';
+
+				reportData.number_of_approved_images = (p.taggedInImages && p.taggedInImages.length ? p.taggedInImages.length : 0);
+				if (reportData.number_of_approved_images > 0) {
+					var activityIds = _.map(p.taggedInImages, function(img) { return img.activity; });
+					reportData.number_of_approved_activities = _.uniq(activityIds).length;
+				}
+				else
+					reportData.number_of_approved_activities = 0;
+
+				if (p.address) {
+					var address = addresses.filter(function(addr) {
+						return addr.IDPerson == p.IDPerson;
+					});
+
+					reportData.person_home_address = '';
+
+					if (address[0] && address[0].codeAddressType == 'TH') {
+						reportData.person_home_address += address[0].Address1Thai ? (address[0].Address1Thai + ' ') : '';
+						reportData.person_home_address += address[0].Address2Thai ? (address[0].Address2Thai + ' ') : '';
+						reportData.person_home_address += address[0].NeighborhoodThai ? (address[0].NeighborhoodThai + ' ') : '';
+
+						if (address[0].IDTambon)
+							reportData.person_home_address += 'ต.' + address[0].IDTambon.NAME_PRI + ' ';
+
+						if (address[0].IDAmphur)
+							reportData.person_home_address += 'อ.' + address[0].IDAmphur.NAME_PRI + ' ';
+
+						if (address[0].IDProvince)
+							reportData.person_home_address += 'จ.' + address[0].IDProvince.NAME_PRI + ' ';
+
+						if (address[0].Zip)
+							reportData.person_home_address += address[0].Zip;
+					}
 				}
 
-				home_address = (home_address  || '') + ' ' + (address.AmpCity || '') + ' ' + (address.ProvState || '');
-			}
-			home_address = (home_address || '') + ' ' + (address.AmpCity || '') + ' ' + (address.ProvState || '');
+				result.push(reportData);
+			});
+
+			next();
 		}
-		reportData.person_home_address = home_address;
-
-		reportData.person_visa_start_date = 'N/A (Visa start date)';
-		reportData.person_visa_expire_date = p.VisaDateIssuedMostRecent ? p.VisaDateIssuedMostRecent : 'N/A (Visa date issue)';
-
-		reportData.person_job_title = p.JobTitle ? p.JobTitle : 'N/A (Job title)';
-		reportData.person_job_description = p.JobDescSimple ? p.JobDescSimple : 'N/A (Job description)';
-
-		reportData.project_title = p.Project;
-
-		reportData.organization_name = 'N/A (Organization name)';
-		reportData.organization_chief_name = 'N/A (Chief name)';
-		reportData.organization_chief_position = 'N/A (Chief position)';
-		reportData.workplace_name = 'N/A (Workplace name)';
-
-		reportData.number_of_approved_images = (p.taggedInImages && p.taggedInImages.length ? p.taggedInImages.length : 0);
-
-		if (reportData.number_of_approved_images > 0) {
-			var activityIds = _.map(p.taggedInImages, function(img) { return img.activity; });
-			reportData.number_of_approved_activities = _.uniq(activityIds).length;
-		}
+	], function(err) {
+		if (err)
+			dfd.reject(err);
 		else
-			reportData.number_of_approved_activities = 0;
-
-
-		return reportData;
+			dfd.resolve(result);
 	});
+
+	return dfd;
 }
 
 module.exports = {
@@ -130,7 +169,7 @@ module.exports = {
 				// Find person object
 				FCFPerson.find(memberNameFilter)
 					.populate('taggedInImages', { status: ['approved', 'ready'] })
-					.populate('address')
+					.populate('codeNationality')
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
@@ -145,8 +184,11 @@ module.exports = {
 			},
 
 			function(next) {
-				results = populateStaffInfo(persons);
-				next();
+				populateStaffInfo(persons).fail(next)
+					.then(function (personInfos) {
+						results = personInfos;
+						next();
+					});
 			}
 		], function(err, r) {
 
@@ -194,7 +236,7 @@ module.exports = {
 
 			function(next) {
 				// Set member name filter
-				var memberFilter = { 
+				var memberFilter = {
 					codeWorkFlowPhase: 'OG',
 					IDPerson: staffIds
 				};
@@ -214,7 +256,7 @@ module.exports = {
 
 				// Find person object
 				FCFPerson.find(memberFilter)
-					.populate('address')
+					.populate('codeNationality')
 					.fail(function(err) {
 						AD.log(err);
 						next(err);
@@ -229,8 +271,11 @@ module.exports = {
 			},
 
 			function(next) {
-				results = populateStaffInfo(persons);
-				next();
+				populateStaffInfo(persons).fail(next)
+					.then(function(personInfos) {
+						results = personInfos;
+						next();
+					});
 			}
 		], function(err, r) {
 
