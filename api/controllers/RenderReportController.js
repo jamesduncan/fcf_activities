@@ -52,12 +52,12 @@ function populateStaffInfo(persons) {
 				reportData.person_name = (p.NameTitleThai ? p.NameTitleThai : '') +
 					(p.NameFirstThai ? p.NameFirstThai + ' ' : '') +
 					(p.NameMiddleThai ? p.NameMiddleThai + ' ' : '') +
-					(p.NameLastThai ? p.NameLastThai + ' ' : '');
+					(p.NameLastThai ? p.NameLastThai : '');
 
 				reportData.person_name_en = (p.NameTitleEng ? p.NameTitleEng + ' ' : '') +
 					(p.NameFirstEng ? p.NameFirstEng + ' ' : '') +
 					(p.NameMiddleEng ? p.NameMiddleEng + ' ' : '') +
-					(p.NameLastEng ? p.NameLastEng + ' ' : '');
+					(p.NameLastEng ? p.NameLastEng : '');
 
 				reportData.person_age = p.DateBirth ? getAge(p.DateBirth) : 'N/A (Age)';
 				reportData.person_passport_number = p.PPNumber ? p.PPNumber : 'N/A (PP Number)';
