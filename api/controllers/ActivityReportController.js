@@ -384,7 +384,7 @@ module.exports = {
 
                 // step 4: now remove all the people who didn't have an avatar
                 function(next) {
-console.log('... compile finalList:');
+// console.log('... compile finalList:');
                     var finalList = [];
 //                     listPeople.forEach(function(person){
 //                         if (person.avatar != null) {
@@ -941,7 +941,7 @@ console.log('... found objectives:', list);
 
                 ADCore.queue.publish('opsportal.approval.create', request);
 
-AD.log('... Published Request:', request);
+// AD.log('... Published Request:', request);
                 next();
 
 

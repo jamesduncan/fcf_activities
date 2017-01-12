@@ -348,6 +348,7 @@ module.exports = {
 
                 if (tags) {
                     tags.forEach(function(tag){
+// console.log('... adding tagged person:'+tag);
                         newImage.taggedPeople.add(tag)
                     })
                 }

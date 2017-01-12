@@ -36,59 +36,60 @@ AD.test.sails.lift({
 
     async.series([
 
-        // make sure these ministries have objectives assigned
-        function(next) {
+// as of Jan 1st, 2017, we no longer do this:
+        // // make sure these ministries have objectives assigned
+        // function(next) {
 
-            console.log('Verifying Ministry Objectives ...');
+        //     console.log('Verifying Ministry Objectives ...');
 
-            var ministries = []; // [82, 13, 43, 70, 71, 72];
-            var numDone = 0;
-            var hasExited = false;
+        //     var ministries = []; // [82, 13, 43, 70, 71, 72];
+        //     var numDone = 0;
+        //     var hasExited = false;
 
-            FCFMinistry.find()
-            .exec(function(err, list) {
+        //     FCFMinistry.find()
+        //     .exec(function(err, list) {
 
-                if (err) { 
-                    next(err);
-                } else {
+        //         if (err) { 
+        //             next(err);
+        //         } else {
 
-                    if (list.length == 0) {
-                        // nothing to do then.
-                        next();
-                    } else {
+        //             if (list.length == 0) {
+        //                 // nothing to do then.
+        //                 next();
+        //             } else {
 
 
-                        function checkAllMinistries( list, cb) {
-                            if ( list.length == 0) {
-                                cb();
-                            } else {
-                                var ministry = list.shift();
-                                checkMinistry(ministry.IDMinistry, function(err){
+        //                 function checkAllMinistries( list, cb) {
+        //                     if ( list.length == 0) {
+        //                         cb();
+        //                     } else {
+        //                         var ministry = list.shift();
+        //                         checkMinistry(ministry.IDMinistry, function(err){
 
-                                    // exit immediatly on error
-                                    if (err) {
-                                        console.log('... err while processing ministry:', ministry);
-                                        cb(err);
-                                    } else {
+        //                             // exit immediatly on error
+        //                             if (err) {
+        //                                 console.log('... err while processing ministry:', ministry);
+        //                                 cb(err);
+        //                             } else {
 
-                                        checkAllMinistries(list, cb);
-                                    }
-                                })
-                            }
-                        }
+        //                                 checkAllMinistries(list, cb);
+        //                             }
+        //                         })
+        //                     }
+        //                 }
 
-                        checkAllMinistries(list, function(err){
-                            if (err) {
-                                next(err);
-                            } else {
-                                next();
-                            }
-                        })
+        //                 checkAllMinistries(list, function(err){
+        //                     if (err) {
+        //                         next(err);
+        //                     } else {
+        //                         next();
+        //                     }
+        //                 })
 
-                    }
-                }
-            })
-        },
+        //             }
+        //         }
+        //     })
+        // },
 
         // // preserve our Admin User "person"
         // function(next) {
