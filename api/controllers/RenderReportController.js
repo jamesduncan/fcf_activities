@@ -335,7 +335,7 @@ module.exports = {
 								p = _.map(a, function(act, index) {
 									return {
 										'person_id': p.IDPerson,
-										'activity_id': act.translations[0].id,
+										'activity_id': act.id,
 										'activity_name': act.translations[0].activity_name,
 										'activity_name_govt': act.translations[0].activity_name_govt,
 										'startDate': act.date_start,
@@ -472,7 +472,7 @@ module.exports = {
 							'activity_description': img[i].activity_description,
 							'activity_description_govt': img[i].activity_description_govt,
 							'activity_start_date': img[i].activity_start_date,
-							'acitivity_end_date': img[i].acitivity_end_date,
+							'activity_end_date': img[i].acitivity_end_date,
 							'activity_image_file_name_left_column': img[i].activity_image_file_name,
 							'activity_image_caption_left_column': img[i].caption,
 							'activity_image_caption_govt_left_column': img[i].caption_govt
