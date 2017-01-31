@@ -422,9 +422,12 @@ module.exports = {
 					.populate('translations', { language_code: langCode })
 					.then(function(resultImages) {
 						resultImages.forEach(function(img) {
-							var image = _.find(images, { 'image_id': img.id });
-							image.caption = img.translations[0] ? img.translations[0].caption : '';
-							image.caption_govt = img.translations[0] ? img.translations[0].caption_govt : '';
+							images.forEach(function(image) {
+								if (image.image_id == img.id) {
+									image.caption = img.translations[0] ? img.translations[0].caption : '';
+									image.caption_govt = img.translations[0] ? img.translations[0].caption_govt : '';
+								}
+							});
 						});
 
 						next();
