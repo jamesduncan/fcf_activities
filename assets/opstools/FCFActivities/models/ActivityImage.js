@@ -23,6 +23,10 @@ steal(
 								getID: function() {},   // returns the unique ID of this row
 								getLabel: function() {} // returns the defined label value
 						*/
+
+						getFullImageUrl: function () {
+							return this.image.replace('_scaled.', '.');
+						}
 					});
 
 
