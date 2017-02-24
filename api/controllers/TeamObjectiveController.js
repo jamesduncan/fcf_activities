@@ -37,14 +37,44 @@ module.exports = {
         }
 
 
+        var projectID = null;
 
         async.series([
+
+            // <2017-02-24> UPDATE:
+            // Objectives are now returned for the Project of a ministry.
+            // get the Project from this ministry:
+            function(next) {
+                FCFMinistry.findOne({IDMinistry:minId})
+                .catch(function(err){
+                    ADCore.error.log('error looking up FCFMinistry:', {error:err, idMinistry: minId });
+                    next(err);
+                    return null;
+                })
+                .done(function(ministry){
+                    if (ministry) {
+                        projectID = ministry.IDProject;
+                        next();
+                    } else {
+                        ADCore.error.log('FCFActivities:TEamObjectiveController:find() : asked to work with unknown ministry', { idministry: minId });
+                        next(new Error('unknown ministry for id:'+minId));
+                    }
+                    return null;
+                })
+            },
+
 
             // get the user's Person Entry
             function(next) {
 
                 AD.log('... finding Objectives where IDMinistry:'+minId);
-                FCFObjective.find({IDMinistry:minId})
+
+                // <2017-02-24> UPDATE:
+                // proper lookup is:
+                // IDProject: match project of given ministry id
+                // IDMinistry: is not null, all project objectives are copied to any 1 sub ministry
+                // flgIsActive: 1  -> the objective is currently active.
+                FCFObjective.find({IDProject:projectID, IDMinistry:{'!': null}, flgIsActive:1})
                 .fail(function(err){
                     next(err);
                 })
