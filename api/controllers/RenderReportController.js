@@ -508,6 +508,61 @@ module.exports = {
 				ADCore.comm.success(res, results);
 			}
 		});
+	},
+
+	// /fcf_activities/renderreport/approved_images
+	approved_images: function(req, res) {
+		var results = [],
+			persons = [];
+
+		async.series([
+
+			function (next) {
+				// Find person object
+				FCFPerson.find({ codeWorkFlowPhase: 'OG' }, { fields: ['IDPerson'] })
+					.populate('taggedInImages', { status: ['approved', 'ready'] })
+					.fail(function(err) {
+						AD.log(err);
+						next(err);
+					})
+					.then(function(p) {
+						if (p.length < 1)
+							next('Could not found any person.');
+
+						persons = p;
+
+						next();
+					});
+			},
+
+			function (next) {
+
+				// Find image caption
+				persons.forEach(function (p) {
+					p.taggedInImages.forEach(function (img) {
+						results.push({
+							'image_id': img.id,
+							'person_id': p.IDPerson,
+							'activity_id': img.activity,
+							'date': img.date
+						});
+					});
+				});
+
+				next();
+			}
+
+		], function (err, r) {
+
+			if (err) {
+
+				ADCore.comm.error(res, err, 500);
+			} else {
+
+				AD.log('<green>::: end renderreport.approved_images() :::</green>');
+				ADCore.comm.success(res, results);
+			}
+		});
 	}
 
 };
