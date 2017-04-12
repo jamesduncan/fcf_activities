@@ -107,13 +107,14 @@ function copyFiles(list, pathSrc, pathDest, cb) {
 		cb();
 	} else {
 		var file = list.shift();
-// console.log('... file:'+file);
+		
 		if(isIgnoredFile(file)) {
 			// move along
 			copyFiles(list, pathSrc, pathDest, cb);
 
 		} else {
-
+			
+			console.log('... copy file:'+file);
 			var src = path.join(pathSrc, file);
 			var dst = path.join(pathDest, file);
 			fs.copy(src, dst, function(err){
@@ -322,6 +323,10 @@ async.series([
 
 	// step 2) copy files to our temp dir:
 	function(next) {
+
+		console.log();
+		console.log('*** Copy Original Files');
+		console.log();
 		readFromDir(pathFromDir, function(err, allFiles) {
 
 			copyFiles(allFiles, pathFromDir, pathRenderDir, function(err){
