@@ -5,12 +5,19 @@
 //
 //  To use:
 //  copy this to the server:  /fcf_activities/setup/rescalePhotos.js
-//  cd /fcf_activities/setup
-//  node rescalePhotos.js
+//  $ cd /fcf_activities/setup
+//  $ node rescalePhotos.js
+//
+//
+//  The render can last a long time for a large number of files.
+//  if you get disconnected, then add 'resume'  option to pickup 
+//  where you left off.
+//
+//  $ node rescalePhotos.js resume
 
 
 
-
+var AD = require('ad-utils');
 var jimp = require('jimp');
 var fs = require('fs-extra');  // fs but with copy!
 var path = require('path');
@@ -199,6 +206,73 @@ function removeScaledFiles(list, cb) {
 }
 
 
+
+function removeProcessedFiles(list, remainingFiles, cb) {
+
+	// param check:
+	if (_.isUndefined(cb)) {
+		cb = remainingFiles;
+		remainingFiles = [];
+	}
+
+
+	if (list.length == 0) {
+		cb(null, remainingFiles);
+	} else {
+
+		var file = list.shift();
+
+		if (isIgnoredFile(file) 
+			|| isRenderedFile(file)) {
+
+			// don't need to check this one:
+			removeProcessedFiles(list, remainingFiles, cb);
+		
+		} else {
+
+			// check to see if it has renderedFiles
+
+			var base = file.split('.')[0];
+			var hasRenderedFiles = false;
+
+			renderNames.some(function(rn){
+
+					var checkName = base+rn;
+
+					// scan each file:
+					list.some(function(fileName){
+
+						if (fileName.indexOf(checkName) != -1) {
+							hasRenderedFiles = true;
+						}
+						return hasRenderedFiles;
+					})
+			
+
+				return hasRenderedFiles;
+			});
+
+
+			// if we didn't have any rendered files,
+			// add this file to our list:
+			if (!hasRenderedFiles) {
+
+				remainingFiles.push(file);
+
+			} else {
+				console.log('... already rendered:', file);
+			}
+			
+
+			// continue.	
+			removeProcessedFiles(list, remainingFiles, cb);
+			
+		}
+
+
+	}
+}
+
 /*
  * @function processFile
  *
@@ -231,24 +305,17 @@ function processFile(allFiles, cb) {
 
 			console.log('... converting file:'+fileName);
 
-			// // get image in jimp:
-			// jimp.read(fromFile)
-			// .then(function(image) {
 
-				var listRenders = _.clone(renders);
+			var listRenders = _.clone(renders);
 
-				renderFile(listRenders, fromFile, function(err){
-					if (err) {
-						cb(err);
-					}else {
-						processFile(allFiles, cb);
-					}
-				})
+			renderFile(listRenders, fromFile, function(err){
+				if (err) {
+					cb(err);
+				}else {
+					processFile(allFiles, cb);
+				}
+			})
 
-			// })
-			// .catch(function(err){
-			// 	cb(err);
-			// })
 		}
 	}
 }
@@ -276,26 +343,86 @@ function renderFile(list, origFile, cb) {
 		var render = list.shift();
 		var toFile = origFile.replace('.', render.name+'.');
 
-		jimp.read(origFile)
-        .then(function(image){
+		var params = [
+			'origFile:'+origFile,
+			'quality:'+render.quality,
+			'width:'+render.width,
+			'height:'+render.height,
+			'name:'+render.name
+		]
 
-			image
-			.quality(render.quality)
-		    .scaleToFit( render.width, render.height )
-		    .write(toFile, function(err){
-				if (err) {
-					cb(err);
-				} else {
-					renderFile(list, origFile, cb);
-				}
-			})
-		})
-        .catch(function(err){
+		params.unshift('jimpIt.js');
+
+		AD.spawn.command({
+            command:'node',
+            options:params,
+            shouldEcho:false
+        })
+        .fail(function(err){
             cb(err);
+        })
+        .then(function(code){
+            renderFile(list, origFile, cb);
         });
 
 	}
 }
+
+// function renderFile(list, origFile, cb) {
+// 	if (list.length == 0) {
+// 		cb();
+// 	} else {
+
+// 		var render = list.shift();
+// 		var toFile = origFile.replace('.', render.name+'.');
+
+// 		jimp.read(origFile)
+//         .then(function(image){
+
+// 			image
+// 			.quality(render.quality)
+// 		    .scaleToFit( render.width, render.height )
+// 		    .write(toFile, function(err){
+// 				if (err) {
+// 					cb(err);
+// 				} else {
+// 					renderFile(list, origFile, cb);
+// 				}
+// 			})
+// 		})
+//         .catch(function(err){
+//             cb(err);
+//         });
+
+// 	}
+// }
+
+function processFilesPar(numPar, files, cb) {
+
+	var numDone = 0;
+	for(var i=1; i<= numPar; i++) {
+		processFile(files, function(err){
+			if (err) {
+				cb(err);
+			} else {
+				numDone++;
+				if (numDone >= numPar) {
+					cb();
+				}
+			}
+		});
+	}
+}
+
+//// Parse any command line arguments:
+var isRestart = false;
+
+process.argv.forEach(function(a){
+	if (a.toLowerCase() == 'resume') {
+		isRestart = true;
+		console.log('.... resumeing render:');
+	}
+})
 
 
 
@@ -304,6 +431,10 @@ async.series([
 
 	// step 1) make the temporary render directory:
 	function (next) {
+
+		// skip if restarting:
+		if (isRestart) { next(); return; }
+
 		console.log();
 		console.log('*** Ensure our render directory exists:')
 		console.log('    (and is clean)');
@@ -324,6 +455,9 @@ async.series([
 	// step 2) copy files to our temp dir:
 	function(next) {
 
+		// skip if restarting:
+		if (isRestart) { next(); return; }
+
 		console.log();
 		console.log('*** Copy Original Files');
 		console.log();
@@ -336,9 +470,14 @@ async.series([
 		})
 	},
 
+
 	// in our render directory
 	// step 3) remove existing scaled files:
 	function(next) {
+
+		// skip if restarting:
+		if (isRestart) { next(); return; }
+
 		console.log();
 		console.log('*** Removing previously rendered files:')
 		console.log();
@@ -355,6 +494,11 @@ async.series([
 
 	// step 4) Process Each Image File
 	function(next) {
+
+		// skip if restarting:
+		if (isRestart) { next(); return; }
+
+
 		console.log();
 		console.log('*** Render remaining files:')
 		console.log();
@@ -363,7 +507,38 @@ async.series([
 				next(err);
 				return;
 			} 
-			processFile(allFiles, next);
+
+			processFilesPar(5, allFiles, next);
+		});
+		
+	},
+
+
+	// step 4) Pickup where we left off Each Image File
+	function(next) {
+
+		// skip if a normal render:
+		if (!isRestart) { next(); return; }
+
+		console.log();
+		console.log('*** Pickup remaining files:')
+		console.log();
+		readFromDir(pathRenderDir, function(err, allFiles) {
+			if (err) {
+				next(err);
+				return;
+			} 
+
+			removeProcessedFiles(allFiles, function(err, unprocessedFiles){
+
+				if (err) {
+					next(err);
+					return;
+				}
+				processFilesPar(5, unprocessedFiles, next);
+			})
+
+			
 		});
 		
 	},
