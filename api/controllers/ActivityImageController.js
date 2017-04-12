@@ -260,21 +260,39 @@ module.exports = {
                     next(new Error('No New Image!'));
                 } else {
 
+                    // 12 Apr 2017
+                    // Now we have multiple images due to our rendering.
+                    // We need to move them ALL to the new directory, and update newImage.image
+                    // with the value of one of the final images.
+                    // Seems like we want the web version to be the default?
+                    var listRenders = getRenderList();
+                    var listAllFiles = [ newImage.image ];
+                    var defaultImage = newImage.image;  // use original if no other default set.
+                    listRenders.forEach(function(r){
+                        var renderFile = newImage.image.replace('.', r.name+'.');
+                        listAllFiles.push( renderFile );
 
-                    // 14 Nov, 2016
-                    // we now keep track of an image and a '_scaled' version.  It is the 
-                    // '_scaled' version that we use by default.  
-                    // 
-                    // So we will have to do this step for both files:
+                        // if default then choose this one
+                        if (r.default) { 
+                            defaultImage = renderFile;
+                        }
+                    })
 
-                    var files = [ values.image ];  
-                    var normFile = FCFCore.paths.images.scaled(values.image);
-                    if (files.indexOf(normFile) == -1) {
 
-                        // put scaled one last, since newImage.image will become the last one processed
-                        // we use _scaled most often, so that is the reference.
-                        files.push(normFile);    
-                    }
+                    // // 14 Nov, 2016
+                    // // we now keep track of an image and a '_scaled' version.  It is the 
+                    // // '_scaled' version that we use by default.  
+                    // // 
+                    // // So we will have to do this step for both files:
+
+                    // var files = [ values.image ];  
+                    // var normFile = FCFCore.paths.images.scaled(values.image);
+                    // if (files.indexOf(normFile) == -1) {
+
+                    //     // put scaled one last, since newImage.image will become the last one processed
+                    //     // we use _scaled most often, so that is the reference.
+                    //     files.push(normFile);    
+                    // }
 
                     function relocateImages(list, cb) {
 
@@ -304,7 +322,11 @@ module.exports = {
 
                     }
 
-                    relocateImages(files, function(err){
+                    relocateImages(listAllFiles, function(err){
+
+                        // after all that, make sure our newImage.image is our default
+                        newImage.toSavedFileName(defaultImage);
+
                         next(err);
                     });
 
@@ -1032,37 +1054,23 @@ console.error(err);
                 .then(function(image){
 
                     // this will re orient an image based upton EXIF info:
-                    image.write(newFile, function(err){
+                    image
+                    .write(newFile, function(err){
 // console.log('... jimp image .write() complete.');
+
+                        res.AD.success({ path:returnName, name:tempName });
 
 
                         // let's try to write out a scaled version in addition:
-                        var width = 160;
-                        var height = 120;
+                        var listRenders = getRenderList();
 
-                        // pull from config file if set:
-                        if (sails.config.fcfcore
-                            && sails.config.fcfcore.images 
-                            && sails.config.fcfcore.images.scaled) {
-
-                            width = sails.config.fcfcore.images.scaled.width || width;
-                            height = sails.config.fcfcore.images.scaled.height || height;
-                        }
-
-                        image
-                        .scaleToFit( width, height )
-                        .write(scaledFile, function(err){
+                        renderFile(listRenders, newFile, function(err){
                             if (err) {
-                                res.AD.error(err, 500);
-                            } else {
-                                res.AD.success({ path:returnName, name:tempName });
+                                ADCore.error.log("FCFActivities:ActivityImageController:upload() Error Rendering File.", { error:err, newFile:newFile });  
                             }
                         })
-                        // if (err) {
-                        //     res.AD.error(err, 500);
-                        // } else {
-                        //     res.AD.success({ path:returnName, name:tempName });
-                        // }
+
+
                     });
                 })
                 .catch(function(err){
@@ -1077,6 +1085,109 @@ console.error(err);
     
 };
 
+
+
+
+
+
+var ImageRenders = [
+
+    // Web Site Version
+    // 160x120
+    {
+        name: '_scaled',
+        quality:40,
+        width: 160,
+        height: 120,
+        'default': true     // use this version by default
+    },
+
+    // Print Versions
+    // 1800x1350
+    {
+        name: '_print',
+        quality:60,
+        width: 1800,
+        height: 1350,
+        'default':false
+    }
+]
+
+
+/*
+ * @function getRenderList
+ *
+ * return the list of render options for this site.
+ *
+ * the output of the render'ed file will match the original Filename
+ * + a render.name tag at the end.
+ *
+ * @param {array} list  an array of renders to perform
+ * @param {string} origFile  the name of the original file being rendered
+ * @param {jimp.image} image  the jimp image object to perform the renders with.
+ * @param {fn} cb  node style callback 
+ */
+function getRenderList() {
+
+    // our default renders
+    var renderList = ImageRenders;
+
+    // pull from config file if set:
+    if (sails.config.fcfcore
+        && sails.config.fcfcore.images 
+        && sails.config.fcfcore.images.renders) {
+
+        renderList = sails.config.fcfcore.images.renders;
+    }
+
+
+    return _.clone(renderList);
+}
+
+
+/*
+ * @function renderFile
+ *
+ * recursively process a list of Render Commands on a given
+ * file.
+ *
+ * the output of the render'ed file will match the original Filename
+ * + a render.name tag at the end.
+ *
+ * @param {array} list  an array of renders to perform
+ * @param {string} origFile  the name of the original file being rendered
+ * @param {jimp.image} image  the jimp image object to perform the renders with.
+ * @param {fn} cb  node style callback 
+ */
+function renderFile(list, origFile, cb) {
+    if (list.length == 0) {
+        cb();
+    } else {
+
+        var render = list.shift();
+        var toFile = origFile.replace('.', render.name+'.');
+
+        jimp.read(origFile)
+        .then(function(image){
+
+            image
+            .quality(render.quality)
+            .scaleToFit( render.width, render.height )
+            .write(toFile, function(err){
+                if (err) {
+                    cb(err);
+                } else {
+                    renderFile(list, origFile, cb);
+                }
+            })
+
+        })
+        .catch(function(err){
+            cb(err);
+        });
+
+    }
+}
 
 
 var PostApprovalRequest = function (options) {
