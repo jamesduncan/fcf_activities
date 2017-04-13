@@ -96,6 +96,25 @@ function readFromDir(fromDirPath, cb) {
 
 
 /*
+ * @function elapsedTime
+ *
+ * return a timing string representing the #s #ms since the 
+ * passed in startTime was taken.
+ *
+ * @param {array} startTime  timing data gathered from process.hrtime()
+ * @return {string} 
+ */
+function elapsedTime(startTime) {
+	var elapsed = process.hrtime(startTime);
+
+	var timingString = elapsed[0]>0 ? elapsed[0]+'s' :'  ';
+	timingString += (parseInt(elapsed[1]/1000000))+'ms';
+
+	return timingString;
+}
+
+
+/*
  * @function copyFiles
  *
  * recursively copies the list of files from the pathSrc
@@ -107,8 +126,6 @@ function readFromDir(fromDirPath, cb) {
  * @param {fn} cb  node style callback when finished.
  */
 function copyFiles(list, pathSrc, pathDest, cb) {
-// console.log('... pathSrc:'+pathSrc);
-// console.log('... pathDest:'+pathDest);
 
 	if (list.length == 0) {
 		cb();
@@ -121,7 +138,8 @@ function copyFiles(list, pathSrc, pathDest, cb) {
 
 		} else {
 			
-			console.log('... copy file:'+file);
+			var startTime = process.hrtime();
+			
 			var src = path.join(pathSrc, file);
 			var dst = path.join(pathDest, file);
 			fs.copy(src, dst, function(err){
@@ -129,6 +147,7 @@ function copyFiles(list, pathSrc, pathDest, cb) {
 					cb(err);
 					return;
 				}
+				console.log('... copy file: '+elapsedTime(startTime)+' : '+file);
 				copyFiles(list, pathSrc, pathDest, cb);
 			})
 
@@ -206,152 +225,96 @@ function removeScaledFiles(list, cb) {
 }
 
 
-
-function removeProcessedFiles(list, remainingFiles, cb) {
-
-	// param check:
-	if (_.isUndefined(cb)) {
-		cb = remainingFiles;
-		remainingFiles = [];
-	}
-
-
-	if (list.length == 0) {
-		cb(null, remainingFiles);
-	} else {
-
-		var file = list.shift();
-
-		if (isIgnoredFile(file) 
-			|| isRenderedFile(file)) {
-
-			// don't need to check this one:
-			removeProcessedFiles(list, remainingFiles, cb);
-		
-		} else {
-
-			// check to see if it has renderedFiles
-
-			var base = file.split('.')[0];
-			var hasRenderedFiles = false;
-
-			renderNames.some(function(rn){
-
-					var checkName = base+rn;
-
-					// scan each file:
-					list.some(function(fileName){
-
-						if (fileName.indexOf(checkName) != -1) {
-							hasRenderedFiles = true;
-						}
-						return hasRenderedFiles;
-					})
-			
-
-				return hasRenderedFiles;
-			});
-
-
-			// if we didn't have any rendered files,
-			// add this file to our list:
-			if (!hasRenderedFiles) {
-
-				remainingFiles.push(file);
-
-			} else {
-				console.log('... already rendered:', file);
-			}
-			
-
-			// continue.	
-			removeProcessedFiles(list, remainingFiles, cb);
-			
-		}
-
-
-	}
-}
-
 /*
- * @function processFile
+ * @function generateRenderQueue
  *
- * recursively process a list of files and make sure each one has 
- * been rendered.
+ * recursively process a list of files and determine what render 
+ * operations are still needed.
+ *
+ * add the render ops as jobs to our queue.
  *
  * @param {array} allFiles  an array of Filenames to check
- * @param {fn} cb  node style callback 
+ * @param {array} queue  current value of our render jobs
+ * @param {fn} cb node style callback 
+ *					{obj} err
+ *					{array} queue array of render jobs
  */
-function processFile(allFiles, cb) {
+function generateRenderQueue(allFiles, queue, cb) {
+
+	if (_.isUndefined(cb)){
+		cb = queue;
+		queue = [];
+	}
+
 
 	if (allFiles.length == 0) {
-		cb();
+		cb(null, queue);
 	} else {
 
-		var fileName = allFiles.shift();
-		// var scaledName = fileName.replace('.', '_scaled.');
+		// get filename
+		var file = allFiles.shift(); 
 
-		if (isIgnoredFile(fileName)		// ignore these files
-			|| (isRenderedFile(fileName))) { // this was the name of the previous scaled file
+		// skip ignored/rendered files:
+		if (!isIgnoredFile(file) && !isRenderedFile(file)) {
 
-			// skip this one
-			processFile(allFiles, cb);
+			// convert to full path:
+			file = path.join(pathRenderDir, file);
 
-		} else {
+			// for each render operation
+			renders.forEach(function(r) {
 
-			// make this a path
-			var fromFile = path.join(pathRenderDir, fileName);
+				// figure out the renderName
+				var renderedName = file.replace('.', r.name+'.');
+
+				// if renderName ! exists
+				if (!fs.existsSync(renderedName)) {
 
 
-			console.log('... converting file:'+fileName);
-
-
-			var listRenders = _.clone(renders);
-
-			renderFile(listRenders, fromFile, function(err){
-				if (err) {
-					cb(err);
-				}else {
-					processFile(allFiles, cb);
+					queue.push({
+						file:file,
+						render:r
+					})
 				}
+					// add render job to queue
 			})
-
 		}
+
+		// recurse->next()
+		generateRenderQueue(allFiles, queue, cb);
 	}
 }
 
 
 /*
- * @function renderFile
+ * @function renderJob
  *
- * recursively process a list of Render Commands on a given
- * file.
+ * recursively process a list of Render Jobs (provided by generateRenderQueue())
  *
  * the output of the render'ed file will match the original Filename
  * + a render.name tag at the end.
  *
- * @param {array} list  an array of renders to perform
- * @param {string} origFile  the name of the original file being rendered
- * @param {jimp.image} image  the jimp image object to perform the renders with.
+ * @param {string} pID  a unique ID for this "process"
+ * @param {array} queue  an array of renders to perform
  * @param {fn} cb  node style callback 
  */
-function renderFile(list, origFile, cb) {
-	if (list.length == 0) {
+function renderJob(pID, queue, cb) {
+	if (queue.length == 0) {
 		cb();
 	} else {
 
-		var render = list.shift();
-		var toFile = origFile.replace('.', render.name+'.');
+		var job = queue.shift();
+		var toFile = job.file.replace('.', job.render.name+'.');
 
 		var params = [
-			'origFile:'+origFile,
-			'quality:'+render.quality,
-			'width:'+render.width,
-			'height:'+render.height,
-			'name:'+render.name
+			'jimpIt.js',
+			'origFile:'+job.file,
+			'quality:'+job.render.quality,
+			'width:'+job.render.width,
+			'height:'+job.render.height,
+			'name:'+job.render.name
 		]
 
-		params.unshift('jimpIt.js');
+		var startTime = process.hrtime();
 
 		AD.spawn.command({
             command:'node',
@@ -362,7 +325,9 @@ function renderFile(list, origFile, cb) {
             cb(err);
         })
         .then(function(code){
-            renderFile(list, origFile, cb);
+
+        	console.log('... '+pID+' : rendered: '+elapsedTime(startTime)+" :"+toFile.replace(pathRenderDir+path.sep, ''))
+            renderJob(pID, queue, cb);
         });
 
 	}
@@ -397,11 +362,23 @@ function renderFile(list, origFile, cb) {
 // 	}
 // }
 
-function processFilesPar(numPar, files, cb) {
+
+
+/*
+ * @function renderJobsPar
+ *
+ * Kick off a series of parallel renderJob() tasks.
+ *
+ *
+ * @param {integer} numPar  the number of parallel tasks
+ * @param {array} queue  an array of renders to perform
+ * @param {fn} cb  node style callback 
+ */
+function renderJobsPar(numPar, queue, cb) {
 
 	var numDone = 0;
 	for(var i=1; i<= numPar; i++) {
-		processFile(files, function(err){
+		renderJob(i+'', queue, function(err){
 			if (err) {
 				cb(err);
 			} else {
@@ -414,7 +391,10 @@ function processFilesPar(numPar, files, cb) {
 	}
 }
 
+
+////
 //// Parse any command line arguments:
+////
 var isRestart = false;
 
 process.argv.forEach(function(a){
@@ -463,7 +443,10 @@ async.series([
 		console.log();
 		readFromDir(pathFromDir, function(err, allFiles) {
 
-			copyFiles(allFiles, pathFromDir, pathRenderDir, function(err){
+			// just grab the original base files:
+			var baseFiles = _.filter(allFiles, function(f) {return !isRenderedFile(f); })
+			
+			copyFiles(baseFiles, pathFromDir, pathRenderDir, function(err){
 				next(err);
 			})
 			
@@ -471,32 +454,8 @@ async.series([
 	},
 
 
-	// in our render directory
-	// step 3) remove existing scaled files:
-	function(next) {
-
-		// skip if restarting:
-		if (isRestart) { next(); return; }
-
-		console.log();
-		console.log('*** Removing previously rendered files:')
-		console.log();
-		readFromDir(pathRenderDir, function(err, allFiles) {
-			if (err) {
-				next(err);
-				return;
-			} 
-			removeScaledFiles(allFiles, next);
-		});
-		
-	},
-
-
 	// step 4) Process Each Image File
 	function(next) {
-
-		// skip if restarting:
-		if (isRestart) { next(); return; }
 
 
 		console.log();
@@ -507,37 +466,9 @@ async.series([
 				next(err);
 				return;
 			} 
-
-			processFilesPar(5, allFiles, next);
-		});
-		
-	},
-
-
-	// step 4) Pickup where we left off Each Image File
-	function(next) {
-
-		// skip if a normal render:
-		if (!isRestart) { next(); return; }
-
-		console.log();
-		console.log('*** Pickup remaining files:')
-		console.log();
-		readFromDir(pathRenderDir, function(err, allFiles) {
-			if (err) {
-				next(err);
-				return;
-			} 
-
-			removeProcessedFiles(allFiles, function(err, unprocessedFiles){
-
-				if (err) {
-					next(err);
-					return;
-				}
-				processFilesPar(5, unprocessedFiles, next);
+			generateRenderQueue(allFiles, function(err, queue){
+				renderJobsPar(5, queue, next);
 			})
-
 			
 		});
 		
