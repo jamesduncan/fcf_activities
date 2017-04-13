@@ -279,21 +279,6 @@ module.exports = {
                     })
 
 
-                    // // 14 Nov, 2016
-                    // // we now keep track of an image and a '_scaled' version.  It is the 
-                    // // '_scaled' version that we use by default.  
-                    // // 
-                    // // So we will have to do this step for both files:
-
-                    // var files = [ values.image ];  
-                    // var normFile = FCFCore.paths.images.scaled(values.image);
-                    // if (files.indexOf(normFile) == -1) {
-
-                    //     // put scaled one last, since newImage.image will become the last one processed
-                    //     // we use _scaled most often, so that is the reference.
-                    //     files.push(normFile);    
-                    // }
-
                     function relocateImages(list, cb) {
 
                         if (list.length == 0) {
@@ -1167,26 +1152,76 @@ function renderFile(list, origFile, cb) {
         var render = list.shift();
         var toFile = origFile.replace('.', render.name+'.');
 
-        jimp.read(origFile)
-        .then(function(image){
+        // jimp.read(origFile)
+        // .then(function(image){
 
-            image
-            .quality(render.quality)
-            .scaleToFit( render.width, render.height )
-            .write(toFile, function(err){
-                if (err) {
-                    cb(err);
-                } else {
-                    renderFile(list, origFile, cb);
-                }
-            })
+        //     image
+        //     .quality(render.quality)
+        //     .scaleToFit( render.width, render.height )
+        //     .write(toFile, function(err){
+        //         if (err) {
+        //             cb(err);
+        //         } else {
+        //             renderFile(list, origFile, cb);
+        //         }
+        //     })
 
+        // })
+        // .catch(function(err){
+        //     cb(err);
+        // });
+
+
+        var params = [
+            path.join(__dirname, '..', '..', 'setup', 'jimpIt.js'),
+            'origFile:'+origFile,
+            'quality:'+render.quality,
+            'width:'+render.width,
+            'height:'+render.height,
+            'name:'+render.name
+        ]
+
+        var startTime = process.hrtime();
+
+        AD.spawn.command({
+            command:'node',
+            options:params,
+            shouldEcho:false
         })
-        .catch(function(err){
+        .fail(function(err){
             cb(err);
+        })
+        .then(function(code){
+
+            console.log('... rendered: '+elapsedTime(startTime)+" :"+toFile.split(path.sep).pop())
+            renderFile(list, origFile, cb);
         });
 
+
+
     }
+}
+
+
+
+
+
+/*
+ * @function elapsedTime
+ *
+ * return a timing string representing the #s #ms since the 
+ * passed in startTime was taken.
+ *
+ * @param {array} startTime  timing data gathered from process.hrtime()
+ * @return {string} 
+ */
+function elapsedTime(startTime) {
+    var elapsed = process.hrtime(startTime);
+
+    var timingString = elapsed[0]>0 ? elapsed[0]+'s' :'  ';
+    timingString += (parseInt(elapsed[1]/1000000))+'ms';
+
+    return timingString;
 }
 
 
