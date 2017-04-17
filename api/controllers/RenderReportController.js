@@ -414,7 +414,7 @@ module.exports = {
 							'image_id': img.id,
 							'person_id': p.IDPerson,
 							'activity_id': img.activity,
-							'activity_image_file_name': img.image
+							'activity_image_file_name': imageFile
 						});
 					});
 				});
