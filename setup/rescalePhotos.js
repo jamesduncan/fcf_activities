@@ -56,12 +56,13 @@ var renders = [
     },
 
     // Print Versions
-    // 1800x1350
+    // 3.5" x 5" @ 300dpi:
+    // 1500x1050
     {
         name: '_print',
         quality:60,
-        width: 1800,
-        height: 1350,
+        width: 1500,
+        height: 1050,
         'default':false
     }
 ]
@@ -333,34 +334,6 @@ function renderJob(pID, queue, cb) {
 	}
 }
 
-// function renderFile(list, origFile, cb) {
-// 	if (list.length == 0) {
-// 		cb();
-// 	} else {
-
-// 		var render = list.shift();
-// 		var toFile = origFile.replace('.', render.name+'.');
-
-// 		jimp.read(origFile)
-//         .then(function(image){
-
-// 			image
-// 			.quality(render.quality)
-// 		    .scaleToFit( render.width, render.height )
-// 		    .write(toFile, function(err){
-// 				if (err) {
-// 					cb(err);
-// 				} else {
-// 					renderFile(list, origFile, cb);
-// 				}
-// 			})
-// 		})
-//         .catch(function(err){
-//             cb(err);
-//         });
-
-// 	}
-// }
 
 
 
