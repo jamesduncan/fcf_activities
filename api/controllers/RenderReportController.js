@@ -405,6 +405,11 @@ module.exports = {
 				// Find image caption
 				persons.forEach(function(p) {
 					p.taggedInImages.forEach(function(img) {
+						var imageFile = img.image;
+
+						if (imageFile.indexOf('_scaled.') > -1)
+							imageFile = imageFile.replace('_scaled.', '_print.');
+
 						images.push({
 							'image_id': img.id,
 							'person_id': p.IDPerson,
