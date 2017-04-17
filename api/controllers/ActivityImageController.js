@@ -1088,12 +1088,13 @@ var ImageRenders = [
     },
 
     // Print Versions
-    // 1800x1350
+    // 3.5"(h) x 5"(w) @ 300dpi:
+    // 1500(w)x1050(h)
     {
         name: '_print',
         quality:60,
-        width: 1800,
-        height: 1350,
+        width: 1500,
+        height: 1050,
         'default':false
     }
 ]
